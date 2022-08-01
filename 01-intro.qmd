@@ -1,0 +1,280 @@
+# Fundamentals
+
+```{r}
+#| echo: false
+#| eval: true
+#| cache: true
+
+set.seed(123)
+```
+
+
+## Project-oriented workflow
+
+:::{.callout-note}
+This subsection is largely based on Jenny Bryan's [What They Forgot (WTF) to Teach You About R](https://rstats.wtf/index.html).
+:::
+
+1 - Organize your work into a project.
+    This means within the file system store all your data, code, figures, notes, and related material within the same folder and subfolders.
+    
+2 - RStudio **P**rojects enforces this approach.
+    When you create a new project in RStudio, it creates a folder with some metadata and user options for that specific project (stored in the .Rproj file inside the folder it created for the project).
+
+3 - RStudio Projects establish a working directory and use relative file paths by default. Usually this is what you want so when you share a project or move it from one computer to the next, it. just. works. This is also why it is critical to store your data and scripts within the project.
+
+
+A typical project might have a file and folder structure like this:
+
+<div class="cell">
+<div class="sourceCode">
+<pre class="sourceCode r cell-code">
+<code class="sourceCode">
+<i class="bi bi-folder-minus"></i> Project Folder
+|
+|--<i class="bi bi-folder-minus"></i> Data
+|   |
+|   |--<i class="bi bi-file-spreadsheet"></i> Raw Data
+|   |--<i class="bi bi-file-spreadsheet"></i> More Raw Data
+|
+|--<i class="bi bi-folder-minus"></i> Scripts
+|   |
+|   |--<i class="bi bi-file-text"></i> Analysis.R file
+|   |--<i class="bi bi-file-text"></i> Figures.R file
+|
+|--<i class="bi bi-folder-minus"></i> Figures
+|   |
+|   |--<i class="bi bi-file-earmark-image"></i> Plot
+|   |--<i class="bi bi-file-earmark-image"></i> Another figure
+|
+|--<i class="bi bi-folder-minus"></i> Exported Data
+|   |
+|   |--<i class="bi bi-file-spreadsheet"></i> Results
+|
+|---<i class="bi bi-folder-minus"></i> Reports
+|   |
+|   |--<i class="bi bi-file-text"></i> Report
+|
+|-<i class="bi bi-file-text"></i> Readme file (usually .Rmd, .md, or .txt file)
+</code>
+</pre>
+</div>
+</div>
+
+### Your RStudio Project
+
+Start a new project! Open RStudio, in the upper left click "File" -> "New Project." We generally want to start a project in a New Directory, so click that. One the next window click New Project. Now you can choose the subdirectory name of your project (folder name) followed by where you want that subdirectory to be stored. Click "Create Project" and RStudio create the subdirectory and puts a .Rproj file with specific project info in there for you.
+
+![Example RStudio workspace](images/example-1.png){fig-alt="A screenshot of the RStudio program with different areas of the workspace noted."}
+
+The RStudio workspace includes 3 major components. In the upper left, the script area shows the content of open R scripts (or any text based file that you open will show up here). You can edit, save, and run lines of code from this window.
+
+At the bottom left, is the R console. This is where R operates. The code you wrote in the script gets loaded into the console and R does whatever is in the script. Output, messages, and warnings from your R code will probably show up here.
+
+At the bottom right, are a couple of tabs. This is where graphical outputs are displayed. There are also tabs for files, packages, and help. The file tab lets you navigate, create, delete, and open files and folders. It defaults to your projects working directory. The packages tab is for exploring the packages you have installed, more on that below. Technically you can load and unload packages from here by clicking boxes next to each package. Don't do that. The help tab is just that, it lets you search functions in each package and displays the documentation for packages and functions. Learn to use this tab, it will help you just like it says! 
+
+### Running Code
+
+You should generally write your code in the script window and execute it from there. This will save you from retyping code again and again.
+
+If you have your cursor on an expression in your R script, use the keyboard shortcut: Ctrl+Enter to execute that expression. The cursor will automatically move to the next statement and the code will run in the console. If you want to execute the entire script at once, use the keyboard shortcut: Ctrl+Shift+S.
+
+### Basic coding
+
+Boxes with the grey background and blue vertical bar indicate chunks of R code. If there is an output when that code chunk is run by R, the output (text output, tables or figures) will follow directly below the chunk. For example, here is a code chunk:
+
+```{r}
+#| echo: true
+#| eval: false
+
+10*100
+```
+
+And this is the output:
+
+```{r}
+#| echo: false
+#| eval: true
+
+10*100
+```
+
+:::{.callout-note}
+Much of this subsection is from [R for Data Science](https://r4ds.had.co.nz/workflow-basics.html) which you are encouraged to explore. 
+:::
+
+This: `<-`,  is called an assignment operator in R. We use it to create objects by assigning a value to a variable name. We name objects so we can easily refer to whatever you assigned later on in your script:
+
+```{r}
+x <- 10
+y <- 100
+
+x * y
+```
+
+You don't have to assign numbers:
+
+```{r}
+x <- "Hello"
+
+print(x)
+```
+
+Assignment operators go either direction, you might find it useful to use the left to right assinment operator in some situations:
+
+```{r}
+"Hello" -> x
+
+print(x)
+```
+
+However, for the most part, standard practice is to assign right to left so you can easily find the variable name receiving the value. Whatever you choose, use the same direction throughout your project.
+
+As your scripts get more complicated, it is important to use descriptive object names. Object names can only contain letters, numbers, `_`, and `.`, so we recommend using "snake_case" to create object names:
+
+```
+streamflow
+streamflow_site_a
+```
+
+Object names are case sensitive, `streamflow_site_a` is not the same as `streamflow_site_A`.
+
+The `#` symbol is ignored by R and used to include human readable comments in your script. Use comments liberally in your code.
+
+```{r}
+#| code-overflow: wrap
+#| eval: false
+
+## I can write what I want
+## and R does not evaluate
+## this
+a <- 1
+a
+```
+
+## Functions
+
+Functions are essentially tools that take input *arguments* and output some kind of value. Functions are the basis for most everything you do in R. For example, `seq()` is a function to generate a regular sequence of numbers. You can get to the help documentation by entering `?seq()` in the console. It takes the arguments `from, to, by, length.out, along.with`. Use `=` for argument values:
+
+```{r}
+#| code-overflow: wrap
+#| eval: true
+
+seq(from = 0, to = 10, by = 2)
+```
+
+Writing your own functions is one of the reasons for using R. Here is a simplistic function that generates a message in the console screen depending on the condition of the first argument.
+
+```{r}
+print_hello <- function(x) {
+  if (x < 1) message("Hello!")
+  else message("Bye")
+}
+
+print_hello(x = -1)
+
+print_hello(x = 1)
+```
+
+Why write a function in the first place? Sometimes you might need to repeatedly run the same set of functions on different data or subsets of data. You will find yourself copy and pasting code and changing some values within. If the output is dependent on some values you forgot to change when you cut and paste, instant problems! Functions let you skip that copy and paste action, and just update the arguments. Here is an example of some code to calculate the confidence interval around the mean for a vector of numbers:
+
+```{r}
+#| cache: true
+
+min <- 0
+max <- 10
+n <- 1000
+ci <- 0.95
+x <- runif(n = n, min = min, max = max)
+se <- sd(x)/sqrt(length(x))
+alpha <- 1 - ci
+mean(x) + se * qnorm(c(alpha/2, 1-alpha/2))
+```
+
+If we need to recalculate the confidence interval for different values or combinations of values of `x`, `n`, and `ci` we would have to cut and paste the chunk each time with the potential for data entry errors if the wrong values are entered. Instead, create a function and change the arguments as needed. 
+
+```{r}
+#| cache: true
+
+
+ci <- function(min, max, n, ci) {
+  x <- runif(n = n, min = min, max = max)
+  se <- sd(x)/sqrt(length(x))
+  alpha <- 1 - ci
+  mean(x) + se * qnorm(c(alpha/2, 1-alpha/2))
+}
+
+ci(min = 0, max = 10, n = 1000, ci = 0.95)
+ci(min = 10, max = 100, n = 1000, ci = 0.90)
+ci(min = 10, max = 1000, n = 1000, ci = 0.80)
+```
+
+
+
+## Packages
+
+Packages might be considered the toolboxes of R. They are generally a collection of functions and classes the expand the capabilities of the base R functions. Many packages have *dependencies* from other packages. This mean when you install one package, you may end up installing multiple other packages automatically that are required for the package that you chose to work. Normally this works without hiccup. However, before installing packages, I suggest restarting your R session and make sure no packages are currently loaded to prevent issues.
+
+Most packages can and should be installed from the CRAN repository. These are a network of repositories that host the official, up-to-date and approved packages for R. This packages are pre-built, meaning you are unlikely to run into issues on installation. To install packages from CRAN, you typically do something like the following:
+
+```{r}
+#| code-overflow: wrap
+#| eval: false
+
+## install one package
+install.packages("ggplot2")
+
+## install multiple packages
+install.packages("dplyr", "tidyr")
+```
+
+
+Sometimes you need a package or package version that is not currently available on CRAN. There are various justifiable reasons the packages might not be available on CRAN; however, one of the benefits of using CRAN packages is that they are all reviewed by a person before acceptance. This provides a safety mechanism for not only the quality of the package but potential security issues.
+
+:::{.callout-note}
+If you are installing a package from GitHub or other source, please review it for safety and quality before installation.
+:::
+
+There are two primary way to install non-CRAN packages. The preferred method is to install pre-built packages from an alternative repository like r-universe. The readme file associated with the package will generally inform you if the package is available on a different repository and how to install it from that repository.
+
+An example of this is shown below for the *adc* package:
+
+```{r}
+#| code-overflow: wrap
+#| eval: false
+
+install.packages('adc', repos = c(txwri = 'https://txwri.r-universe.dev'))
+```
+
+An alternative option is to download and build the packages from the source, such as GitHub. For those on Windows, you will need to install the [RTools toolchain](https://cran.r-project.org/bin/windows/Rtools/). Then, we can use the *remotes* package to download, build and install a package from GitHub:
+
+```{r}
+#| code-overflow: wrap
+#| eval: false
+
+install.packages("remotes")
+remotes::install_github("mps9506/rATTAINS")
+```
+
+After you install a package, you need to load the package in order to use the functions. Confusingly, you use the `library()` function to accomplish this. Standard practice is to load libraries at the top of your script:
+
+```{r}
+#| code-overflow: wrap
+#| eval: false
+
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+
+
+## Other Coding Conventions
+
+
+
+Placeholder.
+
+Topics: strings, Date formats, pipe function
+
+

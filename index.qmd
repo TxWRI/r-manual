@@ -1,0 +1,25 @@
+# Preface {.unnumbered}
+
+This is a the R resource manual for TWRI staff and graduate assistants.
+
+
+## Requirements
+
+ - R version 4.2 or higher. This can be installed from [https://cran.r-project.org/](https://cran.r-project.org/) or using the Ivanti Installation Manager if you are on an AgriLife computer.
+ 
+ - RStudio Desktop is the integrated development environment used to write and execute R code. Available for free from [RStudio or Posit](https://www.rstudio.com/products/rstudio/). Admin privileges are required to install, so install from Ivanti on AgriLife computers.
+ 
+ - The manual assumes some basic understanding of using R and RStudio, reach out to colleagues if you are having difficulty.
+ 
+ - Most of the functions and code make heavy use of the **tidyverse** ecosystem of packages and functions. In particular tibble, dplyr, ggplot2. You are encouraged to become familiar with these particular packages. If you are just starting out with R, the [R for Data Science](https://r4ds.had.co.nz/index.html) book (free!) is a recommended reading.
+ 
+ - Project oriented workflows are an *absolute requirement*. Create projects in RStudio that align with each project you work on. Store your source and raw data within the project. Export your processed data and figures within the project. The complexity of the project will vary according to the project needs and the analysts comfort in various R packages.
+
+
+```{r}
+#| echo: false
+#| eval: true
+
+set.seed(123)
+```
+

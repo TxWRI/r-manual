@@ -1,0 +1,46 @@
+project:
+  type: book
+
+book:
+  title: "twri r-manual"
+  author: "Michael Schramm"
+  image: "images/logo-drop.png"
+  search: true
+  repo: https://github.com/txwri/r-manual
+  date: "7/29/2022"
+  navbar: 
+    logo: "images/logo-drop.png"
+  chapters:
+    - index.qmd
+    - 01-intro.qmd
+    - 02-data_exploration.qmd
+    - 03-streamflow.qmd
+    - 04-stage-discharge.qmd
+    - 05-water-quality.qmd
+    - 06-load-duration.qmd
+    - 07-maps.qmd
+    - 08-watershed-delineation.qmd
+    - 09-raster-summary.qmd
+    - references.qmd
+  page-footer:
+    left:
+      - text: "Texas Water Resources Institute"
+        href: "https://twri.tamu.edu"
+    right: 
+      - icon: github
+        href: https://github.com
+        
+
+bibliography: references.bib
+
+format:
+  html:
+    code-link: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+    theme:
+      light: css/twri_quarto.scss
+    css: css/twri.scss
+
+
+

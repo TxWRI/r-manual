@@ -1,0 +1,121 @@
+[
+  {
+    "objectID": "index.html#requirements",
+    "href": "index.html#requirements",
+    "title": "twri r-manual",
+    "section": "Requirements",
+    "text": "Requirements\n\nR version 4.2 or higher. This can be installed from https://cran.r-project.org/ or using the Ivanti Installation Manager if you are on an AgriLife computer.\nRStudio Desktop is the integrated development environment used to write and execute R code. Available for free from RStudio or Posit. Admin privileges are required to install, so install from Ivanti on AgriLife computers.\nThe manual assumes some basic understanding of using R and RStudio, reach out to colleagues if you are having difficulty.\nMost of the functions and code make heavy use of the tidyverse ecosystem of packages and functions. In particular tibble, dplyr, ggplot2. You are encouraged to become familiar with these particular packages. If you are just starting out with R, the R for Data Science book (free!) is a recommended reading.\nProject oriented workflows are an absolute requirement. Create projects in RStudio that align with each project you work on. Store your source and raw data within the project. Export your processed data and figures within the project. The complexity of the project will vary according to the project needs and the analysts comfort in various R packages."
+  },
+  {
+    "objectID": "01-intro.html#project-oriented-workflow",
+    "href": "01-intro.html#project-oriented-workflow",
+    "title": "\n1  Fundamentals\n",
+    "section": "\n1.1 Project-oriented workflow",
+    "text": "1.1 Project-oriented workflow\n\n\n\n\n\n\nNote\n\n\n\nThis subsection is largely based on Jenny Bryan’s What They Forgot (WTF) to Teach You About R.\n\n\n1 - Organize your work into a project. This means within the file system store all your data, code, figures, notes, and related material within the same folder and subfolders.\n2 - RStudio Projects enforces this approach. When you create a new project in RStudio, it creates a folder with some metadata and user options for that specific project (stored in the .Rproj file inside the folder it created for the project).\n3 - RStudio Projects establish a working directory and use relative file paths by default. Usually this is what you want so when you share a project or move it from one computer to the next, it. just. works. This is also why it is critical to store your data and scripts within the project.\nA typical project might have a file and folder structure like this:\n\n\n\n Project Folder\n|\n|-- Data\n|   |\n|   |-- Raw Data\n|   |-- More Raw Data\n|\n|-- Scripts\n|   |\n|   |-- Analysis.R file\n|   |-- Figures.R file\n|\n|-- Figures\n|   |\n|   |-- Plot\n|   |-- Another figure\n|\n|-- Exported Data\n|   |\n|   |-- Results\n|\n|--- Reports\n|   |\n|   |-- Report\n|\n|- Readme file (usually .Rmd, .md, or .txt file)\n\n\n\n\n\n1.1.1 Your RStudio Project\nStart a new project! Open RStudio, in the upper left click “File” -> “New Project.” We generally want to start a project in a New Directory, so click that. One the next window click New Project. Now you can choose the subdirectory name of your project (folder name) followed by where you want that subdirectory to be stored. Click “Create Project” and RStudio create the subdirectory and puts a .Rproj file with specific project info in there for you.\n\n\nExample RStudio workspace\n\n\nThe RStudio workspace includes 3 major components. In the upper left, the script area shows the content of open R scripts (or any text based file that you open will show up here). You can edit, save, and run lines of code from this window.\nAt the bottom left, is the R console. This is where R operates. The code you wrote in the script gets loaded into the console and R does whatever is in the script. Output, messages, and warnings from your R code will probably show up here.\nAt the bottom right, are a couple of tabs. This is where graphical outputs are displayed. There are also tabs for files, packages, and help. The file tab lets you navigate, create, delete, and open files and folders. It defaults to your projects working directory. The packages tab is for exploring the packages you have installed, more on that below. Technically you can load and unload packages from here by clicking boxes next to each package. Don’t do that. The help tab is just that, it lets you search functions in each package and displays the documentation for packages and functions. Learn to use this tab, it will help you just like it says!\n\n1.1.2 Running Code\nYou should generally write your code in the script window and execute it from there. This will save you from retyping code again and again.\nIf you have your cursor on an expression in your R script, use the keyboard shortcut: Ctrl+Enter to execute that expression. The cursor will automatically move to the next statement and the code will run in the console. If you want to execute the entire script at once, use the keyboard shortcut: Ctrl+Shift+S.\n\n1.1.3 Basic coding\nBoxes with the grey background and blue vertical bar indicate chunks of R code. If there is an output when that code chunk is run by R, the output (text output, tables or figures) will follow directly below the chunk. For example, here is a code chunk:\n\n10*100\n\nAnd this is the output:\n\n\n[1] 1000\n\n\n\n\n\n\n\n\nNote\n\n\n\nMuch of this subsection is from R for Data Science which you are encouraged to explore.\n\n\nThis: <-, is called an assignment operator in R. We use it to create objects by assigning a value to a variable name. We name objects so we can easily refer to whatever you assigned later on in your script:\n\nx <- 10\ny <- 100\n\nx * y\n\n[1] 1000\n\n\nYou don’t have to assign numbers:\n\nx <- \"Hello\"\n\nprint(x)\n\n[1] \"Hello\"\n\n\nAssignment operators go either direction, you might find it useful to use the left to right assinment operator in some situations:\n\n\"Hello\" -> x\n\nprint(x)\n\n[1] \"Hello\"\n\n\nHowever, for the most part, standard practice is to assign right to left so you can easily find the variable name receiving the value. Whatever you choose, use the same direction throughout your project.\nAs your scripts get more complicated, it is important to use descriptive object names. Object names can only contain letters, numbers, _, and ., so we recommend using “snake_case” to create object names:\nstreamflow\nstreamflow_site_a\nObject names are case sensitive, streamflow_site_a is not the same as streamflow_site_A.\nThe # symbol is ignored by R and used to include human readable comments in your script. Use comments liberally in your code.\n\n## I can write what I want\n## and R does not evaluate\n## this\na <- 1\na"
+  },
+  {
+    "objectID": "01-intro.html#functions",
+    "href": "01-intro.html#functions",
+    "title": "\n1  Fundamentals\n",
+    "section": "\n1.2 Functions",
+    "text": "1.2 Functions\nFunctions are essentially tools that take input arguments and output some kind of value. Functions are the basis for most everything you do in R. For example, seq() is a function to generate a regular sequence of numbers. You can get to the help documentation by entering ?seq() in the console. It takes the arguments from, to, by, length.out, along.with. Use = for argument values:\n\nseq(from = 0, to = 10, by = 2)\n\n[1]  0  2  4  6  8 10\n\n\nWriting your own functions is one of the reasons for using R. Here is a simplistic function that generates a message in the console screen depending on the condition of the first argument.\n\nprint_hello <- function(x) {\n  if (x < 1) message(\"Hello!\")\n  else message(\"Bye\")\n}\n\nprint_hello(x = -1)\n\nHello!\n\nprint_hello(x = 1)\n\nBye\n\n\nWhy write a function in the first place? Sometimes you might need to repeatedly run the same set of functions on different data or subsets of data. You will find yourself copy and pasting code and changing some values within. If the output is dependent on some values you forgot to change when you cut and paste, instant problems! Functions let you skip that copy and paste action, and just update the arguments. Here is an example of some code to calculate the confidence interval around the mean for a vector of numbers:\n\nmin <- 0\nmax <- 10\nn <- 1000\nci <- 0.95\nx <- runif(n = n, min = min, max = max)\nse <- sd(x)/sqrt(length(x))\nalpha <- 1 - ci\nmean(x) + se * qnorm(c(alpha/2, 1-alpha/2))\n\n[1] 4.794597 5.150959\n\n\nIf we need to recalculate the confidence interval for different values or combinations of values of x, n, and ci we would have to cut and paste the chunk each time with the potential for data entry errors if the wrong values are entered. Instead, create a function and change the arguments as needed.\n\nci <- function(min, max, n, ci) {\n  x <- runif(n = n, min = min, max = max)\n  se <- sd(x)/sqrt(length(x))\n  alpha <- 1 - ci\n  mean(x) + se * qnorm(c(alpha/2, 1-alpha/2))\n}\n\nci(min = 0, max = 10, n = 1000, ci = 0.95)\n\n[1] 4.805486 5.159644\n\nci(min = 10, max = 100, n = 1000, ci = 0.90)\n\n[1] 53.50643 56.24222\n\nci(min = 10, max = 1000, n = 1000, ci = 0.80)\n\n[1] 497.1494 520.7412"
+  },
+  {
+    "objectID": "01-intro.html#packages",
+    "href": "01-intro.html#packages",
+    "title": "\n1  Fundamentals\n",
+    "section": "\n1.3 Packages",
+    "text": "1.3 Packages\nPackages might be considered the toolboxes of R. They are generally a collection of functions and classes the expand the capabilities of the base R functions. Many packages have dependencies from other packages. This mean when you install one package, you may end up installing multiple other packages automatically that are required for the package that you chose to work. Normally this works without hiccup. However, before installing packages, I suggest restarting your R session and make sure no packages are currently loaded to prevent issues.\nMost packages can and should be installed from the CRAN repository. These are a network of repositories that host the official, up-to-date and approved packages for R. This packages are pre-built, meaning you are unlikely to run into issues on installation. To install packages from CRAN, you typically do something like the following:\n\n## install one package\ninstall.packages(\"ggplot2\")\n\n## install multiple packages\ninstall.packages(\"dplyr\", \"tidyr\")\n\nSometimes you need a package or package version that is not currently available on CRAN. There are various justifiable reasons the packages might not be available on CRAN; however, one of the benefits of using CRAN packages is that they are all reviewed by a person before acceptance. This provides a safety mechanism for not only the quality of the package but potential security issues.\n\n\n\n\n\n\nNote\n\n\n\nIf you are installing a package from GitHub or other source, please review it for safety and quality before installation.\n\n\nThere are two primary way to install non-CRAN packages. The preferred method is to install pre-built packages from an alternative repository like r-universe. The readme file associated with the package will generally inform you if the package is available on a different repository and how to install it from that repository.\nAn example of this is shown below for the adc package:\n\ninstall.packages('adc', repos = c(txwri = 'https://txwri.r-universe.dev'))\n\nAn alternative option is to download and build the packages from the source, such as GitHub. For those on Windows, you will need to install the RTools toolchain. Then, we can use the remotes package to download, build and install a package from GitHub:\n\ninstall.packages(\"remotes\")\nremotes::install_github(\"mps9506/rATTAINS\")\n\nAfter you install a package, you need to load the package in order to use the functions. Confusingly, you use the library() function to accomplish this. Standard practice is to load libraries at the top of your script:\n\nlibrary(dplyr)\nlibrary(ggplot2)\nlibrary(readr)"
+  },
+  {
+    "objectID": "01-intro.html#other-coding-conventions",
+    "href": "01-intro.html#other-coding-conventions",
+    "title": "\n1  Fundamentals\n",
+    "section": "\n1.4 Other Coding Conventions",
+    "text": "1.4 Other Coding Conventions\nPlaceholder.\nTopics: strings, Date formats, pipe function"
+  },
+  {
+    "objectID": "02-data_exploration.html#import-data",
+    "href": "02-data_exploration.html#import-data",
+    "title": "\n2  Data Exploration\n",
+    "section": "\n2.1 Import Data",
+    "text": "2.1 Import Data\nOne of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, do not manipulate the data file1.\nObtain your data and copy it into the data folder in your R project. If you want to work along, download the following"
+  },
+  {
+    "objectID": "02-data_exploration.html#plot-data",
+    "href": "02-data_exploration.html#plot-data",
+    "title": "\n2  Data Exploration\n",
+    "section": "\n2.2 Plot Data",
+    "text": "2.2 Plot Data"
+  },
+  {
+    "objectID": "02-data_exploration.html#summarize-data",
+    "href": "02-data_exploration.html#summarize-data",
+    "title": "\n2  Data Exploration\n",
+    "section": "\n2.3 Summarize Data",
+    "text": "2.3 Summarize Data"
+  },
+  {
+    "objectID": "02-data_exploration.html#export-data",
+    "href": "02-data_exploration.html#export-data",
+    "title": "\n2  Data Exploration\n",
+    "section": "\n2.4 Export Data",
+    "text": "2.4 Export Data"
+  },
+  {
+    "objectID": "03-streamflow.html#data-sources",
+    "href": "03-streamflow.html#data-sources",
+    "title": "3  Streamflow Data",
+    "section": "3.1 Data Sources",
+    "text": "3.1 Data Sources"
+  },
+  {
+    "objectID": "03-streamflow.html#summarise",
+    "href": "03-streamflow.html#summarise",
+    "title": "3  Streamflow Data",
+    "section": "3.2 Summarise",
+    "text": "3.2 Summarise"
+  },
+  {
+    "objectID": "03-streamflow.html#flow-duration-curve",
+    "href": "03-streamflow.html#flow-duration-curve",
+    "title": "3  Streamflow Data",
+    "section": "3.3 Flow Duration Curve",
+    "text": "3.3 Flow Duration Curve"
+  },
+  {
+    "objectID": "04-stage-discharge.html",
+    "href": "04-stage-discharge.html",
+    "title": "4  Stage-Discharge Rating Curves",
+    "section": "",
+    "text": "Placeholder"
+  },
+  {
+    "objectID": "05-water-quality.html",
+    "href": "05-water-quality.html",
+    "title": "5  Water Quality Data",
+    "section": "",
+    "text": "Placeholder"
+  },
+  {
+    "objectID": "06-load-duration.html",
+    "href": "06-load-duration.html",
+    "title": "6  Load Duration Curves",
+    "section": "",
+    "text": "Placeholder"
+  },
+  {
+    "objectID": "08-watershed-delineation.html",
+    "href": "08-watershed-delineation.html",
+    "title": "8  Delineate Watersheds",
+    "section": "",
+    "text": "Placeholder"
+  },
+  {
+    "objectID": "09-raster-summary.html",
+    "href": "09-raster-summary.html",
+    "title": "9  Extract Raster Summaries",
+    "section": "",
+    "text": "Placeholder"
+  }
+]

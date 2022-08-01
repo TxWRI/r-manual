@@ -1,0 +1,45 @@
+# Data Exploration
+
+This is a basic introduction to importing and tidying, plotting,  summarizing, and exporting data using the *tidyverse* family of functions. This is a very basic primer, for more indepth discussion see: ...
+
+To get started, make sure you have the [tidyverse](https://www.tidyverse.org/) installed. The tidyverse is actually a set of 8 packages designed to work together using a common set of design philosophies. You can doo all the things described below, without tidyverse packages, but I think it is easier to review code that is written using the tidyverse approach.
+
+Install the required packages:
+
+```{r}
+#| code-overflow: wrap
+#| eval: false
+
+install.packages("tidyverse")
+```
+
+Load the packages (you will get a message indicating some function conflicts, don't worry about that for now:
+
+```{r}
+#| code-overflow: wrap
+
+library(tidyverse)
+```
+
+When you load tidyverse, you will see the 8 different packages. 
+
+  - *ggplot2* is primarily used to plot data. 
+  - *tibble* is a data structure that extends the native data.frame structure in base R.
+  - *tidyr* provides tools to orient or transform data from wide to narrow formats and vice versa. It also allows nesting and unnesting of datasets.
+  - *readr* is used to read (and write) data into R from CSV, TSV and other delimited text files.
+  - *purrr* is a functional programming toolkit (don't worry about this for now).
+  - *dplyr* provides many functions (creating new variables, grouping by variables, joining data, summarizing data, etc.) for working with tibbles and dataframes.
+  - *stringr* has functions for easily manipulating character strings.
+  - *forcats* functions for creating and reordering "factor" variables.
+
+## Import Data
+
+One of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, *do not* manipulate the data file^[Later on we will discuss loading web data sources directly into R, but for most of our work your best bet is to store raw data files inside the project].
+
+Obtain your data and copy it into the *data* folder in your R project. If you want to work along, download the following
+
+## Plot Data
+
+## Summarize Data
+
+## Export Data
