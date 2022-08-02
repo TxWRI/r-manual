@@ -33,12 +33,174 @@ When you load tidyverse, you will see the 8 different packages.
   - *forcats* functions for creating and reordering "factor" variables.
 
 ## Import Data
+**self-note** - create multisite dataset (flow?)
 
 One of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, *do not* manipulate the data file^[Later on we will discuss loading web data sources directly into R, but for most of our work your best bet is to store raw data files inside the project].
 
 Obtain your data and copy it into the *data* folder in your R project. If you want to work along, download the following
 
-## Plot Data
+
+Use the `read_csv()` function from the *readr* package to import the data and assign it to a variable. The console will print some information telling you what type of variable it made each column of the csv and if there are any problems.
+
+```{r}
+df <- read_csv(file = "data/easterwood.csv")
+```
+
+`read_csv()` guesses the column types and sometimes it can guess wrong, so the safest option is to tell it what to expect using the `col_types` argument. This argument takes a string where each character represents one column. Here we will tell it to expect a `character, Date, character, number, number` which is represented as `cDcnn`.
+
+```{r}
+df <- read_csv(file = "data/easterwood.csv",
+               col_types = "cDcnn")
+df
+```
+
+TSV and other delimited files are read in the same way but with `read_delim()` or `read_tsv()`. If your data is in `.xlsx` format, the *readxl* pacakge is required. In *readxl* there is a `read_xlsx()` function that works similar to the `read_csv()` function except you can specify the sheet and range of cells to read from. The `col_types` argument also needs to be spelled out as a character vector such as `col_types = c("text", "date", "text", "numeric", "numeric")`.
+
+If you have multiple files with the same column names you can read them into the same data frame. Here we read in multiple files and are more explicit about defining the column types:
+
+```{r}
+#| message: false
+files <- c("data/marabwq2020.csv", "data/marabwq2021.csv", "data/marcewq2020.csv", "data/marcewq2021.csv")
+df <- read_csv(file = files, 
+               col_types = cols_only(
+                 StationCode = col_factor(),
+                 DateTimeStamp = col_datetime(format = "%m/%e/%Y %H:%M"),
+                 Temp = col_number(),
+                 F_Temp = col_character(),
+                 SpCond = col_number(),
+                 F_SpCond = col_character(),
+                 Sal = col_number(),
+                 F_Sal = col_character(),
+                 DO_mgl = col_number(),
+                 F_DO_mgl = col_character()
+               ))
+df
+```
+
+In this data we have a row for each date/time observation with associated columns for Station, Temperature, Specific Conductance, Salinity, and Dissolved Oxygen. The columns with the F_ prefix are qa/qc flags, `<0>` is accepted data. 
+
+## Plot and Clean Data
+
+*ggplot2* is the graphics package for producing layered plots. The underlying philosophy of *ggplot2* is to iteratively build your plots layer by layer which allows for some sophisticated plots. I won't go into full details of using *ggplot2* but lots of information is available in the [ggplot2 book](https://ggplot2-book.org/index.html).
+
+Three key things you need to learn: data, aesthetics, geoms.
+
+ - data: a data frame or tibble with the data you want to plot. 
+ 
+ - aesthetics mappings (or aes): specify how variables will be visually depicted (x, y, color, shape, size, etc.).
+ 
+ - geoms: are the layers that define how each layer is rendered (points, lines, bars, etc.).
+ 
+Using the data we imported from above we can quickly create a basic scatter plot. Note the use of the `+` symbol to iteratively add layers to our plot. First we specify the data, then the geometry, and the aesthetic for that geom: 
+
+```{r}
+p1 <- ggplot(data = df, aes(x = DateTimeStamp, y = Temp)) +
+  geom_point()
+p1
+```
+
+The above figure demonstrates the importance of plotting your data, the -100 value is clearly an issue. One thing we can do is filter the data to try and track down the issue. The dplyr package provides a number of functions to explore your data. Here, the data is filtered on the Temp column to include data less than -99:
+
+```{r}
+df |> 
+  filter(Temp < -99)
+```
+
+The F_Temp qa flag is `< -3 >` indicating QA rejected the data point. So, let's update the data to remove data that doesn't have the `< 0 >` data flag:
+
+```{r}
+df <- df |> 
+  filter(F_Temp == "<0>")
+df
+```
+This removes about 29,263 observations. Try plotting again:
+
+```{r}
+p1 <- ggplot(data = df, aes(x = DateTimeStamp, y = Temp)) +
+  geom_point()
+p1
+```
+
+We can use different geoms to explore the data:
+
+```{r}
+p2 <- ggplot(data = df, aes(x = Temp)) +
+  geom_histogram(binwidth = 1)
+p2
+```
+
+To explore relationships between two variables, use geom_point and geom_smooth with each variable mapped to x and y. In this example, ggplot2 prints a message indicating 834 rows of data had missing or NA values that could not be plotted. geom_mooth will plot the smooth line (using a loess or gam smooth) between two variables. If you want the linear regression drawn use the argument `method = "lm"`.
+
+```{r}
+p3 <- ggplot(data = df, aes(x = Temp, y = DO_mgl)) +
+  geom_point(alpha = 0.2) +
+  geom_smooth(se = FALSE)
+p3
+```
+
+This is a good example to introduce the other important aesthetics in *ggplot2*. There is a clear negative relationship between Temperature and Dissolved Oxygen. Our data includes two sites, is there a difference between the two sites? We can map color to the site variable which will color each observation and each smooth a different color. Although shape and color can be used inside the `aes()` mapping function, you can assign them a value in the geom directly. Here we asign values for the shape and alpha properties in the point geom.
+
+```{r}
+p3 <- ggplot(data = df, aes(x = Temp, y = DO_mgl, color = StationCode)) +
+  geom_point(shape = 21, alpha = 0.05) +
+  geom_smooth(se = FALSE)
+p3
+```
+
+There was no reason to expect a difference and there isn't. However the plot is muddy because there are so many overlying data points. We can also facet the graph by a variable. The following code also shows how you can just add another layer to your existing ggplot object:
+
+```{r}
+p3 <- p3 +
+  facet_wrap(~StationCode)
+
+p3
+```
+
+As you can see, ggplot2 allows you to rapidly iterate plots to explore data. When exploring the data, the formatting might not matter much, but if you want to export plots, we also need to take care of labels and general plot visual preferences.
+
+```{r}
+p3 <- p3 +
+  labs(x = "Temperature [°F]", y = "Dissolved Oxygen [mg/L]") +
+  scale_colour_brewer(name = "Stations",
+                      palette = "Dark2",
+                      labels = c("Aransas Bay", "Copano East"))
+p3
+```
+
+### Themes
+
+ggplot2 has a number of built-in themes. For most of our use cases (reports and papers), the grey background and white lines are not great choices. We recommend using the `theme_bw()` function at the bare minimum:
+
+```{r}
+p3 +
+  theme_bw()
+```
+
+
+The twriTemplates package is available with a custom theme and some color palettes that are consistent with the Institute's branding:
+
+```{r}
+#| eval: false
+
+install.packages("twriTemplates", 
+                 repos = c(txwri = 'https://txwri.r-universe.dev',
+                           CRAN = 'https://cloud.r-project.org'))
+
+```
+
+
+```{r}
+#| message: false
+
+library(twriTemplates)
+p3 +
+  theme_TWRI_print() +
+  scale_color_discrete_twri(name = "Stations",
+                            labels = c("Aransas Bay", "Copano East"))
+```
+
+
+
 
 ## Summarize Data
 

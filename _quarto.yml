@@ -41,6 +41,13 @@ format:
     theme:
       light: css/twri_quarto.scss
     css: css/twri.scss
+    fig-width: 8
+    fig-height: 5
+    
+knitr: 
+  opts_chunk: 
+    dev: ragg_png
+    dpi: 200
 
 
 

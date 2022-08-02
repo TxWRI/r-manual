@@ -1,12 +1,5 @@
 # Fundamentals
 
-```{r}
-#| echo: false
-#| eval: true
-#| cache: true
-
-set.seed(123)
-```
 
 
 ## Project-oriented workflow
@@ -179,8 +172,6 @@ print_hello(x = 1)
 Why write a function in the first place? Sometimes you might need to repeatedly run the same set of functions on different data or subsets of data. You will find yourself copy and pasting code and changing some values within. If the output is dependent on some values you forgot to change when you cut and paste, instant problems! Functions let you skip that copy and paste action, and just update the arguments. Here is an example of some code to calculate the confidence interval around the mean for a vector of numbers:
 
 ```{r}
-#| cache: true
-
 min <- 0
 max <- 10
 n <- 1000
@@ -194,9 +185,6 @@ mean(x) + se * qnorm(c(alpha/2, 1-alpha/2))
 If we need to recalculate the confidence interval for different values or combinations of values of `x`, `n`, and `ci` we would have to cut and paste the chunk each time with the potential for data entry errors if the wrong values are entered. Instead, create a function and change the arguments as needed. 
 
 ```{r}
-#| cache: true
-
-
 ci <- function(min, max, n, ci) {
   x <- runif(n = n, min = min, max = max)
   se <- sd(x)/sqrt(length(x))

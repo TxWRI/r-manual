@@ -16,10 +16,3 @@ This is a the R resource manual for TWRI staff and graduate assistants.
  - Project oriented workflows are an *absolute requirement*. Create projects in RStudio that align with each project you work on. Store your source and raw data within the project. Export your processed data and figures within the project. The complexity of the project will vary according to the project needs and the analysts comfort in various R packages.
 
 
-```{r}
-#| echo: false
-#| eval: true
-
-set.seed(123)
-```
-
