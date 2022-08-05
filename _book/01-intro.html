@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="quarto-0.9.80">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="placeholder">
 <title>twri r-manual - 1&nbsp; Fundamentals</title>
 <style>
     code{white-space: pre-wrap;}
@@ -157,27 +158,32 @@
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-water-quality.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Water Quality Data</span></a>
+  <a href="./05-drainage-area-ratio.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Drainage Area Ratio</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./06-load-duration.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Load Duration Curves</span></a>
+  <a href="./06-water-quality.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Water Quality Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-maps.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Spatial Data</span></a>
+  <a href="./07-load-duration.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Load Duration Curves</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./08-watershed-delineation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></a>
+  <a href="./08-maps.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-raster-summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></a>
+  <a href="./09-watershed-delineation.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-raster-summary.html" class="sidebar-item-text sidebar-link"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -201,6 +207,7 @@
 <li><a href="#functions" class="nav-link" data-scroll-target="#functions"> <span class="header-section-number">1.2</span> Functions</a></li>
 <li><a href="#packages" class="nav-link" data-scroll-target="#packages"> <span class="header-section-number">1.3</span> Packages</a></li>
 <li><a href="#other-coding-conventions" class="nav-link" data-scroll-target="#other-coding-conventions"> <span class="header-section-number">1.4</span> Other Coding Conventions</a></li>
+<li><a href="#suggested-rstudio-settings" class="nav-link" data-scroll-target="#suggested-rstudio-settings"> <span class="header-section-number">1.5</span> Suggested RStudio Settings</a></li>
 </ul></nav>
     </div>
 <!-- main -->
@@ -376,7 +383,7 @@ streamflow_site_a</code></pre>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">ci</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="va">se</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">-</span><span class="va">alpha</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 4.926802 5.291238</code></pre>
+<pre><code>[1] 4.727005 5.085111</code></pre>
 </div>
 </div>
 <p>If we need to recalculate the confidence interval for different values or combinations of values of <code>x</code>, <code>n</code>, and <code>ci</code> we would have to cut and paste the chunk each time with the potential for data entry errors if the wrong values are entered. Instead, create a function and change the arguments as needed.</p>
@@ -390,15 +397,15 @@ streamflow_site_a</code></pre>
 <span></span>
 <span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">10</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 4.954985 5.317012</code></pre>
+<pre><code>[1] 4.711251 5.067269</code></pre>
 </div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="fl">100</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 52.74082 55.46551</code></pre>
+<pre><code>[1] 54.21753 56.97051</code></pre>
 </div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="fl">1000</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.80</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 492.4893 516.3169</code></pre>
+<pre><code>[1] 492.4878 515.7990</code></pre>
 </div>
 </div>
 </section><section id="packages" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="packages">
@@ -446,6 +453,12 @@ Note
 <span class="header-section-number">1.4</span> Other Coding Conventions</h2>
 <p>Placeholder.</p>
 <p>Topics: strings, Date formats, pipe function</p>
+</section><section id="suggested-rstudio-settings" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="suggested-rstudio-settings">
+<span class="header-section-number">1.5</span> Suggested RStudio Settings</h2>
+<ul>
+<li>Global and project options</li>
+<li>ragg output</li>
+</ul>
 
 
 </section></main><!-- /main --><script type="application/javascript">

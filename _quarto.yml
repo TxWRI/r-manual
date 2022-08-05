@@ -5,22 +5,26 @@ book:
   title: "twri r-manual"
   author: "Michael Schramm"
   image: "images/logo-drop.png"
-  search: true
   repo: https://github.com/txwri/r-manual
   date: "7/29/2022"
+  description: "placeholder"
   navbar: 
     logo: "images/logo-drop.png"
+    search: true
+    background: "#02233b"
+    foreground: "#f6f6f6"
   chapters:
     - index.qmd
     - 01-intro.qmd
     - 02-data_exploration.qmd
     - 03-streamflow.qmd
     - 04-stage-discharge.qmd
-    - 05-water-quality.qmd
-    - 06-load-duration.qmd
-    - 07-maps.qmd
-    - 08-watershed-delineation.qmd
-    - 09-raster-summary.qmd
+    - 05-drainage-area-ratio.qmd
+    - 06-water-quality.qmd
+    - 07-load-duration.qmd
+    - 08-maps.qmd
+    - 09-watershed-delineation.qmd
+    - 10-raster-summary.qmd
     - references.qmd
   page-footer:
     left:
@@ -31,18 +35,27 @@ book:
         href: https://github.com
         
 
-bibliography: references.bib
+bibliography: references.yml
 
 format:
   html:
+    # hyperlink functions in code blocks
     code-link: true
+    # code block has grey background
     code-block-bg: true
-    code-block-border-left: "#31BAE9"
+    # blue bar on side of code box
+    code-block-border-left: "#02233b"
+    # wrap long lines of code
+    code-overflow: wrap
+    # theme css
     theme:
       light: css/twri_quarto.scss
     css: css/twri.scss
+    # define figure sizing
     fig-width: 8
     fig-height: 5
+    # footnotes go in the margine
+    reference-location: margin
     
 knitr: 
   opts_chunk: 

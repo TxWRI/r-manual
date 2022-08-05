@@ -33,12 +33,13 @@ When you load tidyverse, you will see the 8 different packages.
   - *forcats* functions for creating and reordering "factor" variables.
 
 ## Import Data
-**self-note** - create multisite dataset (flow?)
 
 One of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, *do not* manipulate the data file^[Later on we will discuss loading web data sources directly into R, but for most of our work your best bet is to store raw data files inside the project].
 
-Obtain your data and copy it into the *data* folder in your R project. If you want to work along, download the following
-
+:::{.callout-tip}
+## Download Data
+If you want to work along, download the following example data export it directly into the *data* folder in your R project: [Data](https://github.com/TxWRI/r-manual/raw/main/data/tutorial.zip)
+:::
 
 Use the `read_csv()` function from the *readr* package to import the data and assign it to a variable. The console will print some information telling you what type of variable it made each column of the csv and if there are any problems.
 
@@ -76,6 +77,10 @@ df <- read_csv(file = files,
                ))
 df
 ```
+
+::: {.column-margin}
+This dataset is from the NOAA NERRS Centralized Data Management Office and provides measures of water quality parameters in the Mission and Aransas (MAR) National Estuarine Research Reserve (NERR)[@noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022].
+:::
 
 In this data we have a row for each date/time observation with associated columns for Station, Temperature, Specific Conductance, Salinity, and Dissolved Oxygen. The columns with the F_ prefix are qa/qc flags, `<0>` is accepted data. 
 
@@ -128,6 +133,12 @@ p2 <- ggplot(data = df, aes(x = Temp)) +
   geom_histogram(binwidth = 1)
 p2
 ```
+
+```{r}
+ggplot(data = df, aes(y = Temp, x = StationCode)) +
+  geom_boxplot()
+```
+
 
 To explore relationships between two variables, use geom_point and geom_smooth with each variable mapped to x and y. In this example, ggplot2 prints a message indicating 834 rows of data had missing or NA values that could not be plotted. geom_mooth will plot the smooth line (using a loess or gam smooth) between two variables. If you want the linear regression drawn use the argument `method = "lm"`.
 
@@ -200,8 +211,152 @@ p3 +
 ```
 
 
+The facet labels are still not very useful. There isn't an easy way to change this using *ggplot2*. Instead we can create a new variable using the `mutate()` function in *dplyr*. There is more discussion about *dplyr* in the next section.
+
+```{r}
+#| message: false
 
 
-## Summarize Data
+df <- df |> 
+  mutate(StationName = case_when(
+    StationCode == "marabwq" ~ "Aransas Bay",
+    StationCode == "marcewq" ~ "Copano Bay East"
+  ))
+
+ggplot(data = df,
+       aes(x = Temp, y = DO_mgl, color = StationName)) +
+  geom_point(shape = 21, alpha = 0.05) +
+  geom_smooth(se = FALSE) +
+  facet_wrap(~StationName) +
+  labs(x = "Temperature [°F]", y = "Dissolved Oxygen [mg/L]") +
+  scale_color_discrete_twri(name = "Stations") +
+  theme_TWRI_print()
+  
+```
+
+
+## Manipulate and Summarize Data
+
+[*dplyr*](https://dplyr.tidyverse.org/articles/dplyr.html) is a powerful package designed for working with dataframes and tibbles. Read the [*dplyr* introduction](https://dplyr.tidyverse.org/articles/dplyr.html) to get a better sense of all the available functions. Essentially *dplyr* provides "verb" functions that correspond to how you want to manipulate the dataframe.
+
+Commonly used verbs include:
+
+ - `filter()`: subset the rows based on value
+ - `mutate()`: create a new column
+ - `select()`: subset columns based on names or types
+ - `group_by()`: group the data by variable values
+ - `summarise()`: summarise the grouped or ungrouped data based on user provided functions
+ 
+There are many other functions, but these cover many use cases for people just getting started. *dplyr* also provides functions for joining datasets based on common variables, changing the order of a dataframe, calculating cumulative statistics, calculating lag and leading values, and rolling or window rank functions among others. All of these can be very useful to become familiar with.
+
+In this example I want to explore seasonal differences in the water quality parameters. `mutate()` is used to create new variables. 
+```{r}
+summary_plot <- df |> 
+  # returns DateTimeStamp Value as the month only
+  # see ?strptime() for more info
+  mutate(Month = as_factor(format(DateTimeStamp, "%B")),
+         StationName = case_when(
+           StationCode == "marabwq" ~ "Aransas Bay",
+           StationCode == "marcewq" ~ "Copano Bay East")) |> 
+  ## months have an inherent order, right now it is alphabetical
+  ## this adds the correct order so it plots nicely
+  mutate(Month = lvls_revalue(Month, month.name)) |> 
+  ggplot() +
+  geom_boxplot(aes(x = Month, y = DO_mgl, fill = StationName)) +
+  scale_fill_discrete_twri(name = "Stations") +
+  theme_TWRI_print()
+summary_plot
+```
+ 
+
+Now we have a summary figure, but what about the data? We can use the `summarize()` or `summarise()` function (depending on your English preference) to calculate some summary statistics for each group.
+
+```{r}
+summary_table <- df |> 
+  mutate(Month = as_factor(format(DateTimeStamp, "%B")),
+         StationName = case_when(
+           StationCode == "marabwq" ~ "Aransas Bay",
+           StationCode == "marcewq" ~ "Copano Bay East")) |> 
+  mutate(Month = lvls_revalue(Month, month.name)) |> 
+  ## create groups to calculate summary stats on
+  group_by(StationName, Month) |> 
+  ## calculate the summary stats
+  ## returns a column for each stat with a row for each group
+  summarize(Mean = mean(DO_mgl),
+            Max = max(DO_mgl),
+            Min = min(DO_mgl),
+            ## no standard error function in base R
+            ## can calculate manually here
+            SE = sd(DO_mgl)/sqrt(length(DO_mgl)))
+
+summary_table
+```
+
 
 ## Export Data
+
+### Figures
+
+You have created a figure and a table in R. Now you probably need to put it in a report, website, or other self contained file for your boss to look at. For figures created with *ggplot2*, the `ggsave()` option is the easiest option. First I reccomend installing, the *ragg* package because if it available, `ggsave()` will use it. *ragg* provides higher performance and higher quality images than the graphics devices available in base R. 
+
+```{r}
+#| eval: false
+
+# install ragg
+install.packages("ragg")
+library(ragg)
+
+## ggsave defaults to the last plot displayed
+## it is safer to specify which plot you want saved
+ggsave(filename = "figures/boxplot_mare.png",
+       plot = summary_plot,
+       width = 8,
+       height = 6,
+       dpi = 300,
+       units = "in")
+```
+
+If you have a figure created from something other than a ggplot object, then we need to use the ragg graphics device to save it as a file (this also works with ggplot as demonstrated here). If you don't have *ragg* installed, substitute `png()` for `agg_png()`. 
+
+```{r}
+#| eval: false
+
+# first function creates the device
+agg_png(filename = "figures/boxplot_mare.png",
+    width = 8,
+    height = 6,
+    res = 300,
+    units = "in")
+# copy the plot to the file
+summary_plot
+# turns off the device
+dev.off()
+```
+
+
+### Tables
+
+*readr* and [*writexl*](https://docs.ropensci.org/writexl/) packages provide the functions required to export data frames to text delimited or Microsoft Excel files.
+
+```{r}
+#| eval: false
+
+## write a csv
+write_csv(x = summary_table,
+          file = "export_data/monthly_summary_mare.csv")
+
+## or an Excel file
+## uncomment the next line if writexl is not installed
+# install.packages("writexl")
+
+library(writexl)
+# one sheet
+write_xlsx(x = summary_table,
+           path = "export_data/monthly_summary_mare.xlsx")
+
+# or specify sheets
+write_xlsx(x = list(summarysheet = summary_table,
+                    rawdatasheet = df),
+           path = "export_data/monthly_summary_mare.xlsx")
+```
+

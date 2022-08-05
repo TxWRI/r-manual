@@ -1,3 +1,307 @@
 # Stage-Discharge Rating Curves
 
-Placeholder
+The power function for relating discharge and water level is:
+
+$$
+Q = K(H - H_0)^z
+$$
+
+where:
+
+$Q$ = discharge in cfs;
+$H$ = stage in feet;
+$H_0$ = stage at zero flow (in feet);
+$K$ and $z$ are parameters determined by fitting stage-discharge measurements.
+
+Sometimes we know $H_0$ based on observed data and can plug the known value in. It is also possible to estimate it using regression. Here I am going to let the non linear least squares solve for the best value because we are likely going to fit multiple models anyways. You should check to make sure that the the solved parameter makes sense (not negative or highly positive). $K$ is equal to the discharge at which $(H-H_0) = 0$ and $Z$ describes the slope. Using the `nls()` function requires the analyst provide some starting parameters, the choice of starting parameters is important because the model can converge on the wrong solution or fail to find a solution if the parameters are far away from the optimal answer. Using the `nls_multstart()` function from the *nls.mutlstart* package, we can provide a range of possible starting values and the function will iterate combinations of starting values and select the best model using information theory metrics.
+
+## Data
+
+This example uses field measurements of stream stage and instantaneous discharge measured at the COMO NEON field site [@neonnationalecologicalobservatorynetworkDischargeFieldCollection]. Raw data is available in the `neon.rds` file within the [tutorial download](https://github.com/TxWRI/r-manual/raw/main/data/tutorial.zip).
+
+```{r}
+#| message: false
+#| 
+
+
+library(tidyverse)
+library(twriTemplates)
+
+example_data <- read_rds("data/neon.rds")
+stage_discharge <- example_data$dsc_fieldData
+glimpse(stage_discharge)
+```
+
+## Plot Data
+
+First step is to plot the data.
+
+```{r}
+#| message: false
+#| 
+
+# plot observations over time
+ggplot(stage_discharge) +
+  geom_point(aes(collectDate, finalDischarge)) +
+  labs(x = "Date", y = "Discharge [L/s]") +
+  theme_TWRI_print()
+
+# plot the stage and discharge relationship
+ggplot(stage_discharge) +
+  geom_point(aes(streamStage, finalDischarge)) +
+  labs(x = "Stage [m]", y = "Discharge [L/s]") +
+  scale_x_log10() +
+  scale_y_log10() +
+  theme_TWRI_print()
+```
+
+Looks like there might be a shift in the rating curve at some point. Use dplyr to create a new year variable and the *gghighlight* package to explore it.
+
+
+```{r}
+#| message: false
+#| 
+
+# install.packages("gghighlight")
+library(gghighlight)
+stage_discharge |> 
+  filter(!is.na(finalDischarge)) |> 
+  mutate(year = format(collectDate, format = "%Y")) |> 
+  ggplot() +
+  geom_point(aes(streamStage, finalDischarge, color = year)) +
+  facet_wrap(~year) +
+  gghighlight(max_highlight = 8,
+              use_direct_label = FALSE,
+              calculate_per_facet = FALSE)   +
+  labs(x = "Stage [m]", y = "Discharge [L/s]") +
+  theme_TWRI_print()
+  
+```
+
+## Fit Rating Curve
+
+It appears the rating curve shifted after 2016 and possibly after 2018. In practice we would fit different rating curves based on this information. For this example the rating curve will only be fit to 2019-2021 data. We will use this data to estimate the $K$, $H_0$ and $Z$ parameters in the power function described at the top of the chapter using nonlinear least squares.
+
+```{r}
+#| message: false
+#| 
+
+# install.packages("nls.multstart")
+# install.packages("nlstools")
+library(nls.multstart)
+library(nlstools)
+
+# clean the data a little bit and filter
+stage_discharge <- stage_discharge |> 
+  filter(!is.na(finalDischarge)) |>
+  mutate(year = format(startDate, "%Y")) |> 
+  filter(year >= 2018) |> 
+  # convert units to feet and cfs
+  mutate(streamStage = streamStage * 3.28084,
+         finalDischarge = finalDischarge * 0.0353147)
+
+# Set the equation
+f_Q <- formula(finalDischarge ~ K*(streamStage - H_0)^Z)
+
+# Some initial starting values
+start_lower <- c(K = -10, Z = -10, H_0 = 0.02)
+start_upper <- c(K = 10, Z = 10, H_0 = 1)
+
+# nonlinear least squares
+m1 <- nls_multstart(f_Q,
+          data = stage_discharge,
+          iter = 1000,
+          start_lower = start_lower,
+          start_upper = start_upper,
+          supp_errors = 'Y',
+          lower = c(K = -10, Z = -10, H_0 = 0),
+          control = minpack.lm::nls.lm.control(maxiter = 1000L))
+
+summary(m1)
+
+```
+
+NLS estimated parameters are: $K =$ `r coef(m1)[1]`, $H_0 =$ `r coef(m1)[2]`, and $Z =$ `r coef(m1)[2]`. Before using these parameter, evaluated the goodness of fit using the model residuals (add citation or note with more resources here).
+
+```{r}
+#| message: false
+#| code-fold: true
+#| code-summary: "Show the code"
+
+
+# for easy multipanel plots, use the patchwork package
+#install.packages("patchwork")
+library(patchwork)
+
+std_resids <- as_tibble(nlsResiduals(m1)$resi2)
+
+stage_discharge <- stage_discharge |> 
+    mutate(fits = std_resids$`Fitted values`,
+         residuals = std_resids$`Standardized residuals`)
+
+
+p1 <- ggplot(stage_discharge) +
+  geom_density(aes(residuals)) +
+  labs(x = "Standardized Residuals",
+       y = "Count",
+       subtitle = "Distribution of standardized residuals") +
+  theme_TWRI_print()
+
+
+p2 <- ggplot(stage_discharge) +
+  geom_point(aes(streamStage, residuals), color = "steelblue", alpha = 0.4) +
+  labs(x = "Stream Height [ft]",
+       y = "Standardized Residuals",
+       subtitle = "Residuals against stream height") +
+  theme_TWRI_print()
+
+p3 <- ggplot(stage_discharge) +
+  geom_point(aes(fits, finalDischarge), color = "steelblue", alpha = 0.4) +
+  labs(x = "Model Fits",
+       y = "Measured Discharge [cfs]",
+       subtitle = "Measured against fitted") +
+  theme_TWRI_print()
+
+p4 <- ggplot(stage_discharge) +
+  stat_qq(aes(sample = residuals), color = "steelblue", alpha = 0.4) +
+  stat_qq_line(aes(sample = residuals)) +
+  labs(x = "Theoretical",
+       y = "Standardized Residuals",
+       subtitle = "Sample Quantile against theoretical quantile") +
+  theme_TWRI_print()
+
+
+# patchwork allows us to assemble plots using + and /
+
+(p1 + p2) / (p3 + p4)
+```
+
+The plots indicate increasing residual variance as stream height increases and heavy tails in Q-Q plot. Two options from here are to (1) fit a rating curve per year or (2) fit a piece-wise log-linear model that assumes a different relationship along different parts of the rating curve. Because of the large residual variance at the top of curve, I think fitting a curve per year will do the job. You may also choose to fit models by season (small streams in particular may see large changes in rating curves do to changes in stream bank vegetation).
+
+
+## Fit Multiple Curves 
+
+:::{.callout-note}
+This section is slightly more advanced and requires some understanding of list structures in R and nested dataframes.
+:::
+
+The [*purrr* package](https://purrr.tidyverse.org/) facilitates running a function on a list of nested data. The idea here is to subset the dataframe by year, create a list with each item in the list being a subset of the dataframe, then running `nls_multstart()` on each item in that list. Sounds like a loop huh? We achieve this using `for()` or `lapply()` functions in base R. The nice thing about doing it with *purrr* is that we can keep everything together in a single dataframe. The first step is to create a nested dataframe:
+
+```{r}
+nested_data <- example_data$dsc_fieldData |> 
+  filter(!is.na(finalDischarge)) |>
+  mutate(year = format(startDate, "%Y")) |> 
+  filter(year >= 2018) |> 
+  mutate(streamStage = streamStage * 3.28084,
+         finalDischarge = finalDischarge * 0.0353147) |> 
+  ## group data by year
+  group_by(year) |> 
+  ## nest the data by year
+  nest()
+
+nested_data
+```
+
+Now we use the `map()` function in *purrr* to iterate the `nls.multstart()` function on each nested dataframe:
+
+```{r}
+nested_data <- nested_data |> 
+  mutate(model_output = map(.x = data,
+                            ~nls_multstart(formula = f_Q,
+                                           data = .x,
+                                           iter = 1000,
+                                           start_lower = start_lower,
+                                           start_upper = start_upper,
+                                           supp_errors = 'Y',
+                                           lower = c(K = -10, Z = -10, H_0 = 0),
+                                           control = minpack.lm::nls.lm.control(maxiter = 1000L))))
+nested_data
+```
+
+We created a new column called `model_output` that is a list of the output from the `nls_multstart()` function that was run on each item in the `data` column. Grab the residuals and fits from each model:
+
+```{r}
+#| fig-width: 8
+#| fig-height: 16
+#| code-fold: true
+#| code-summary: "Show the code"
+
+
+nested_data <- nested_data |> 
+  mutate(residuals = map(model_output,
+                         ~as_tibble(nlsResiduals(.x)$resi2))) |> 
+  unnest(c(data,residuals))
+
+p1 <- ggplot(nested_data) +
+  geom_point(aes(`Fitted values`, `Standardized residuals`)) +
+  facet_wrap(~year) +
+  labs(x = "Fitted",
+       y = "Standardized Residuals",
+       subtitle = "Sample Quantile against theoretical quantile") +
+  theme_TWRI_print()
+
+p2 <- ggplot(nested_data) +
+  geom_density(aes(`Standardized residuals`)) +
+  facet_wrap(~year) +
+  labs(x = "Standardized Residuals",
+       y = "Count",
+       subtitle = "Distribution of standardized residuals") +
+  theme_TWRI_print()
+
+p3 <- ggplot(nested_data) +
+  geom_point(aes(`Fitted values`, finalDischarge), color = "steelblue", alpha = 0.4) +
+  facet_wrap(~year) +
+  labs(x = "Model Fits",
+       y = "Measured Discharge [cfs]",
+       subtitle = "Measured against fitted") +
+  theme_TWRI_print()
+
+p4 <- ggplot(nested_data) +
+  stat_qq(aes(sample = `Standardized residuals`), color = "steelblue", alpha = 0.4) +
+  stat_qq_line(aes(sample = `Standardized residuals`)) +
+  facet_wrap(~year) +
+  labs(x = "Theoretical",
+       y = "Standardized Residuals",
+       subtitle = "Sample Quantile against theoretical quantile") +
+  theme_TWRI_print()
+
+p1 / p2 / p3 / p4
+```
+
+The results are a mixed bag. For the most part, the residuals are tighter to mean zero and the tails are not as heavy as the first example. We will assume the data is good enough to continue the example. In practice, I might explore the use of seasonal rating curves or piece-wise functions.
+
+Next lets make a nice plot showing the rating curve with the observed data.
+
+```{r}
+#| message: false
+#| warning: false
+
+
+fits <- nested_data |> 
+  nest(data = -c(year, model_output)) |> 
+  # create a new dataframe by group
+  # this includes the full range of the predictor variable
+  # so we can draw a nice smooth line using predictions
+  mutate(newdata = map(data,
+                       ~{
+                         tibble(streamStage = seq(min(nested_data$streamStage),
+                                                  max(nested_data$streamStage),
+                                                  length.out = 100))
+                       })) |> 
+  mutate(fits = map2(newdata, model_output,
+                     ~{predict(.y, .x)})) |> 
+  unnest(c(newdata, fits))
+
+ggplot() +
+  geom_point(data = nested_data,
+             aes(streamStage, finalDischarge, color = year)) +
+  geom_line(data = fits,
+            aes(streamStage, fits, color = year)) +
+  facet_wrap(~year) +
+  gghighlight(max_highlight = 8,
+              use_direct_label = FALSE,
+              calculate_per_facet = FALSE)   +
+  labs(x = "Stage [ft]", y = "Discharge [cfs]") +
+  theme_TWRI_print()
+```
+

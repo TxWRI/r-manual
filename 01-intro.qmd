@@ -266,3 +266,7 @@ Placeholder.
 Topics: strings, Date formats, pipe function
 
 
+## Suggested RStudio Settings
+
+- Global and project options
+- ragg output

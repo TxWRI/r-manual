@@ -1,0 +1,61 @@
+---
+references:
+- id: neonnationalecologicalobservatorynetworkDischargeFieldCollection
+  author:
+    - literal: NEON (National Ecological Observatory Network)
+  citation-key: neonnationalecologicalobservatorynetworkDischargeFieldCollection
+  title: Discharge field collection (DP1.20048.001), RELEASE-2022
+  type: report
+  URL: https://doi.org/10.48443/eaak-tt31
+
+- id: >-
+    noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022
+  accessed:
+    - year: 2022
+      month: 8
+      day: 2
+  author:
+    - literal: NOAA National Estuarine Research Reserve System (NERRS)
+  citation-key: >-
+    noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022
+  issued:
+    - year: 2022
+  publisher: NOAA NERRS Centralized Data Management Office
+  title: System-wide Monitoring Program
+  type: report
+  URL: http://cdmo.baruch.sc.edu/
+
+- id: smithStatisticalAssessmentViolations2001
+  accessed:
+    - year: 2022
+      month: 8
+      day: 5
+  author:
+    - family: Smith
+      given: Eric P.
+    - family: Ye
+      given: Keying
+    - family: Hughes
+      given: Chris
+    - family: Shabman
+      given: Leonard
+  citation-key: smithStatisticalAssessmentViolations2001
+  container-title: Environmental Science & Technology
+  container-title-short: Environ. Sci. Technol.
+  DOI: 10.1021/es001159e
+  ISSN: 0013-936X, 1520-5851
+  issue: '3'
+  issued:
+    - year: 2001
+      month: 2
+      day: 1
+  language: en
+  page: 606-612
+  source: DOI.org (Crossref)
+  title: >-
+    Statistical Assessment of Violations of Water Quality Standards under
+    Section 303(d) of the Clean Water Act
+  type: article-journal
+  URL: https://pubs.acs.org/doi/10.1021/es001159e
+  volume: '35'
+...
