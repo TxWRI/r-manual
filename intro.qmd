@@ -259,14 +259,26 @@ library(readr)
 
 ## Other Coding Conventions
 
+:::{.callout-note}
 
+## Incomplete
 
-Placeholder.
+I still need to add discussion on strings, date formats, and the pipe function.
 
-Topics: strings, Date formats, pipe function
+:::
 
 
 ## Suggested RStudio Settings
 
-- Global and project options
-- ragg output
+
+:::{.callout-note}
+
+## Incomplete
+
+I still need to add discussion on 
+
+ - setting global and project options in RStudio
+ - using ragg graphics device (this might be better in figure section)
+
+:::
+

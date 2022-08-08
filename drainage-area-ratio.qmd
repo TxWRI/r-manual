@@ -81,4 +81,20 @@ ggplot(estimates) +
 
 ## Parameterized Exponent
 
-To do.
+:::{.callout-note}
+
+## Incomplete
+
+Still needs to be written.
+
+:::
+
+## Other Data Considerations
+
+:::{.callout-note}
+
+## Incomplete
+
+Add discussion about naturalized flows.
+
+:::

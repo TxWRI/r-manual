@@ -1,7 +1,0 @@
-# Streamflow Data
-
-## Data Sources
-
-## Summarise
-
-## Flow Duration Curve

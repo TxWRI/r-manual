@@ -15,16 +15,24 @@ book:
     foreground: "#f6f6f6"
   chapters:
     - index.qmd
-    - 01-intro.qmd
-    - 02-data_exploration.qmd
-    - 03-streamflow.qmd
-    - 04-stage-discharge.qmd
-    - 05-drainage-area-ratio.qmd
-    - 06-water-quality.qmd
-    - 07-load-duration.qmd
-    - 08-maps.qmd
-    - 09-watershed-delineation.qmd
-    - 10-raster-summary.qmd
+    - part: "R Basics"
+      chapters:
+        - intro.qmd
+        - data_exploration.qmd
+    - part: "Hydrology"
+      chapters:
+        - streamflow.qmd
+        - stage-discharge.qmd
+        - drainage-area-ratio.qmd
+    - part: "Water Quality"
+      chapters:
+        - water-quality.qmd
+        - load-duration.qmd
+    - part: "Geospatial"
+      chapters:
+        - maps.qmd
+        - watershed-delineation.qmd
+        - raster-summary.qmd
     - references.qmd
   page-footer:
     left:
@@ -36,6 +44,7 @@ book:
         
 
 bibliography: references.yml
+csl: https://raw.githubusercontent.com/TxWRI/csl/main/twri-technical-report.csl
 
 format:
   html:
@@ -54,7 +63,7 @@ format:
     # define figure sizing
     fig-width: 8
     fig-height: 5
-    # footnotes go in the margine
+    # footnotes go in the margin
     reference-location: margin
     
 knitr: 
