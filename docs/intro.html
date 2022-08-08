@@ -423,7 +423,7 @@ streamflow_site_a</code></pre>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">ci</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="va">se</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">-</span><span class="va">alpha</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 4.938372 5.304365</code></pre>
+<pre><code>[1] 5.026550 5.377243</code></pre>
 </div>
 </div>
 <p>If we need to recalculate the confidence interval for different values or combinations of values of <code>x</code>, <code>n</code>, and <code>ci</code> we would have to cut and paste the chunk each time with the potential for data entry errors if the wrong values are entered. Instead, create a function and change the arguments as needed.</p>
@@ -437,15 +437,15 @@ streamflow_site_a</code></pre>
 <span></span>
 <span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">10</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 4.810708 5.173351</code></pre>
+<pre><code>[1] 4.689721 5.044329</code></pre>
 </div>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="fl">100</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 52.43726 55.19977</code></pre>
+<pre><code>[1] 55.14154 57.86932</code></pre>
 </div>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="fl">1000</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.80</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-stdout">
-<pre><code>[1] 498.9585 521.4467</code></pre>
+<pre><code>[1] 493.4929 516.3571</code></pre>
 </div>
 </div>
 </section><section id="packages" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="packages">
