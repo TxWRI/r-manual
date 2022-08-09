@@ -4,7 +4,7 @@ title-block-banner: images/Tres_Palacios_PHOTO_BY_ED_RHODES-010.JPG
 ---
 # Preface {.unnumbered}
 
-This is a the R resource manual for TWRI staff and graduate assistants.
+This is the R resource manual for TWRI staff and graduate assistants.
 
 
 ## Requirements

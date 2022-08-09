@@ -1,4 +1,4 @@
-# Spatial Data
+# Spatial Data {#sec-spatial}
 
 :::{.callout-note}
 

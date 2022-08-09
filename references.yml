@@ -1,5 +1,38 @@
 ---
 references:
+- id: gumbelStatisticsExtreme1958
+  author:
+    - family: Gumbel
+      given: Emil Julius
+  citation-key: gumbelStatisticsExtreme1958
+  event-place: New York
+  issued:
+    - year: 1958
+  publisher: Columbia University Press
+  publisher-place: New York
+  title: Statistics of extreme
+  type: book
+
+- id: morrisonDevelopmentDurationCurveBased2008
+  author:
+    - family: Morrison
+      given: Matthew A
+    - family: Bonta
+      given: James V
+  citation-key: morrisonDevelopmentDurationCurveBased2008
+  issued:
+    - year: 2008
+  language: en
+  number: EPA/600/R-08/065
+  page: '58'
+  publisher: U.S. Environmental Protection Agency
+  source: Zotero
+  title: >-
+    Development of Duration-Curve Based Methods for   Quantifying Variability
+    and Change in Watershed   Hydrology and Water Quality
+  type: report
+  URL: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P1000VR4.txt
+
 - id: neonnationalecologicalobservatorynetworkDischargeFieldCollection
   author:
     - literal: NEON (National Ecological Observatory Network)
@@ -58,4 +91,61 @@ references:
   type: article-journal
   URL: https://pubs.acs.org/doi/10.1021/es001159e
   volume: '35'
+
+- id: u.s.environmentalprotectionagencyApproachUsingLoad2007
+  author:
+    - literal: U.S. Environmental Protection Agency
+  citation-key: u.s.environmentalprotectionagencyApproachUsingLoad2007
+  issued:
+    - year: 2007
+  language: en
+  number: EPA 841-B-07-006
+  page: '74'
+  publisher: U.S. Environmental Protection Agency
+  source: Zotero
+  title: An Approach for Using Load Duration Curves in the Development of TMDLs
+  type: report
+  URL: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P1008ZQA.txt
+
+- id: vogelFlowDurationCurves1994
+  abstract: >-
+    A flow-durationcurve (FDC) is simply the complementof the
+    cumulativedistributionfunctionof daily,weekly,monthly(or someother
+    timeinterval of) streamflow.Applicationsof FDCs include,but are not
+    limitedto, hydropower planning, water-qualitymanagement, river and reservoir
+    sedimentationstudies, habitat suitability,and low-flowaugmentation. Although
+    FDCs have a long and rich historyin the field of hydrology,they are
+    sometimescriticizedbecause, traditionally,their interpretationdependson the
+    particularperiod of record on which they are based. If one considersn
+    individualFDCs, each correspondingto one of the individualn years of record,
+    then one may treat those n annual FDCs in much the same way one treats a
+    sequence of annual maximumor annual minimum
+    streamflows.Thisnewannual-basedinterpretationenablesconfidenceintervalsand
+    recurrenceintervalsto be associatedwith FDCs in a nonparametricframework.
+  accessed:
+    - year: 2018
+      month: 6
+      day: 22
+  author:
+    - family: Vogel
+      given: Richard M.
+    - family: Fennessey
+      given: Neil M.
+  citation-key: vogelFlowDurationCurves1994
+  container-title: Journal of Water Resources Planning and Management
+  DOI: 10.1061/(ASCE)0733-9496(1994)120:4(485)
+  ISSN: 0733-9496, 1943-5452
+  issue: '4'
+  issued:
+    - year: 1994
+      month: 7
+  language: en
+  page: 485-504
+  source: Crossref
+  title: 'Flow‐Duration Curves. I: New Interpretation and Confidence Intervals'
+  title-short: Flow‐Duration Curves. I
+  type: article-journal
+  URL: >-
+    http://ascelibrary.org/doi/10.1061/%28ASCE%290733-9496%281994%29120%3A4%28485%29
+  volume: '120'
 ...

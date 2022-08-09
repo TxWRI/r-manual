@@ -1,4 +1,4 @@
-# Drainage Area Ratio
+# Drainage Area Ratio {#sec-dar}
 
 The drainage area ratio (DAR) is a simple way to estimate daily runoff at an ungaged stream site using a nearby surrogate stream gage. The principle idea is that two nearby watersheds will have mean daily discharges that are equivalent to the ratio of their drainage areas. The general equation for the DAR is:
 

@@ -1,4 +1,4 @@
-# Data Exploration
+# Data Exploration {#sec-dataexplore}
 
 This is a basic introduction to importing and tidying, plotting,  summarizing, and exporting data using the *tidyverse* family of functions. This is a very basic primer, for more indepth discussion see: ...
 
@@ -360,3 +360,17 @@ write_xlsx(x = list(summarysheet = summary_table,
            path = "export_data/monthly_summary_mare.xlsx")
 ```
 
+## Workflow
+
+:::{.callout-note}
+
+## Incomplete
+
+Plan to add information on proper workflow.
+One script to download, clean, and save data that analysis is conducted on.
+
+One script to run the analysis and export data/tables/figures
+
+Metadata, readme, etc.
+
+:::
