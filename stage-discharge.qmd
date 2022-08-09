@@ -1,4 +1,4 @@
-# Stage-Discharge Rating Curves
+# Stage-Discharge Rating Curves {#sec-stagedischarge}
 
 The power function for relating discharge and water level is:
 

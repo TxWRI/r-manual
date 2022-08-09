@@ -1,4 +1,4 @@
-# Extract Raster Summaries
+# Extract Raster Summaries {#sec-raster}
 
 :::{.callout-note}
 
