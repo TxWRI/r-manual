@@ -6,7 +6,9 @@ book:
   title: "twri r-manual"
   author: "Michael Schramm"
   image: "images/logo-drop.png"
-  repo: https://github.com/txwri/r-manual
+  repo-url: https://github.com/txwri/r-manual
+  repo-subdir: docs
+  repo-actions: [edit, issue, source]
   date: "7/29/2022"
   description: "placeholder"
   navbar: 
@@ -36,13 +38,16 @@ book:
         - raster-summary.qmd
     - references.qmd
   page-footer:
+    border: true
     left:
       - text: "Texas Water Resources Institute"
         href: "https://twri.tamu.edu"
-    right: 
-      - icon: github
-        href: https://github.com
-        
+    right: |
+      This work is licensed under</br>
+      [CC BY-NC 4.0
+      ![](https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1){style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"}
+      ![](https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1){style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"}
+      ![](https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1){style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"}](http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1)
 
 bibliography: references.yml
 csl: https://raw.githubusercontent.com/TxWRI/csl/main/twri-technical-report.csl
