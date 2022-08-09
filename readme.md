@@ -1,7 +1,9 @@
+# Readme
 
 [![Project Status: WIP – Initial development is in progress, but there has not yet been a stable, usable release suitable for the public.](https://www.repostatus.org/badges/latest/wip.svg)](https://www.repostatus.org/#wip)
+[![pages-build-deployment](https://github.com/TxWRI/r-manual/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/TxWRI/r-manual/actions/workflows/pages/pages-build-deployment)
 
-"[![license](https://img.shields.io/badge/license-CC0-lightgrey.svg)](https://choosealicense.com/)"
 
+This is the project repo for the [TWRI r-manual reference guide](https://txwri.github.io/r-manual/).
 
-`quarto publish gh-pages`
+To contribute, please clone, branch, commit, and make a pull request.
