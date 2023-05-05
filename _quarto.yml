@@ -9,8 +9,8 @@ book:
   repo-url: https://github.com/txwri/r-manual
   repo-subdir: docs
   repo-actions: [edit, issue, source]
-  date: "7/29/2022"
-  description: "placeholder"
+  original-date: "7/29/2022"
+  date: today
   navbar: 
     logo: "images/logo-drop.png"
     search: true
@@ -39,9 +39,8 @@ book:
     - references.qmd
   page-footer:
     border: true
-    left:
-      - text: "Texas Water Resources Institute"
-        href: "https://twri.tamu.edu"
+    left: |
+      [Texas Water Resources Institute](https://twri.tamu.edu)
     right: |
       This work is licensed under</br>
       [CC BY-NC 4.0
