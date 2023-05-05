@@ -1,3 +1,7 @@
+---
+title-block-style: default
+---
+
 # Data Exploration {#sec-dataexplore}
 
 This is a basic introduction to importing and tidying, plotting,  summarizing, and exporting data using the *tidyverse* family of functions. This is a very basic primer, for more indepth discussion see: ...

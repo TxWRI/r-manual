@@ -21,3 +21,15 @@ pre code {
   font-family: $font-family-code;
 }
 
+.quarto-title-banner{
+  padding-top: 5em;
+  padding-bottom: 20em;
+}
+
+.quarto-title-block .quarto-title-banner {
+  background-position: center;
+}
+
+.quarto-title-banner {
+  color: var(--bs-body-color);
+}

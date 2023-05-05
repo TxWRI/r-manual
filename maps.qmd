@@ -7,3 +7,14 @@
 This has not been written yet.
 
 :::
+
+
+:::{.callout-note}
+
+Some of our contracted projects require ESRI ArcMap, ArcPro formatted deliverable.
+It is generally recommended to do your spatial processing and save projects in ESRI formats to deliver projects as ESRI map documents.
+
+:::
+
+
+

@@ -1,10 +1,10 @@
 ---
-title-block-style: plain
-title-block-banner: images/Tres_Palacios_PHOTO_BY_ED_RHODES-010.JPG
+title-block-style: default
+description: This is the R resource manual and cookbook for TWRI staff and graduate assistants.
 ---
 # Preface {.unnumbered}
 
-This is the R resource manual for TWRI staff and graduate assistants.
+This online resource provides guidance for reproducible data analysis using R and RStudio. The intent is not to provide copy and pastable code but to provide genaral guidance and examples that are adaptable to your own project.
 
 
 ## Requirements
