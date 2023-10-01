@@ -12,6 +12,34 @@ references:
   publisher-place: New York
   title: Statistics of extreme
   type: book
+  
+
+- id: helselStatisticalMethodsWater2020
+  author:
+    - family: Helsel
+      given: Dennis R
+    - family: Hirsch
+      given: Robert M
+    - family: Ryberg
+      given: Karen R.
+    - family: Archfield
+      given: Stacey A.
+    - family: Gilroy
+      given: E J
+  citation-key: helselStatisticalMethodsWater2020
+  event-place: Reston, VA
+  issued:
+    - year: 2020
+  number-of-pages: '458'
+  publisher: USGS
+  publisher-place: Reston, VA
+  title: >-
+    Statistical methods in water resources: U.S. Geological Survey techniques
+    and methods, book 4, chapter A3
+  type: book
+  URL: https://doi.org/10.3133/tm4a3
+
+
 
 - id: morrisonDevelopmentDurationCurveBased2008
   author:
@@ -57,6 +85,26 @@ references:
   title: System-wide Monitoring Program
   type: report
   URL: http://cdmo.baruch.sc.edu/
+
+
+- id: schrammEstimatingStatisticalPower2021
+  author:
+    - family: Schramm
+      given: Michael P.
+  citation-key: schrammEstimatingStatisticalPower2021
+  container-title: Texas Water Journal
+  DOI: 10.21423/txj.v12i1.7126
+  issue: '1'
+  issued:
+    - year: 2021
+  page: 140-150
+  title: >-
+    Estimating statistical power for detecting long term trends in surface water
+    *Escherichia coli* concentrations
+  type: article-journal
+  volume: '12'
+
+
 
 - id: smithStatisticalAssessmentViolations2001
   accessed:

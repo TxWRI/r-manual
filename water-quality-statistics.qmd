@@ -1,0 +1,262 @@
+# Water Quality Statistics {#sec-wqs}
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+
+library(dplyr)
+library(ggplot2)
+library(gt)
+
+
+```
+
+
+This section introduces some statistical approaches commonly used in out projects.
+For an in depth discussion and examples of statistical approaches commonly
+employed across surface water quality studies, the reader is highly
+encouraged to review @helselStatisticalMethodsWater2020.
+
+## Hypothesis Tests
+
+```{r}
+#| label: tbl-hypothesis-tests
+#| echo: false
+#| tbl-cap: Guide to classification of hypothesis tests. Adapted from @helselStatisticalMethodsWater2020.
+
+
+tibble(
+  Data = c(
+    "Two independent groups",
+    "Matched pairs",
+    "Three of more independent groups",
+    "Two-factor group comparisons",
+    "Correlation between two independent variables"
+  ),
+  Parametric = c(
+    "*t*-test",
+    "Paired *t*-test",
+    "Analysis of variance (ANOVA)",
+    "Two-factor ANOVA",
+    "Pearson's *r*"
+  ),
+  Nonparametric = c(
+    "Rank-sum test",
+    "Signed-rank test",
+    "Kruskal-Walis test",
+    "Brunner-Dette-Munk test",
+    "Spearman's *p* or Kendall's *r*"
+  ),
+  Permutation = c(
+    "Two-sample permutation test",
+    "Paired permuatation test",
+    "One-way permutation test",
+    "Two-factor permutation test",
+    "Permutation test for Pearson's *r*"
+  )
+) |> 
+  gt() |> 
+  fmt_markdown(columns = everything()) |> 
+  cols_label(Data = '**Data**',
+             Parametric = '**Parametric**',
+             Nonparametric = "**Nonparametric**",
+             Permutation = "**Permutation**",
+             .fn = md) |> 
+  as_raw_html()
+```
+
+
+### Compare two independent groups
+
+In the following example, we will generate example data using random data drawn
+from the normal distribution using the `rnorm()` function. @fig-two-sample-ed
+shows two samples with $n$=10, the first sample was drawn from a normal
+distribution with mean ($\mu$)=0.5 and standard deviation ($\sigma$)= 0.25. 
+The second sample is drawn from a normal distribution with $\mu$=1.0 and 
+$\sigma$ = 0.5. 
+
+```{r}
+#| message: false
+#| label: fig-two-sample-ed
+#| fig-cap: Box-plot and values of randomly generated sample drawn from the normal distribution.
+#| fig-asp: 1
+#| out-width: "50%"
+
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(twriTemplates)
+
+## sets seed for reproducible example with random data
+set.seed(1000)
+
+## sample size
+n = 10
+
+## generate example data
+example_data <- tibble(
+  sample_1 = rnorm(n = n, mean = 0.5, sd = 0.5),
+  sample_2 = rnorm(n = n, mean = 0.7, sd = 0.5)
+)
+
+example_data |> 
+  pivot_longer(cols = everything(),
+               names_to = "Sample", values_to = "Value") |> 
+  ggplot() +
+  geom_boxplot(aes(x = Sample, y = Value)) +
+  geom_point(aes(x = Sample, y = Value), position = "jitter") +
+  theme_TWRI_print()
+```
+
+A test for the difference in the means is conducted using the `t.test()` function
+to run the **two-sample *t*-test**:
+
+```{r}
+results <- t.test(example_data$sample_1, example_data$sample_2)
+results
+```
+
+For the *t*-test, the null hypothesis ($H_0$) is that the difference in means
+is equal to zero, the alternative hypothesis ($H_1$) is that the difference in
+means is *not* equal to zero. By default `t.test()` prints some information about
+your test results, including the t-statistic, degrees of freedom for the
+t-statistic calculation, p-value, and confidence intervals. 
+
+:::{.callout-note}
+By assigning the output of `t.test()` to the `results` object we can also
+obtaining these results individually, which can be handy for plotting or exporting
+results to other files. See the output of `str(results)` for a list of values you
+can reach.
+:::
+
+In this example, we do not have the evidence to reject $H_0$ at an 
+$\alpha$ = 0.05 (t-stat = `r results$statistic |> prettyNum(digits = 3)`, $p$ = 
+`r results$p.value |> prettyNum(digits = 3)`). 
+
+
+Since this example uses randomly drawn data, we can examine what happens when
+sample size is increased to $n$ = 100:
+
+```{r}
+## sample size
+n = 100
+
+## generate example data
+example_data <- tibble(
+  sample_1 = rnorm(n = n, mean = 0.5, sd = 0.5),
+  sample_2 = rnorm(n = n, mean = 0.7, sd = 0.5)
+)
+
+t.test(example_data$sample_1, example_data$sample_2)
+```
+Now we have evidence to reject $H_0$ due to the larger sample size which increased
+the statistical power for detecting a smaller effect size at a cost
+of increasing the risk of detecting an effect that is not actually there or
+is not environmentally relevant and of course increased monitoring costs if
+this were an actual water quality monitoring project.
+
+:::{.callout-note}
+@helselStatisticalMethodsWater2020 (Chapter 13) and 
+@schrammEstimatingStatisticalPower2021 have a important discussions on 
+statistical power, sample sizes, and study designs.
+:::
+
+The *t*-test assumes underlying data is normally distributed. However, hydrology
+and water quality data is often skewed and log-normally distributed. While,
+a simple log-transformation in the data can correct this, it is suggested to use
+a non-parametric or permutation test instead.
+
+The **Wilcoxon Rank Sum** (also called Mann-Whitney) tests can be considered
+a non-parametric versions of the two-sample *t*-test. This example uses the bacteria
+data first shown in @sec-waterquality. @fig-wilcox-data shows the density plot
+of the bacteria values in the dataset. The heavily skewed data observed in
+fecal indicator bacteria are well suited for non-parametric statistical analysis.
+
+```{r}
+#| label: fig-wilcox-data
+#| fig-cap: This density plot is essentially a smoothed histogram. The example bacteria dataset shows a heavy right skew and appears to be log-normally distributed. It should be assessed using non-parametric methods.
+
+library(readr)
+library(janitor)
+
+df <- read_delim("data/swqmispublicdata.txt",
+                 delim = "|",
+                 # see awkward column names that have to be wrapped
+                 # in between "`" (escape) marks.
+                 col_types = cols_only(
+                   `Segment ID` = col_character(),
+                   `Station ID` = col_factor(),
+                   `Station Description` = col_character(),
+                   `End Date` = col_date(format = "%m/%d/%Y"),
+                   `Collecting Entity` = col_character(),
+                   `Monitoring Type` = col_character(),
+                   `Composite Category` = col_character(),
+                   `Parameter Name` = col_character(),
+                   `Parameter Code` = col_character(),
+                   `Value` = col_number(),
+                   `RFA/Tag ID` = col_character()
+                 )) |> 
+  clean_names() |> 
+  filter(parameter_code == "31699") |> 
+  select(station_id, value)
+
+ggplot(df) +
+  geom_density(aes(value, fill = station_id), alpha = 0.5) +
+  theme_TWRI_print()
+
+```
+The Wilcoxon test is conducted using the `wilcox.test()` function. When your data
+is in "tidy" long format like above, you can use the formula notation in
+`wilcox.test()`, eg. `y ~ x` where `y` represents the response variable and `x` is
+the variable representing the factors you are comparing. You can also use use
+`x` and `y` arguments if your are comparing two numeric vectors. Both examples
+are shown below:
+
+
+```{r}
+## formula notation
+wilcox.test(value~station_id, data = df,
+            conf.int = TRUE)
+
+## default notation
+x <- df |> 
+  filter(station_id == "12517")
+y <- df |> 
+  filter(station_id == "15325")
+
+wilcox.test(x$value, y$value,
+            conf.int = TRUE)
+
+```
+Chapter 5.2 in @helselStatisticalMethodsWater2020 provide an excellent explanation of permutation tests. The permutation test works by resampling the data for all (or thousands of) possible permutations of group assignments. Assuming the null hypothesis is correct, it makes no difference which group any particular observation gets assigned to. The difference between groups and test statistics are calculated for each permutation. Then the proportion of permutation results that equal or exceed the difference calculated in the original data is the permutation *p*-value.
+
+
+```{r}
+library(coin)
+
+oneway_test(value~station_id, 
+            data = df,
+            distribution = approximate())
+
+```
+
+Notice that we end up with a different result from the Wilcoxon test. This is because
+the Wilcoxon test does not compare the means, but the ranked values (ie. does one
+group tend to have higher or lower ranked values than the other). The permutation
+test evaluates for differences in the mean of each group. 
+
+Wilcoxon tells us one site is likely to have a higher median, but the permutation
+test tells us that the means are approximately the same.
+
+### Matched pairs
+
+### Three or more groups
+
+### Two-factor group comprisons
+
+### Correlation between two independent variables
+
+## Regression
+
+## Trend Analysis
