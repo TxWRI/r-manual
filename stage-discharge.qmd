@@ -31,8 +31,8 @@ This example uses field measurements of stream stage and instantaneous discharge
 library(tidyverse)
 library(twriTemplates)
 
-example_data <- read_rds("data/neon.rds")
-stage_discharge <- example_data$dsc_fieldData
+## neon_stage_discharge is an example dataset in the twriTemplates package
+stage_discharge <- neon_stage_discharge
 glimpse(stage_discharge)
 ```
 
@@ -192,7 +192,7 @@ This section is slightly more advanced and requires some understanding of list s
 The [*purrr* package](https://purrr.tidyverse.org/) facilitates running a function on a list of nested data. The idea here is to subset the dataframe by year, create a list with each item in the list being a subset of the dataframe, then running `nls_multstart()` on each item in that list. Sounds like a loop huh? We achieve this using `for()` or `lapply()` functions in base R. The nice thing about doing it with *purrr* is that we can keep everything together in a single dataframe. The first step is to create a nested dataframe:
 
 ```{r}
-nested_data <- example_data$dsc_fieldData |> 
+nested_data <- neon_stage_discharge |> 
   filter(!is.na(finalDischarge)) |>
   mutate(year = format(startDate, "%Y")) |> 
   filter(year >= 2018) |> 

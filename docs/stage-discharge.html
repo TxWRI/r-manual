@@ -311,8 +311,8 @@ Q = K(H - H_0)^z
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TxWRI/twriTemplates">twriTemplates</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">example_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_rds.html">read_rds</a></span><span class="op">(</span><span class="st">"data/neon.rds"</span><span class="op">)</span></span>
-<span><span class="va">stage_discharge</span> <span class="op">&lt;-</span> <span class="va">example_data</span><span class="op">$</span><span class="va">dsc_fieldData</span></span>
+<span><span class="co">## neon_stage_discharge is an example dataset in the twriTemplates package</span></span>
+<span><span class="va">stage_discharge</span> <span class="op">&lt;-</span> <span class="va">neon_stage_discharge</span></span>
 <span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="va">stage_discharge</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 134
@@ -468,11 +468,11 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 0.889 on 77 degrees of freedom
 
-Number of iterations to convergence: 49 
+Number of iterations to convergence: 41 
 Achieved convergence tolerance: 1.49e-08</code></pre>
 </div>
 </div>
-<p>NLS estimated parameters are: <span class="math inline">\(K =\)</span> 5.0398566, <span class="math inline">\(H_0 =\)</span> 0.7874016, and <span class="math inline">\(Z =\)</span> 0.7874016. Before using these parameter, evaluated the goodness of fit using the model residuals (add citation or note with more resources here).</p>
+<p>NLS estimated parameters are: <span class="math inline">\(K =\)</span> 5.0398732, <span class="math inline">\(H_0 =\)</span> 0.7874016, and <span class="math inline">\(Z =\)</span> 0.7874016. Before using these parameter, evaluated the goodness of fit using the model residuals (add citation or note with more resources here).</p>
 <div class="cell">
 <details><summary>Show the code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># for easy multipanel plots, use the patchwork package</span></span>
 <span><span class="co">#install.packages("patchwork")</span></span>
@@ -546,7 +546,7 @@ Note
 </div>
 <p>The <a href="https://purrr.tidyverse.org/"><em>purrr</em> package</a> facilitates running a function on a list of nested data. The idea here is to subset the dataframe by year, create a list with each item in the list being a subset of the dataframe, then running <code><a href="https://rdrr.io/pkg/nls.multstart/man/nls_multstart.html">nls_multstart()</a></code> on each item in that list. Sounds like a loop huh? We achieve this using <code>for()</code> or <code><a href="https://rdrr.io/r/base/lapply.html">lapply()</a></code> functions in base R. The nice thing about doing it with <em>purrr</em> is that we can keep everything together in a single dataframe. The first step is to create a nested dataframe:</p>
 <div class="cell">
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nested_data</span> <span class="op">&lt;-</span> <span class="va">example_data</span><span class="op">$</span><span class="va">dsc_fieldData</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">nested_data</span> <span class="op">&lt;-</span> <span class="va">neon_stage_discharge</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">finalDischarge</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="va">startDate</span>, <span class="st">"%Y"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">year</span> <span class="op">&gt;=</span> <span class="fl">2018</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
