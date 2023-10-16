@@ -281,7 +281,7 @@ div.csl-indent {
 <li><a href="#compare-two-independent-groups" id="toc-compare-two-independent-groups" class="nav-link" data-scroll-target="#compare-two-independent-groups"><span class="header-section-number">8.1.1</span> Compare two independent groups</a></li>
   <li><a href="#matched-pairs" id="toc-matched-pairs" class="nav-link" data-scroll-target="#matched-pairs"><span class="header-section-number">8.1.2</span> Matched pairs</a></li>
   <li><a href="#three-or-more-groups" id="toc-three-or-more-groups" class="nav-link" data-scroll-target="#three-or-more-groups"><span class="header-section-number">8.1.3</span> Three or more groups</a></li>
-  <li><a href="#two-factor-group-comprisons" id="toc-two-factor-group-comprisons" class="nav-link" data-scroll-target="#two-factor-group-comprisons"><span class="header-section-number">8.1.4</span> Two-factor group comprisons</a></li>
+  <li><a href="#two-factor-group-comparisons" id="toc-two-factor-group-comparisons" class="nav-link" data-scroll-target="#two-factor-group-comparisons"><span class="header-section-number">8.1.4</span> Two-factor group comparisons</a></li>
   <li><a href="#correlation-between-two-independent-variables" id="toc-correlation-between-two-independent-variables" class="nav-link" data-scroll-target="#correlation-between-two-independent-variables"><span class="header-section-number">8.1.5</span> Correlation between two independent variables</a></li>
   </ul>
 </li>
@@ -315,7 +315,7 @@ Table&nbsp;8.1: Guide to classification of hypothesis tests. Adapted from <span 
 </figcaption><div aria-describedby="tbl-hypothesis-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div>
 <div class="cell-output-display">
-<div id="akpcbfyhoo" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<div id="ycumdpryjj" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
   
   
 <table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
@@ -636,8 +636,157 @@ alternative hypothesis: true mu is not equal to 0</code></pre>
 <span class="header-section-number">8.1.2</span> Matched pairs</h3>
 </section><section id="three-or-more-groups" class="level3" data-number="8.1.3"><h3 data-number="8.1.3" class="anchored" data-anchor-id="three-or-more-groups">
 <span class="header-section-number">8.1.3</span> Three or more groups</h3>
-</section><section id="two-factor-group-comprisons" class="level3" data-number="8.1.4"><h3 data-number="8.1.4" class="anchored" data-anchor-id="two-factor-group-comprisons">
-<span class="header-section-number">8.1.4</span> Two-factor group comprisons</h3>
+</section><section id="two-factor-group-comparisons" class="level3" data-number="8.1.4"><h3 data-number="8.1.4" class="anchored" data-anchor-id="two-factor-group-comparisons">
+<span class="header-section-number">8.1.4</span> Two-factor group comparisons</h3>
+<p>When you have two-(non-nested)factors that may simultaneously influence observations, the factorial ANOVA and non-parametric alternatives can be used.</p>
+<p>In the example below, we retrieve data for two water quality stations using the USGS <a href="https://rconnect.usgs.gov/dataRetrieval/"><code>dataRetrieval</code></a> package. In 2011, an artifical wetland was completed to treat wastewater effluent discharged between stations <code>13079</code> (upstream side) and <code>13074</code> (downstream side). The first factor is station location, either upstream or downstream of the effluent discharge. We expect the upstream station to have “better” water quality than the downstream station. The second factor is before and after the wetland was completed. We expect the downstream station to have better water quality after the wetland than before, but no impact on the upstream water quality.</p>
+<div class="cell">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## download the data</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://code.usgs.gov/water/dataRetrieval">dataRetrieval</a></span><span class="op">)</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/dataRetrieval/man/readWQPdata.html">readWQPdata</a></span><span class="op">(</span>siteid<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"TCEQMAIN-13079"</span>, <span class="st">"TCEQMAIN-13074"</span><span class="op">)</span>, </span>
+<span>                  characteristicName <span class="op">=</span> <span class="st">"Total suspended solids"</span>,</span>
+<span>                  startDateLo <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"1990-01-01"</span><span class="op">)</span>,</span>
+<span>                  startDateHigh <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2023-07-30"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## prepare the data for anlaysis</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html">clean_names</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">activity_type_code</span> <span class="op">!=</span> <span class="st">"Sample-Field Split"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## assign upstream and downstream variables</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">monitoring_location_identifier</span>  <span class="op">==</span> <span class="st">"TCEQMAIN-13074"</span> <span class="op">~</span> <span class="st">"Below"</span>,</span>
+<span>    <span class="va">monitoring_location_identifier</span>  <span class="op">==</span> <span class="st">"TCEQMAIN-13079"</span> <span class="op">~</span> <span class="st">"Above"</span>,</span>
+<span>    .default <span class="op">=</span> <span class="va">monitoring_location_identifier</span> </span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## assign pre- and post-wetland variable</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>wetland <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">activity_start_date</span>  <span class="op">&lt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2011-12-31"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Pre"</span>,</span>
+<span>    <span class="va">activity_start_date</span>  <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2011-12-31"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Post"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## make wetland a factor so it orders correctly in the plots</span></span>
+<span>  <span class="co">## default order is alphabetical, but it makes more sense to</span></span>
+<span>  <span class="co">## specify "Pre" before "Post"</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>wetland <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_relevel.html">fct_relevel</a></span><span class="op">(</span><span class="va">wetland</span>, <span class="st">"Pre"</span>, <span class="st">"Post"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">monitoring_location_identifier</span>, <span class="va">result_measure_value</span>, <span class="va">location</span>, <span class="va">activity_start_date</span>, <span class="va">wetland</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before we analyze the data, take a look at the boxplots of TSS values. The distributions suggest a log-normal distribution (the y-axis is log transformed). It appears that post-wetland TSS values were reduced downstream of the wetland but not upstream of the wetland.</p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/eclarke/ggbeeswarm">ggbeeswarm</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">location</span>,</span>
+<span>               y <span class="op">=</span> <span class="va">result_measure_value</span>,</span>
+<span>               fill <span class="op">=</span> <span class="va">wetland</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.5</span>, outlier.shape <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/ggbeeswarm/man/geom_quasirandom.html">geom_quasirandom</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>color <span class="op">=</span> <span class="va">wetland</span><span class="op">)</span>, dodge.width <span class="op">=</span> <span class="fl">0.75</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_color_brewer</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">""</span>,</span>
+<span>                     palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_fill_brewer</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">""</span>,</span>
+<span>                    palette <span class="op">=</span> <span class="st">"Set2"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_log10</a></span><span class="op">(</span><span class="st">"TSS (mg/L)"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-1" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="water-quality-statistics_files/figure-html/unnamed-chunk-10-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-1" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
+</div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/stats/aov.html">aov()</a></code> function fits the ANOVA model using the formula notation. The formula notation is of form <code>response ~ factor</code> where factor is a series of factors specified in the model. The specification <code>factor1 + factor2</code> indicates all the factors are taken together, while <code>factor1:factor2</code>indicates the interactions. The notation <code>factor1*factor2</code> is equivalent to <code>factor1 + factor2 + factor1:factor2</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">result_measure_value</span><span class="op">)</span> <span class="op">~</span> <span class="va">wetland</span> <span class="op">*</span> <span class="va">location</span>,</span>
+<span>          data <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Df Sum Sq Mean Sq F value   Pr(&gt;F)    
+wetland            1  0.155   0.155   1.048 0.308288    
+location           1 19.016  19.016 128.900  &lt; 2e-16 ***
+wetland:location   1  1.809   1.809  12.264 0.000684 ***
+Residuals        103 15.195   0.148                     
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Here we fit the ANOVA to log-transformed TSS values. The results indicate a difference in geometric means (because we used the log values in the ANOVA) between upstream and downstream location <em>and</em> a difference in the interaction terms.</p>
+<p>We follow up the ANOVA with a multiple comparisons test (Tukey’s Honest Significant Difference, or Tukey’s HSD) on the factor(s) of interest.</p>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/TukeyHSD.html">TukeyHSD</a></span><span class="op">(</span><span class="va">m1</span>, <span class="st">"wetland:location"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = log(result_measure_value) ~ wetland * location, data = df)
+
+$`wetland:location`
+                             diff        lwr        upr     p adj
+Post:Above-Pre:Above   0.08065095 -0.3558692  0.5171711 0.9628194
+Pre:Below-Pre:Above   -0.34843318 -0.8062593  0.1093930 0.1994032
+Post:Below-Pre:Above  -0.95543536 -1.4006003 -0.5102705 0.0000010
+Pre:Below-Post:Above  -0.42908413 -0.6836169 -0.1745514 0.0001524
+Post:Below-Post:Above -1.03608631 -1.2670710 -0.8051016 0.0000000
+Post:Below-Pre:Below  -0.60700218 -0.8760912 -0.3379131 0.0000003</code></pre>
+</div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/stats/TukeyHSD.html">TukeyHSD()</a></code> function takes the output from <code><a href="https://rdrr.io/r/stats/aov.html">aov()</a></code> and optionally the factor you are interested in evaluating the difference in means. The output provide the estimate difference in means between each level of the factor, the 95% confidence interval and the multiple comparisons adjusted p-value. <a href="#fig-contrasts" class="quarto-xref">Figure&nbsp;<span>8.3</span></a> is an example of how the data can be plotted for easier interpretation.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-contrasts" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-contrasts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="water-quality-statistics_files/figure-html/fig-contrasts-1.png" class="img-fluid figure-img" width="1600">
+</div>
+<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-contrasts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.3: The 95% confidence intervals on differences in means (log scale) for different factor interactions.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>The non-parametric version of the ANOVA model is the <em>two-factor Brunner-Dette-Munk</em> (BDM) test. The BDM test is implemented in the <code>asbio</code> package using the <code><a href="https://rdrr.io/pkg/asbio/man/BDM.test.html">BDM.2way()</a></code> function.</p>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">asbio</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: tcltk</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Registered S3 method overwritten by 'asbio':
+  method   from
+  print.ci coin</code></pre>
+</div>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bdm_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/asbio/man/BDM.test.html">BDM.2way</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">result_measure_value</span>, </span>
+<span>                       X1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">location</span><span class="op">)</span>, </span>
+<span>                       X2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">wetland</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bdm_output</span><span class="op">$</span><span class="va">BDM.Table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      df1     df2        F*    P(F &gt; F*)
+X1      1 7.45395 31.373306 0.0006543175
+X2      1 7.45395  4.020217 0.0825010167
+X1:X2   1 7.45395  6.504502 0.0361551078</code></pre>
+</div>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bdm_output</span><span class="op">$</span><span class="va">Q</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Levels Rel.effects
+1  Above.Pre   0.6806854
+2 Above.Post   0.7158029
+3  Below.Pre   0.4842290
+4 Below.Post   0.1908808</code></pre>
+</div>
+</div>
+<p>Post-hoc isn’t straightforward depending on what factors you want to compare. Recommend using GLM here or permutation test here.</p>
+<div class="cell">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/asbio/man/perm.fact.test.html">perm.fact.test</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">result_measure_value</span>, </span>
+<span>               X1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">location</span><span class="op">)</span>, </span>
+<span>               X2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">wetland</span><span class="op">)</span>,</span>
+<span>               perm <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Table
+         Initial.F  Df   pval
+X1       43.727189   1 0.0002
+X2        6.026275   1 0.0170
+X1:X2     3.383129   1 0.0684
+Residual        NA 103     NA</code></pre>
+</div>
+</div>
 </section><section id="correlation-between-two-independent-variables" class="level3" data-number="8.1.5"><h3 data-number="8.1.5" class="anchored" data-anchor-id="correlation-between-two-independent-variables">
 <span class="header-section-number">8.1.5</span> Correlation between two independent variables</h3>
 </section></section><section id="regression" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="regression">

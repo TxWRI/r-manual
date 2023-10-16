@@ -176,6 +176,7 @@ fecal indicator bacteria are well suited for non-parametric statistical analysis
 ```{r}
 #| label: fig-wilcox-data
 #| fig-cap: This density plot is essentially a smoothed histogram. The example bacteria dataset shows a heavy right skew and appears to be log-normally distributed. It should be assessed using non-parametric methods.
+#| fig-asp: 0.5
 
 library(readr)
 library(janitor)
@@ -253,10 +254,281 @@ test tells us that the means are approximately the same.
 
 ### Three or more groups
 
-### Two-factor group comprisons
+### Two-factor group comparisons
+
+When you have two-(non-nested)factors that may simultaneously influence 
+observations, the factorial ANOVA and non-parametric alternatives can be used.
+
+In the example below, we retrieve data for two water quality stations
+using the USGS [`dataRetrieval`](https://rconnect.usgs.gov/dataRetrieval/) package.
+In 2011, an artifical wetland was completed to treat wastewater effluent discharged
+between stations `13079` (upstream side) and `13074` (downstream side). The
+first factor is station location, either upstream or downstream of the effluent
+discharge. We expect the upstream station to have "better" water quality than
+the downstream station. The second factor is before and after the wetland
+was completed. We expect the downstream station to have better water quality after
+the wetland than before, but no impact on the upstream water quality.
+
+
+```{r}
+## download the data
+library(dataRetrieval)
+df <- readWQPdata(siteid=c("TCEQMAIN-13079", "TCEQMAIN-13074"), 
+                  characteristicName = "Total suspended solids",
+                  startDateLo = as.Date("1990-01-01"),
+                  startDateHigh = as.Date("2023-07-30"))
+
+## prepare the data for anlaysis
+df <- df |>
+  clean_names() |> 
+  filter(activity_type_code != "Sample-Field Split") |> 
+  ## assign upstream and downstream variables
+  mutate(location = case_when(
+    monitoring_location_identifier  == "TCEQMAIN-13074" ~ "Below",
+    monitoring_location_identifier  == "TCEQMAIN-13079" ~ "Above",
+    .default = monitoring_location_identifier 
+  )) |> 
+  ## assign pre- and post-wetland variable
+  mutate(wetland = case_when(
+    activity_start_date  <= as.Date("2011-12-31") ~ "Pre",
+    activity_start_date  > as.Date("2011-12-31") ~ "Post"
+  )) |> 
+  ## make wetland a factor so it orders correctly in the plots
+  ## default order is alphabetical, but it makes more sense to
+  ## specify "Pre" before "Post"
+  mutate(wetland = forcats::fct_relevel(wetland, "Pre", "Post")) |> 
+  select(monitoring_location_identifier, result_measure_value, location, activity_start_date, wetland)
+```
+
+
+Before we analyze the data, take a look at the boxplots of TSS values. The
+distributions suggest a log-normal distribution (the y-axis is log transformed).
+It appears that post-wetland TSS values were reduced downstream of the wetland
+but not upstream of the wetland.
+
+```{r}
+library(ggbeeswarm)
+ggplot(df, aes(x = location,
+               y = result_measure_value,
+               fill = wetland)) +
+  geom_boxplot(alpha = 0.5, outlier.shape = NA) +
+  geom_quasirandom(aes(color = wetland), dodge.width = 0.75, alpha = 0.5) +
+  scale_color_brewer(name = "",
+                     palette = "Set2") +
+  scale_fill_brewer(name = "",
+                    palette = "Set2") +
+  scale_y_log10("TSS (mg/L)") +
+  theme_TWRI_print()
+```
+
+The `aov()` function fits the ANOVA model using the formula notation.
+The formula notation is of form `response ~ factor` where factor is 
+a series of factors specified in the model. The specification 
+`factor1 + factor2` indicates all the factors are taken together, while
+`factor1:factor2`indicates the interactions. The notation `factor1*factor2` is
+equivalent to `factor1 + factor2 + factor1:factor2`. 
+
+```{r}
+m1 <- aov(log(result_measure_value) ~ wetland * location,
+          data = df)
+
+summary(m1)
+```
+
+Here we fit the ANOVA to log-transformed TSS values. The results
+indicate a difference in geometric means (because we used the log values in 
+the ANOVA) between upstream and downstream location *and* a difference in the
+interaction terms. 
+
+We follow up the ANOVA with a multiple comparisons test (Tukey's Honest 
+Significant Difference, or Tukey's HSD) on the factor(s) of interest.
+
+```{r}
+TukeyHSD(m1, "wetland:location")
+```
+
+The `TukeyHSD()` function takes the output from `aov()` and optionally
+the factor you are interested in evaluating the difference in means.
+The output provide the estimate difference in means between each level of the factor, the 95% confidence interval and the multiple comparisons adjusted p-value. @fig-contrasts
+is an example of how the data can be plotted for easier interpretation.
+
+```{r}
+#| label: fig-contrasts
+#| fig-cap: The 95% confidence intervals on differences in means (log scale) for different factor interactions. 
+#| echo: false
+#| fig-asp: 0.33
+TukeyHSD(m1, "wetland:location") |> 
+  broom::tidy() |> 
+  mutate(adj.p.value = format.pval(adj.p.value,
+                                   digits = 2,
+                                   eps = 0.001,
+                                   nsmall = 3)) |> 
+  select(`Contrast` = contrast,
+         `Estimate` = estimate,
+         `Lower 95% CI` = conf.low,
+         `Upper 95% CI` = conf.high,
+         `Adj. p-value` = adj.p.value) |> 
+  mutate(Contrast = forcats::fct_reorder(Contrast, Estimate)) |> 
+  ggplot() +
+  geom_pointrange(aes(y = Contrast, x = Estimate,
+                      xmin = `Lower 95% CI`, xmax = `Upper 95% CI`)) +
+  labs(x = "Difference in log(means) of TSS", y = "Contrasts") +
+  theme_TWRI_print()
+  
+```
+
+The non-parametric version of the ANOVA model is the *two-factor Brunner-Dette-Munk* (BDM) test. The BDM test is implemented in the `asbio` package using the `BDM.2way()` function.
+
+```{r}
+library(asbio)
+bdm_output <- BDM.2way(Y = df$result_measure_value, 
+                       X1 = as.factor(df$location), 
+                       X2 = as.factor(df$wetland))
+
+bdm_output$BDM.Table
+bdm_output$Q
+```
+
+Post-hoc isn't straightforward depending on what factors you want to compare.
+Recommend using GLM here or permutation test here.
+
+
+```{r}
+perm.fact.test(Y = df$result_measure_value, 
+               X1 = as.factor(df$location), 
+               X2 = as.factor(df$wetland),
+               perm = 5000)
+```
+
+
 
 ### Correlation between two independent variables
 
+Using the estuary water quality example data from #sec-plotclean we will explore
+correlations between two independent variables:
+
+```{r}
+files <- c("data/marabwq2020.csv", "data/marabwq2021.csv", "data/marcewq2020.csv", "data/marcewq2021.csv")
+
+df <- read_csv(file = files, 
+               col_types = cols_only(
+                 StationCode = col_factor(),
+                 DateTimeStamp = col_datetime(format = "%m/%e/%Y %H:%M"),
+                 Temp = col_number(),
+                 F_Temp = col_character(),
+                 SpCond = col_number(),
+                 F_SpCond = col_character(),
+                 Sal = col_number(),
+                 F_Sal = col_character(),
+                 DO_mgl = col_number(),
+                 F_DO_mgl = col_character()
+               )) |> 
+  filter(F_Temp == "<0>",
+         F_DO_mgl == "<0>")
+
+```
+
+```{r}
+#| label: fig-do-temp
+ggplot(df) +
+  geom_point(aes(Temp, DO_mgl), alpha = 0.1) +
+  theme_TWRI_print() +
+  labs(x = "Temperature °C", y = "Dissolved Oxygen (mg/L)")
+```
+
+A quick glance at the data [@fig-do-temp] indicates a probable relationship
+between dissolved oxygen and temperature. **Pearson's *r* **is the linear correlation
+coefficient that measures the linear association between two variables. Values of r
+range from -1 to 1 (indicate perfectly positive or negative linear relationships).
+Use the `cor.test()` function to return Pearson's *r* and associated p-value:
+
+
+
+```{r}
+ecoli_df <- read_delim("data/swqmispublicdata.txt",
+                 delim = "|",
+                 # see awkward column names that have to be wrapped
+                 # in between "`" (escape) marks.
+                 col_types = cols_only(
+                   `Segment ID` = col_character(),
+                   `Station ID` = col_factor(),
+                   `Station Description` = col_character(),
+                   `End Date` = col_date(format = "%m/%d/%Y"),
+                   `Collecting Entity` = col_character(),
+                   `Monitoring Type` = col_character(),
+                   `Composite Category` = col_character(),
+                   `Parameter Name` = col_character(),
+                   `Parameter Code` = col_character(),
+                   `Value` = col_number(),
+                   `RFA/Tag ID` = col_character()
+                 )) |> 
+  clean_names() |> 
+  filter(station_id == "12517") |> 
+  filter(parameter_code == "31699") |> 
+  select(end_date, value)
+
+df <- readNWISdv(siteNumbers = "08162600",
+           startDate = "2000-01-01",
+           endDate = "2020-12-31",
+           parameterCd = "00060",
+           statCd = "00003") |> 
+  renameNWISColumns() |> 
+  clean_names() |> 
+  left_join(ecoli_df, by = c("date" = "end_date")) |> 
+  filter(!is.na(value))
+
+ggplot(df, aes(flow, value)) +
+  geom_point() + 
+  scale_y_log10() + scale_x_log10() +
+  labs(x = "Streamflow (cfs)", y = "E. coli (MPN/100mL)") +
+  theme_TWRI_print()
+```
+
+
+
+
+```{r}
+## create a permutation function for 2 sided pearson's r
+
+permutate_cor <- function(x, y, n = 1000) {
+  data.name <- paste(deparse(substitute(x))," and ",deparse(substitute(y)),"\n",n," permutations",sep="")
+  cor_test_output <- cor.test(x = x, y = y, method = "pearson")
+  obs_r <- cor_test_output$estimate
+  obs_stat <- cor_test_output$statistic
+  
+  cor_permutations <- sapply(1:n,
+                             FUN = function(i) cor(x = x, y = sample(y)))
+  
+  cor_permutations <- c(cor_permutations, obs_r)
+  
+  
+  p_val <- sum(abs(cor_permutations) >= abs(obs_r))/(n+1)
+  
+  result <- list(statistic = obs_stat, 
+                 data.name = data.name, 
+                 estimate = obs_r,
+                 p.value = p_val,
+                 method = "Pearson's product-moment correlation - Permutation test",
+                 data = data.frame(r = unname(cor_permutations)))
+  class(result) <- "htest"
+  return(result)
+}
+```
+
+```{r}
+tempt <- permutate_cor(log(df$flow), log(df$value), n = 500)
+tempt
+
+ggplot(tempt$data) +
+  geom_histogram(aes(r), bins = 50) +
+  geom_vline(xintercept = tempt$estimate)
+```
+
 ## Regression
 
+
 ## Trend Analysis
+
+Mann-Kendall test
+Linear regression on numeric dates
+Flow adjustments
