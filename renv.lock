@@ -196,6 +196,30 @@
       ],
       "Hash": "20d81ec18bde233d8cc3265761fe8c93"
     },
+    "asbio": {
+      "Package": "asbio",
+      "Version": "1.9-6",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "deSolve",
+        "gWidgets2",
+        "gWidgets2tcltk",
+        "grDevices",
+        "graphics",
+        "lattice",
+        "multcompView",
+        "mvtnorm",
+        "pixmap",
+        "plotrix",
+        "scatterplot3d",
+        "stats",
+        "tcltk",
+        "utils"
+      ],
+      "Hash": "e85a39c34e62a05a43fa0280bd2af2ab"
+    },
     "askpass": {
       "Package": "askpass",
       "Version": "1.2.0",
@@ -225,6 +249,19 @@
         "R"
       ],
       "Hash": "543776ae6848fde2f48ff3816d0628bc"
+    },
+    "beeswarm": {
+      "Package": "beeswarm",
+      "Version": "0.4.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "grDevices",
+        "graphics",
+        "stats",
+        "utils"
+      ],
+      "Hash": "0f4e9d8caa6feaa7e409ae6c30f2ca66"
     },
     "bigD": {
       "Package": "bigD",
@@ -587,7 +624,7 @@
     },
     "dataRetrieval": {
       "Package": "dataRetrieval",
-      "Version": "2.7.13",
+      "Version": "2.7.14",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -601,7 +638,7 @@
         "utils",
         "xml2"
       ],
-      "Hash": "19fb337a48dddca5301f99fc531db440"
+      "Hash": "6f41d853cf2b5d150c3d8de9fe9eca42"
     },
     "dbplyr": {
       "Package": "dbplyr",
@@ -630,6 +667,20 @@
         "withr"
       ],
       "Hash": "63534894354af6b2587b7aa518a5193a"
+    },
+    "deSolve": {
+      "Package": "deSolve",
+      "Version": "1.38",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "grDevices",
+        "graphics",
+        "methods",
+        "stats"
+      ],
+      "Hash": "860e6724c3bcdf194e8e043b97ab6f6e"
     },
     "digest": {
       "Package": "digest",
@@ -843,6 +894,32 @@
       ],
       "Hash": "47b5f30c720c23999b913a1a635cf0bb"
     },
+    "gWidgets2": {
+      "Package": "gWidgets2",
+      "Version": "1.0-9",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "digest",
+        "methods"
+      ],
+      "Hash": "666378412a7967e86193726c8484bc35"
+    },
+    "gWidgets2tcltk": {
+      "Package": "gWidgets2tcltk",
+      "Version": "1.0-8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "digest",
+        "gWidgets2",
+        "memoise",
+        "methods",
+        "tcltk"
+      ],
+      "Hash": "d073b659a4247cf265a7810a5c458d6b"
+    },
     "gargle": {
       "Package": "gargle",
       "Version": "1.5.2",
@@ -909,6 +986,21 @@
         "utils"
       ],
       "Hash": "a535d76cf92645364997a8751396d63b"
+    },
+    "ggbeeswarm": {
+      "Package": "ggbeeswarm",
+      "Version": "0.7.2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "beeswarm",
+        "cli",
+        "ggplot2",
+        "lifecycle",
+        "vipor"
+      ],
+      "Hash": "899f28fe0388b7f687d7453429c2474d"
     },
     "gghighlight": {
       "Package": "gghighlight",
@@ -1600,6 +1692,16 @@
       ],
       "Hash": "2688bf2f8d54c19534ee7d8a876d9fc7"
     },
+    "multcompView": {
+      "Package": "multcompView",
+      "Version": "0.1-9",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "grid"
+      ],
+      "Hash": "a453bb54107d6ff5fb4280729e15a023"
+    },
     "munsell": {
       "Package": "munsell",
       "Version": "0.5.0",
@@ -1759,6 +1861,18 @@
       ],
       "Hash": "15da5a8412f317beeee6175fbc76f4bb"
     },
+    "pixmap": {
+      "Package": "pixmap",
+      "Version": "0.4-12",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "grDevices",
+        "graphics",
+        "methods"
+      ],
+      "Hash": "ff0e0b97265ced0db4d13d0005334d78"
+    },
     "pkgconfig": {
       "Package": "pkgconfig",
       "Version": "2.0.3",
@@ -1768,6 +1882,20 @@
         "utils"
       ],
       "Hash": "01f28d4278f15c76cddbea05899c5d6f"
+    },
+    "plotrix": {
+      "Package": "plotrix",
+      "Version": "3.8-2",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "grDevices",
+        "graphics",
+        "stats",
+        "utils"
+      ],
+      "Hash": "2ebe8c2ec200da649738b0fc35a9b1a1"
     },
     "png": {
       "Package": "png",
@@ -2164,6 +2292,19 @@
       ],
       "Hash": "906cb23d2f1c5680b8ce439b44c6fa63"
     },
+    "scatterplot3d": {
+      "Package": "scatterplot3d",
+      "Version": "0.3-44",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "grDevices",
+        "graphics",
+        "stats"
+      ],
+      "Hash": "10ee4b91ec812690bd55d9bf51edccee"
+    },
     "selectr": {
       "Package": "selectr",
       "Version": "0.4-2",
@@ -2440,7 +2581,7 @@
     },
     "twriTemplates": {
       "Package": "twriTemplates",
-      "Version": "0.2.3",
+      "Version": "0.3.0",
       "Source": "Repository",
       "Repository": "https://txwri.r-universe.dev",
       "Requirements": [
@@ -2454,7 +2595,7 @@
         "rlang",
         "systemfonts"
       ],
-      "Hash": "b19dfd1827b2d8dfc6f1fa2090b3e0ff"
+      "Hash": "a848a107e8f27c39f95cd92bd18ce401"
     },
     "tzdb": {
       "Package": "tzdb",
@@ -2524,6 +2665,18 @@
         "rlang"
       ],
       "Hash": "d0ef2856b83dc33ea6e255caf6229ee2"
+    },
+    "vipor": {
+      "Package": "vipor",
+      "Version": "0.4.5",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "graphics",
+        "stats"
+      ],
+      "Hash": "ea85683da7f2bfa63a98dc6416892591"
     },
     "viridis": {
       "Package": "viridis",
