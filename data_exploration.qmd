@@ -14,7 +14,11 @@ Install the required packages:
 #| code-overflow: wrap
 #| eval: false
 
+options(repos = c(
+  txwri = 'https://txwri.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
 install.packages("tidyverse")
+install.packages("twriTemplates")
 ```
 
 Load the packages (you will get a message indicating some function conflicts, don't worry about that for now:
@@ -23,6 +27,7 @@ Load the packages (you will get a message indicating some function conflicts, do
 #| code-overflow: wrap
 
 library(tidyverse)
+library(twriTemplates)
 ```
 
 When you load tidyverse, you will see the 8 different packages. 
@@ -48,13 +53,19 @@ If you want to work along, download the following example data export it directl
 Use the `read_csv()` function from the *readr* package to import the data and assign it to a variable. The console will print some information telling you what type of variable it made each column of the csv and if there are any problems.
 
 ```{r}
-df <- read_csv(file = "data/easterwood.csv")
+## this is a shortcut function in the twriTemplates package
+## that returns the file path to example data used in this documentation
+example_file_path <- path_to_file("easterwood.csv")
+
+## return a dataframe from the read_csv function with the file path
+## as the first argument
+df <- read_csv(file = example_file_path)
 ```
 
 `read_csv()` guesses the column types and sometimes it can guess wrong, so the safest option is to tell it what to expect using the `col_types` argument. This argument takes a string where each character represents one column. Here we will tell it to expect a `character, Date, character, number, number` which is represented as `cDcnn`.
 
 ```{r}
-df <- read_csv(file = "data/easterwood.csv",
+df <- read_csv(file = example_file_path,
                col_types = "cDcnn")
 df
 ```
@@ -65,8 +76,12 @@ If you have multiple files with the same column names you can read them into the
 
 ```{r}
 #| message: false
-files <- c("data/marabwq2020.csv", "data/marabwq2021.csv", "data/marcewq2020.csv", "data/marcewq2021.csv")
-df <- read_csv(file = files, 
+
+## returns two different file paths
+example_file_paths <- path_to_file(c("marabwq2021.csv", "marcewq2021.csv"))
+
+## returns one dataframe from two files
+df <- read_csv(file = example_file_paths, 
                col_types = cols_only(
                  StationCode = col_factor(),
                  DateTimeStamp = col_datetime(format = "%m/%e/%Y %H:%M"),
@@ -88,7 +103,7 @@ This dataset is from the NOAA NERRS Centralized Data Management Office and provi
 
 In this data we have a row for each date/time observation with associated columns for Station, Temperature, Specific Conductance, Salinity, and Dissolved Oxygen. The columns with the F_ prefix are qa/qc flags, `<0>` is accepted data. 
 
-## Plot and Clean Data
+## Plot and Clean Data {#sec-plotclean}
 
 *ggplot2* is the graphics package for producing layered plots. The underlying philosophy of *ggplot2* is to iteratively build your plots layer by layer which allows for some sophisticated plots. I won't go into full details of using *ggplot2* but lots of information is available in the [ggplot2 book](https://ggplot2-book.org/index.html).
 
