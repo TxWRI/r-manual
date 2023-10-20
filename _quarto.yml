@@ -65,6 +65,8 @@ format:
     # theme css
     theme:
       light: css/twri_quarto.scss
+    mainfont: Crimson Text
+    monofont: Source Code Pro
     css: css/twri.scss
     # define figure sizing
     fig-width: 8

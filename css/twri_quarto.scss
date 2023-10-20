@@ -4,21 +4,36 @@
 $theme: "simplex" !default;
 
 // import google fonts
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Oswald:wght@300;400;500&display=swap');
 
-// use Atkinson Hyperlegible font if available
-$font-family-sans-serif:      "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+//some variables
+$font-family-heading: "Oswald", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 
-$font-family-code: "Source Code Pro", SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$font-family-serif: "Crimson Text", serif !default;
 
 /*-- scss:rules --*/
-p {
-  font-family: $font-family-sans-serif;
+.anchored {
+  font-family: $font-family-heading;
 }
 
-pre code {
-  font-family: $font-family-code;
+.breadcrumb {
+  font-family: $font-family-heading;
+  font-weight: 300;
+}
+
+.footer {
+  font-family: $font-family-heading;
+  font-weight: 300;
+}
+
+.navbar-title {
+  font-family: $font-family-heading;
+}
+
+.menu-text {
+  font-family: $font-family-heading;
+  font-weight: 300;
 }
 
 .quarto-title-banner{
@@ -32,4 +47,21 @@ pre code {
 
 .quarto-title-banner {
   color: var(--bs-body-color);
+}
+
+.margin-sidebar {
+  font-family: $font-family-heading;
+  font-weight: 300;
+}
+
+.table {
+  font-family: $font-family-serif;
+}
+
+.title {
+  font-family: $font-family-heading;
+}
+
+h1.unnumbered {
+  font-family: $font-family-heading;
 }
