@@ -14,7 +14,11 @@ Install the required packages:
 #| code-overflow: wrap
 #| eval: false
 
+options(repos = c(
+  txwri = 'https://txwri.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
 install.packages("tidyverse")
+install.packages("twriTemplates")
 ```
 
 Load the packages (you will get a message indicating some function conflicts, don't worry about that for now:
@@ -23,6 +27,7 @@ Load the packages (you will get a message indicating some function conflicts, do
 #| code-overflow: wrap
 
 library(tidyverse)
+library(twriTemplates)
 ```
 
 When you load tidyverse, you will see the 8 different packages. 
@@ -38,35 +43,78 @@ When you load tidyverse, you will see the 8 different packages.
 
 ## Import Data
 
-One of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, *do not* manipulate the data file^[Later on we will discuss loading web data sources directly into R, but for most of our work your best bet is to store raw data files inside the project].
+One of the first steps in any data analysis project is importing or reading 
+data into R. 
+For now, we will focus on reading in data from comma separated 
+value (CSV), tab seperated value (TSV), and similar delimited text files. 
+For most projects, it is useful to work off a singular data snapshot. 
+So once you download your data and have it in your project, *do not* manipulate 
+the data file^[Later on we will discuss loading web data sources directly into 
+R, but for most of our work your best bet is to store raw data files inside 
+the project].
 
 :::{.callout-tip}
-## Download Data
-If you want to work along, download the following example data export it directly into the *data* folder in your R project: [Data](https://github.com/TxWRI/r-manual/raw/main/data/tutorial.zip)
+## Example Data
+The [`twriTemplates`](https://txwri.github.io/twriTemplates/) package includes 
+the example data used here. The `path_to_file()` function returns the file path
+to example data csv and text files in the package. 
+The output from `path_to_file()` can be used directly in the functions used to 
+read or import csv and text files.
 :::
 
-Use the `read_csv()` function from the *readr* package to import the data and assign it to a variable. The console will print some information telling you what type of variable it made each column of the csv and if there are any problems.
+Use the `read_csv()` function from the *readr* package to import the data and 
+assign it to a variable^[Try downloading and extracting this [example data](https://github.com/TxWRI/r-manual/raw/main/data/tutorial.zip) 
+to your R project *data* folder. 
+Instead of using the `path_to_file()` function, type to path to the data folder 
+and the filename for your first argument in `read_csv()`. 
+It should look something like: `read_csv("data/easterwood.csv"`]. 
+The console will print some information telling you what type of variable it 
+made each column of the csv and if there are any problems.
 
 ```{r}
-df <- read_csv(file = "data/easterwood.csv")
+## this is a shortcut function in the twriTemplates package
+## that returns the file path to example data used in this documentation
+example_file_path <- path_to_file("easterwood.csv")
+
+## return a dataframe from the read_csv function with the file path
+## as the first argument
+df <- read_csv(file = example_file_path)
 ```
 
-`read_csv()` guesses the column types and sometimes it can guess wrong, so the safest option is to tell it what to expect using the `col_types` argument. This argument takes a string where each character represents one column. Here we will tell it to expect a `character, Date, character, number, number` which is represented as `cDcnn`.
+`read_csv()` guesses the column types and sometimes it can guess wrong, so the 
+safest option is to tell it what to expect using the `col_types` argument. 
+This argument takes a string where each character represents one column. 
+Here we will tell it to expect a `character, Date, character, number, number` 
+which is represented as `cDcnn`.
 
 ```{r}
-df <- read_csv(file = "data/easterwood.csv",
+df <- read_csv(file = example_file_path,
                col_types = "cDcnn")
 df
 ```
 
-TSV and other delimited files are read in the same way but with `read_delim()` or `read_tsv()`. If your data is in `.xlsx` format, the *readxl* pacakge is required. In *readxl* there is a `read_xlsx()` function that works similar to the `read_csv()` function except you can specify the sheet and range of cells to read from. The `col_types` argument also needs to be spelled out as a character vector such as `col_types = c("text", "date", "text", "numeric", "numeric")`.
+TSV and other delimited files are read in the same way but with `read_delim()` 
+or `read_tsv()`. If your data is in `.xlsx` format, the *readxl* pacakge is 
+required. 
+In *readxl* there is a `read_xlsx()` function that works similar to the 
+`read_csv()` function except you can specify the sheet and range of cells to 
+read from. 
+The `col_types` argument also needs to be spelled out as a character vector 
+such as `col_types = c("text", "date", "text", "numeric", "numeric")`.
 
-If you have multiple files with the same column names you can read them into the same data frame. Here we read in multiple files and are more explicit about defining the column types:
+If you have multiple files with the same column names you can read them into 
+the same data frame. 
+Here we read in multiple files and are more explicit about defining the column 
+types:
 
 ```{r}
 #| message: false
-files <- c("data/marabwq2020.csv", "data/marabwq2021.csv", "data/marcewq2020.csv", "data/marcewq2021.csv")
-df <- read_csv(file = files, 
+
+## returns two different file paths
+example_file_paths <- path_to_file(c("marabwq2021.csv", "marcewq2021.csv"))
+
+## returns one dataframe from two files
+df <- read_csv(file = example_file_paths, 
                col_types = cols_only(
                  StationCode = col_factor(),
                  DateTimeStamp = col_datetime(format = "%m/%e/%Y %H:%M"),
@@ -83,14 +131,24 @@ df
 ```
 
 ::: {.column-margin}
-This dataset is from the NOAA NERRS Centralized Data Management Office and provides measures of water quality parameters in the Mission and Aransas (MAR) National Estuarine Research Reserve (NERR)[@noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022].
+This dataset is from the NOAA NERRS Centralized Data Management Office and 
+provides measures of water quality parameters in the Mission and Aransas (MAR) 
+National Estuarine Research Reserve (NERR)[@noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022].
 :::
 
-In this data we have a row for each date/time observation with associated columns for Station, Temperature, Specific Conductance, Salinity, and Dissolved Oxygen. The columns with the F_ prefix are qa/qc flags, `<0>` is accepted data. 
+In this data we have a row for each date/time observation with associated 
+columns for Station, Temperature, Specific Conductance, Salinity, and Dissolved 
+Oxygen. 
+The columns with the F_ prefix are qa/qc flags, `<0>` is accepted data. 
 
-## Plot and Clean Data
+## Plot and Clean Data {#sec-plotclean}
 
-*ggplot2* is the graphics package for producing layered plots. The underlying philosophy of *ggplot2* is to iteratively build your plots layer by layer which allows for some sophisticated plots. I won't go into full details of using *ggplot2* but lots of information is available in the [ggplot2 book](https://ggplot2-book.org/index.html).
+[*ggplot2*](https://ggplot2.tidyverse.org/) is the graphics package for 
+producing layered plots. 
+The underlying philosophy of *ggplot2* is to iteratively build your plots layer 
+by layer which allows for some sophisticated plots. I won't go into full 
+details of using *ggplot2* but lots of information is available in 
+the [ggplot2 book](https://ggplot2-book.org/index.html).
 
 Three key things you need to learn: data, aesthetics, geoms.
 
@@ -100,7 +158,10 @@ Three key things you need to learn: data, aesthetics, geoms.
  
  - geoms: are the layers that define how each layer is rendered (points, lines, bars, etc.).
  
-Using the data we imported from above we can quickly create a basic scatter plot. Note the use of the `+` symbol to iteratively add layers to our plot. First we specify the data, then the geometry, and the aesthetic for that geom: 
+Using the data we imported from above we can quickly create a basic scatter 
+plot. 
+Note the use of the `+` symbol to iteratively add layers to our plot. 
+First we specify the data, then the geometry, and the aesthetic for that geom: 
 
 ```{r}
 p1 <- ggplot(data = df, aes(x = DateTimeStamp, y = Temp)) +
@@ -108,21 +169,27 @@ p1 <- ggplot(data = df, aes(x = DateTimeStamp, y = Temp)) +
 p1
 ```
 
-The above figure demonstrates the importance of plotting your data, the -100 value is clearly an issue. One thing we can do is filter the data to try and track down the issue. The dplyr package provides a number of functions to explore your data. Here, the data is filtered on the Temp column to include data less than -99:
+The above figure demonstrates the importance of plotting your data, the 
+-100 value is clearly an issue. 
+One thing we can do is filter the data to try and track down the issue.
+The dplyr package provides a number of functions to explore your data. 
+Here, the data is filtered on the Temp column to include data less than -99:
 
 ```{r}
 df |> 
   filter(Temp < -99)
 ```
 
-The F_Temp qa flag is `< -3 >` indicating QA rejected the data point. So, let's update the data to remove data that doesn't have the `< 0 >` data flag:
+The F_Temp qa flag is `< -3 >` indicating QA rejected the data point. 
+Let's update the data to remove data that doesn't have the `< 0 >` data flag:
 
 ```{r}
 df <- df |> 
   filter(F_Temp == "<0>")
 df
 ```
-This removes about 29,263 observations. Try plotting again:
+This removes about 29,263 observations. 
+Try plotting again:
 
 ```{r}
 p1 <- ggplot(data = df, aes(x = DateTimeStamp, y = Temp)) +
@@ -144,7 +211,13 @@ ggplot(data = df, aes(y = Temp, x = StationCode)) +
 ```
 
 
-To explore relationships between two variables, use geom_point and geom_smooth with each variable mapped to x and y. In this example, ggplot2 prints a message indicating 834 rows of data had missing or NA values that could not be plotted. geom_mooth will plot the smooth line (using a loess or gam smooth) between two variables. If you want the linear regression drawn use the argument `method = "lm"`.
+To explore relationships between two variables, use geom_point and geom_smooth 
+with each variable mapped to x and y. 
+In this example, ggplot2 prints a message indicating 834 rows of data had 
+missing or NA values that could not be plotted. 
+`geom_smooth()` will plot the smooth line (using a loess or gam smooth) between 
+two variables. 
+If you want the linear regression drawn use the argument `method = "lm"`.
 
 ```{r}
 p3 <- ggplot(data = df, aes(x = Temp, y = DO_mgl)) +
@@ -153,7 +226,14 @@ p3 <- ggplot(data = df, aes(x = Temp, y = DO_mgl)) +
 p3
 ```
 
-This is a good example to introduce the other important aesthetics in *ggplot2*. There is a clear negative relationship between Temperature and Dissolved Oxygen. Our data includes two sites, is there a difference between the two sites? We can map color to the site variable which will color each observation and each smooth a different color. Although shape and color can be used inside the `aes()` mapping function, you can assign them a value in the geom directly. Here we asign values for the shape and alpha properties in the point geom.
+This is a good example to introduce the other important aesthetics in *ggplot2*. 
+There is a clear negative relationship between Temperature and Dissolved Oxygen. 
+Our data includes two sites, is there a difference between the two sites? 
+We can map color to the site variable which will color each observation and 
+each smooth a different color. 
+Although shape and color can be used inside the `aes()` mapping function, you 
+can assign them a value in the geom directly. Here we asign values for the 
+shape and alpha properties in the point geom.
 
 ```{r}
 p3 <- ggplot(data = df, aes(x = Temp, y = DO_mgl, color = StationCode)) +
@@ -162,7 +242,10 @@ p3 <- ggplot(data = df, aes(x = Temp, y = DO_mgl, color = StationCode)) +
 p3
 ```
 
-There was no reason to expect a difference and there isn't. However the plot is muddy because there are so many overlying data points. We can also facet the graph by a variable. The following code also shows how you can just add another layer to your existing ggplot object:
+There was no reason to expect a difference and there isn't. However the plot is 
+muddy because there are so many overlying data points. 
+We can also facet the graph by a variable. The following code also shows how 
+you can just add another layer to your existing ggplot object:
 
 ```{r}
 p3 <- p3 +
@@ -171,7 +254,10 @@ p3 <- p3 +
 p3
 ```
 
-As you can see, ggplot2 allows you to rapidly iterate plots to explore data. When exploring the data, the formatting might not matter much, but if you want to export plots, we also need to take care of labels and general plot visual preferences.
+As you can see, ggplot2 allows you to rapidly iterate plots to explore data. 
+When exploring the data, the formatting might not matter much, but if you want 
+to export plots, we also need to take care of labels and general plot visual 
+preferences.
 
 ```{r}
 p3 <- p3 +
@@ -184,7 +270,10 @@ p3
 
 ### Themes
 
-ggplot2 has a number of built-in themes. For most of our use cases (reports and papers), the grey background and white lines are not great choices. We recommend using the `theme_bw()` function at the bare minimum:
+ggplot2 has a number of built-in themes. 
+For most of our use cases (reports and papers), the grey background and white 
+lines are not great choices. 
+We recommend using the `theme_bw()` function at the bare minimum:
 
 ```{r}
 p3 +
@@ -192,7 +281,8 @@ p3 +
 ```
 
 
-The twriTemplates package is available with a custom theme and some color palettes that are consistent with the Institute's branding:
+The twriTemplates package is available with a custom theme and some color 
+palettes that are consistent with the Institute's branding:
 
 ```{r}
 #| eval: false
@@ -215,7 +305,10 @@ p3 +
 ```
 
 
-The facet labels are still not very useful. There isn't an easy way to change this using *ggplot2*. Instead we can create a new variable using the `mutate()` function in *dplyr*. There is more discussion about *dplyr* in the next section.
+The facet labels are still not very useful. There isn't an easy way to change 
+this using *ggplot2*. 
+Instead we can create a new variable using the `mutate()` function in *dplyr*. 
+There is more discussion about *dplyr* in the next section.
 
 ```{r}
 #| message: false
@@ -241,7 +334,12 @@ ggplot(data = df,
 
 ## Manipulate and Summarize Data
 
-[*dplyr*](https://dplyr.tidyverse.org/articles/dplyr.html) is a powerful package designed for working with dataframes and tibbles. Read the [*dplyr* introduction](https://dplyr.tidyverse.org/articles/dplyr.html) to get a better sense of all the available functions. Essentially *dplyr* provides "verb" functions that correspond to how you want to manipulate the dataframe.
+[*dplyr*](https://dplyr.tidyverse.org/articles/dplyr.html) is a powerful package 
+designed for working with dataframes and tibbles. 
+Read the [*dplyr* introduction](https://dplyr.tidyverse.org/articles/dplyr.html) 
+to get a better sense of all the available functions. 
+Essentially *dplyr* provides "verb" functions that correspond to how you want 
+to manipulate the dataframe.
 
 Commonly used verbs include:
 
@@ -251,9 +349,16 @@ Commonly used verbs include:
  - `group_by()`: group the data by variable values
  - `summarise()`: summarise the grouped or ungrouped data based on user provided functions
  
-There are many other functions, but these cover many use cases for people just getting started. *dplyr* also provides functions for joining datasets based on common variables, changing the order of a dataframe, calculating cumulative statistics, calculating lag and leading values, and rolling or window rank functions among others. All of these can be very useful to become familiar with.
+There are many other functions, but these cover many use cases for people just 
+getting started. *dplyr* also provides functions for joining datasets based on 
+common variables, changing the order of a dataframe, calculating cumulative 
+statistics, calculating lag and leading values, and rolling or window rank 
+functions among others. 
+All of these can be very useful to become familiar with.
 
-In this example I want to explore seasonal differences in the water quality parameters. `mutate()` is used to create new variables. 
+In this example I want to explore seasonal differences in the water quality 
+parameters. 
+`mutate()` is used to create new variables. 
 ```{r}
 summary_plot <- df |> 
   # returns DateTimeStamp Value as the month only
@@ -273,7 +378,9 @@ summary_plot
 ```
  
 
-Now we have a summary figure, but what about the data? We can use the `summarize()` or `summarise()` function (depending on your English preference) to calculate some summary statistics for each group.
+Now we have a summary figure, but what about the data? 
+We can use the `summarize()` or `summarise()` function (depending on your 
+English preference) to calculate some summary statistics for each group.
 
 ```{r}
 summary_table <- df |> 
@@ -301,7 +408,14 @@ summary_table
 
 ### Figures
 
-You have created a figure and a table in R. Now you probably need to put it in a report, website, or other self contained file for your boss to look at. For figures created with *ggplot2*, the `ggsave()` option is the easiest option. First I reccomend installing, the *ragg* package because if it available, `ggsave()` will use it. *ragg* provides higher performance and higher quality images than the graphics devices available in base R. 
+You have created a figure and a table in R. Now you probably need to put it in 
+a report, website, or other self contained file for your boss to look at. 
+For figures created with *ggplot2*, the `ggsave()` option is the easiest 
+option. 
+First I recommend installing, the *ragg* package because if it available, 
+`ggsave()` will use it. 
+*ragg* provides higher performance and higher quality images than the 
+graphics devices available in base R. 
 
 ```{r}
 #| eval: false
@@ -320,7 +434,10 @@ ggsave(filename = "figures/boxplot_mare.png",
        units = "in")
 ```
 
-If you have a figure created from something other than a ggplot object, then we need to use the ragg graphics device to save it as a file (this also works with ggplot as demonstrated here). If you don't have *ragg* installed, substitute `png()` for `agg_png()`. 
+If you have a figure created from something other than a ggplot object, then we 
+need to use the ragg graphics device to save it as a file (this also works with 
+ggplot as demonstrated here). 
+If you don't have *ragg* installed, substitute `png()` for `agg_png()`. 
 
 ```{r}
 #| eval: false
@@ -340,7 +457,9 @@ dev.off()
 
 ### Tables
 
-*readr* and [*writexl*](https://docs.ropensci.org/writexl/) packages provide the functions required to export data frames to text delimited or Microsoft Excel files.
+*readr* and [*writexl*](https://docs.ropensci.org/writexl/) packages provide 
+the functions required to export data frames to text delimited or Microsoft 
+Excel files.
 
 ```{r}
 #| eval: false
@@ -378,3 +497,4 @@ One script to run the analysis and export data/tables/figures
 Metadata, readme, etc.
 
 :::
+

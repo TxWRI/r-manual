@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.340">
+<meta name="generator" content="quarto-1.4.376">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <title>twri r-manual - 2&nbsp; Data Exploration</title>
 <style>
@@ -19,7 +19,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -55,6 +55,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 div.csl-bib-body { }
 div.csl-entry {
   clear: both;
+  margin-bottom: 0em;
 }
 .hanging-indent div.csl-entry {
   margin-left:2em;
@@ -96,6 +97,12 @@ div.csl-indent {
   "panel-placement": "end",
   "type": "overlay",
   "limit": 20,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -105,7 +112,8 @@ div.csl-indent {
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
     "search-detached-cancel-button-title": "Cancel",
-    "search-submit-button-title": "Submit"
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
   }
 }</script><link rel="stylesheet" href="css/twri.scss">
 </head>
@@ -113,14 +121,14 @@ div.csl-indent {
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
-      <div class="navbar-brand-container">
+      <div class="navbar-brand-container mx-auto">
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     <img src="./images/logo-drop.png" alt="" class="navbar-logo"></a>
     <a class="navbar-brand" href="./index.html">
     <span class="navbar-title">twri r-manual</span>
     </a>
   </div>
-        <div class="quarto-navbar-tools ms-auto">
+        <div class="quarto-navbar-tools">
     <a href="https://github.com/txwri/r-manual/tree/main/docs/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
 </div>
           <div id="quarto-search" class="" title="Search"></div>
@@ -129,21 +137,13 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">R Basics</a></li><li class="breadcrumb-item"><a href="./data_exploration.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Exploration</span></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
-      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
-        <i class="bi bi-search"></i>
-      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">R Basics</a></li><li class="breadcrumb-item"><a href="./data_exploration.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Exploration</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="mt-2 flex-shrink-0 align-items-center">
-        <div class="sidebar-search">
-        <div id="quarto-search" class="" title="Search"></div>
-        </div>
-        </div>
-    <div class="sidebar-menu-container"> 
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
@@ -229,7 +229,7 @@ div.csl-indent {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Geospatial</span></a>
+ <span class="menu-text">Statistical Analysis</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -237,20 +237,43 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./water-quality-statistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Geospatial</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./maps.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./watershed-delineation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./raster-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
   </div>
 </li>
       </ul>
@@ -271,7 +294,7 @@ div.csl-indent {
   <ul>
 <li><a href="#import-data" id="toc-import-data" class="nav-link active" data-scroll-target="#import-data"><span class="header-section-number">2.1</span> Import Data</a></li>
   <li>
-<a href="#plot-and-clean-data" id="toc-plot-and-clean-data" class="nav-link" data-scroll-target="#plot-and-clean-data"><span class="header-section-number">2.2</span> Plot and Clean Data</a>
+<a href="#sec-plotclean" id="toc-sec-plotclean" class="nav-link" data-scroll-target="#sec-plotclean"><span class="header-section-number">2.2</span> Plot and Clean Data</a>
   <ul class="collapse">
 <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes"><span class="header-section-number">2.2.1</span> Themes</a></li>
   </ul>
@@ -285,10 +308,10 @@ div.csl-indent {
   </ul>
 </li>
   <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">2.5</span> Workflow</a></li>
-  </ul><div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/txwri/r-manual/edit/main/docs/data_exploration.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/txwri/r-manual/issues/new" class="toc-action">Report an issue</a></p><p><a href="https://github.com/txwri/r-manual/blob/main/docs/data_exploration.qmd" class="toc-action">View source</a></p></div></div></nav>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/txwri/r-manual/edit/main/docs/data_exploration.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/txwri/r-manual/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/txwri/r-manual/blob/main/docs/data_exploration.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
-<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./intro.html">R Basics</a></li><li class="breadcrumb-item"><a href="./data_exploration.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Exploration</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title"><span id="sec-dataexplore" class="quarto-section-identifier"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Exploration</span></span></h1>
 </div>
 
@@ -302,53 +325,35 @@ div.csl-indent {
   </div>
   
 
+
 </header><p>This is a basic introduction to importing and tidying, plotting, summarizing, and exporting data using the <em>tidyverse</em> family of functions. This is a very basic primer, for more indepth discussion see: …</p>
 <p>To get started, make sure you have the <a href="https://www.tidyverse.org/">tidyverse</a> installed. The tidyverse is actually a set of 8 packages designed to work together using a common set of design philosophies. You can doo all the things described below, without tidyverse packages, but I think it is easier to review code that is written using the tidyverse approach.</p>
 <p>Install the required packages:</p>
 <div class="cell">
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"tidyverse"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span></span>
+<span>  txwri <span class="op">=</span> <span class="st">'https://txwri.r-universe.dev'</span>,</span>
+<span>  CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"tidyverse"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"twriTemplates"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Load the packages (you will get a message indicating some function conflicts, don’t worry about that for now:</p>
 <div class="cell">
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'tidyverse' was built under R version 4.2.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'ggplot2' was built under R version 4.2.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'tibble' was built under R version 4.2.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'tidyr' was built under R version 4.2.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'readr' was built under R version 4.2.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'dplyr' was built under R version 4.2.3</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'stringr' was built under R version 4.2.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'forcats' was built under R version 4.2.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'lubridate' was built under R version 4.2.2</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.2     ✔ readr     2.1.4
+✔ dplyr     1.1.3     ✔ readr     2.1.4
 ✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.2     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.1     
+✔ ggplot2   3.4.3     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TxWRI/twriTemplates">twriTemplates</a></span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>See https://github.com/TxWRI/twriTemplates for more details, use the Issues tab if you have questions.</code></pre>
 </div>
 </div>
 <p>When you load tidyverse, you will see the 8 different packages.</p>
@@ -372,23 +377,29 @@ div.csl-indent {
 </ul>
 <section id="import-data" class="level2 page-columns page-full" data-number="2.1"><h2 data-number="2.1" class="anchored" data-anchor-id="import-data">
 <span class="header-section-number">2.1</span> Import Data</h2>
-<div class="page-columns page-full"><p>One of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, <em>do not</em> manipulate the data file<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p><div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;Later on we will discuss loading web data sources directly into R, but for most of our work your best bet is to store raw data files inside the project</p></li></div></div>
-<div class="callout callout-style-default callout-tip callout-titled">
+<p>One of the first steps in any data analysis project is importing or reading data into R. For now, we will focus on reading in data from comma separated value (CSV), tab seperated value (TSV), and similar delimited text files. For most projects, it is useful to work off a singular data snapshot. So once you download your data and have it in your project, <em>do not</em> manipulate the data file<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;Later on we will discuss loading web data sources directly into R, but for most of our work your best bet is to store raw data files inside the project</p></li></div><div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Download Data
+Example Data
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you want to work along, download the following example data export it directly into the <em>data</em> folder in your R project: <a href="https://github.com/TxWRI/r-manual/raw/main/data/tutorial.zip">Data</a></p>
+<p>The <a href="https://txwri.github.io/twriTemplates/"><code>twriTemplates</code></a> package includes the example data used here. The <code><a href="https://txwri.github.io/twriTemplates/reference/path_to_file.html">path_to_file()</a></code> function returns the file path to example data csv and text files in the package. The output from <code><a href="https://txwri.github.io/twriTemplates/reference/path_to_file.html">path_to_file()</a></code> can be used directly in the functions used to read or import csv and text files.</p>
 </div>
 </div>
-<p>Use the <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv()</a></code> function from the <em>readr</em> package to import the data and assign it to a variable. The console will print some information telling you what type of variable it made each column of the csv and if there are any problems.</p>
-<div class="cell">
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"data/easterwood.csv"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Use the <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv()</a></code> function from the <em>readr</em> package to import the data and assign it to a variable<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>. The console will print some information telling you what type of variable it made each column of the csv and if there are any problems.</p>
+<div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;Try downloading and extracting this <a href="https://github.com/TxWRI/r-manual/raw/main/data/tutorial.zip">example data</a> to your R project <em>data</em> folder. Instead of using the <code><a href="https://txwri.github.io/twriTemplates/reference/path_to_file.html">path_to_file()</a></code> function, type to path to the data folder and the filename for your first argument in <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv()</a></code>. It should look something like: <code>read_csv("data/easterwood.csv"</code></p></li></div><div class="cell">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## this is a shortcut function in the twriTemplates package</span></span>
+<span><span class="co">## that returns the file path to example data used in this documentation</span></span>
+<span><span class="va">example_file_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/path_to_file.html">path_to_file</a></span><span class="op">(</span><span class="st">"easterwood.csv"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## return a dataframe from the read_csv function with the file path</span></span>
+<span><span class="co">## as the first argument</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">example_file_path</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 4045 Columns: 5
 ── Column specification ────────────────────────────────────────────────────────
@@ -403,7 +414,7 @@ date (1): date
 </div>
 <p><code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv()</a></code> guesses the column types and sometimes it can guess wrong, so the safest option is to tell it what to expect using the <code>col_types</code> argument. This argument takes a string where each character represents one column. Here we will tell it to expect a <code>character, Date, character, number, number</code> which is represented as <code>cDcnn</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"data/easterwood.csv"</span>,</span>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">example_file_path</span>,</span>
 <span>               col_types <span class="op">=</span> <span class="st">"cDcnn"</span><span class="op">)</span></span>
 <span><span class="va">df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -427,8 +438,11 @@ date (1): date
 <p>TSV and other delimited files are read in the same way but with <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_delim()</a></code> or <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_tsv()</a></code>. If your data is in <code>.xlsx</code> format, the <em>readxl</em> pacakge is required. In <em>readxl</em> there is a <code>read_xlsx()</code> function that works similar to the <code><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv()</a></code> function except you can specify the sheet and range of cells to read from. The <code>col_types</code> argument also needs to be spelled out as a character vector such as <code>col_types = c("text", "date", "text", "numeric", "numeric")</code>.</p>
 <p>If you have multiple files with the same column names you can read them into the same data frame. Here we read in multiple files and are more explicit about defining the column types:</p>
 <div class="cell">
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">files</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"data/marabwq2020.csv"</span>, <span class="st">"data/marabwq2021.csv"</span>, <span class="st">"data/marcewq2020.csv"</span>, <span class="st">"data/marcewq2021.csv"</span><span class="op">)</span></span>
-<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">files</span>, </span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## returns two different file paths</span></span>
+<span><span class="va">example_file_paths</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/path_to_file.html">path_to_file</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"marabwq2021.csv"</span>, <span class="st">"marcewq2021.csv"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## returns one dataframe from two files</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_csv</a></span><span class="op">(</span>file <span class="op">=</span> <span class="va">example_file_paths</span>, </span>
 <span>               col_types <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html">cols_only</a></span><span class="op">(</span></span>
 <span>                 StationCode <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_factor.html">col_factor</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>                 DateTimeStamp <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_datetime.html">col_datetime</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"%m/%e/%Y %H:%M"</span><span class="op">)</span>,</span>
@@ -443,20 +457,20 @@ date (1): date
 <span>               <span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 140,352 × 10
+<pre><code># A tibble: 70,080 × 10
    StationCode DateTimeStamp        Temp F_Temp SpCond F_SpCond   Sal F_Sal
    &lt;fct&gt;       &lt;dttm&gt;              &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;
- 1 marabwq     2020-01-01 00:00:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 2 marabwq     2020-01-01 00:15:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 3 marabwq     2020-01-01 00:30:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 4 marabwq     2020-01-01 00:45:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 5 marabwq     2020-01-01 01:00:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 6 marabwq     2020-01-01 01:15:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.4 &lt;0&gt;  
- 7 marabwq     2020-01-01 01:30:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
- 8 marabwq     2020-01-01 01:45:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
- 9 marabwq     2020-01-01 02:00:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
-10 marabwq     2020-01-01 02:15:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
-# ℹ 140,342 more rows
+ 1 marabwq     2021-01-01 00:00:00  16.1 &lt;0&gt;      47.9 &lt;0&gt;       31.2 &lt;0&gt;  
+ 2 marabwq     2021-01-01 00:15:00  16   &lt;0&gt;      47.9 &lt;0&gt;       31.3 &lt;0&gt;  
+ 3 marabwq     2021-01-01 00:30:00  16   &lt;0&gt;      47.9 &lt;0&gt;       31.3 &lt;0&gt;  
+ 4 marabwq     2021-01-01 00:45:00  16   &lt;0&gt;      47.9 &lt;0&gt;       31.3 &lt;0&gt;  
+ 5 marabwq     2021-01-01 01:00:00  15.9 &lt;0&gt;      47.9 &lt;0&gt;       31.2 &lt;0&gt;  
+ 6 marabwq     2021-01-01 01:15:00  15.9 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+ 7 marabwq     2021-01-01 01:30:00  15.9 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+ 8 marabwq     2021-01-01 01:45:00  15.8 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+ 9 marabwq     2021-01-01 02:00:00  15.8 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+10 marabwq     2021-01-01 02:15:00  15.7 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+# ℹ 70,070 more rows
 # ℹ 2 more variables: DO_mgl &lt;dbl&gt;, F_DO_mgl &lt;chr&gt;</code></pre>
 </div>
 </div>
@@ -464,9 +478,9 @@ date (1): date
 <div class="no-row-height column-margin column-container"><div class="">
 <p>This dataset is from the NOAA NERRS Centralized Data Management Office and provides measures of water quality parameters in the Mission and Aransas (MAR) National Estuarine Research Reserve (NERR)<span class="citation" data-cites="noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022">(<a href="references.html#ref-noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022" role="doc-biblioref">NOAA National Estuarine Research Reserve System (NERRS) 2022</a>)</span>.</p>
 </div></div><p>In this data we have a row for each date/time observation with associated columns for Station, Temperature, Specific Conductance, Salinity, and Dissolved Oxygen. The columns with the F_ prefix are qa/qc flags, <code>&lt;0&gt;</code> is accepted data.</p>
-</section><section id="plot-and-clean-data" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="plot-and-clean-data">
+</section><section id="sec-plotclean" class="level2" data-number="2.2"><h2 data-number="2.2" class="anchored" data-anchor-id="sec-plotclean">
 <span class="header-section-number">2.2</span> Plot and Clean Data</h2>
-<p><em>ggplot2</em> is the graphics package for producing layered plots. The underlying philosophy of <em>ggplot2</em> is to iteratively build your plots layer by layer which allows for some sophisticated plots. I won’t go into full details of using <em>ggplot2</em> but lots of information is available in the <a href="https://ggplot2-book.org/index.html">ggplot2 book</a>.</p>
+<p><a href="https://ggplot2.tidyverse.org/"><em>ggplot2</em></a> is the graphics package for producing layered plots. The underlying philosophy of <em>ggplot2</em> is to iteratively build your plots layer by layer which allows for some sophisticated plots. I won’t go into full details of using <em>ggplot2</em> but lots of information is available in the <a href="https://ggplot2-book.org/index.html">ggplot2 book</a>.</p>
 <p>Three key things you need to learn: data, aesthetics, geoms.</p>
 <ul>
 <li><p>data: a data frame or tibble with the data you want to plot.</p></li>
@@ -475,19 +489,24 @@ date (1): date
 </ul>
 <p>Using the data we imported from above we can quickly create a basic scatter plot. Note the use of the <code>+</code> symbol to iteratively add layers to our plot. First we specify the data, then the geometry, and the aesthetic for that geom:</p>
 <div class="cell">
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">DateTimeStamp</span>, y <span class="op">=</span> <span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">DateTimeStamp</span>, y <span class="op">=</span> <span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 4975 rows containing missing values (`geom_point()`).</code></pre>
+<pre><code>Warning: Removed 4959 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-1" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-6-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-1" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>The above figure demonstrates the importance of plotting your data, the -100 value is clearly an issue. One thing we can do is filter the data to try and track down the issue. The dplyr package provides a number of functions to explore your data. Here, the data is filtered on the Temp column to include data less than -99:</p>
 <div class="cell">
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">Temp</span> <span class="op">&lt;</span> <span class="op">-</span><span class="fl">99</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 10
@@ -497,57 +516,72 @@ date (1): date
 # ℹ 2 more variables: DO_mgl &lt;dbl&gt;, F_DO_mgl &lt;chr&gt;</code></pre>
 </div>
 </div>
-<p>The F_Temp qa flag is <code>&lt; -3 &gt;</code> indicating QA rejected the data point. So, let’s update the data to remove data that doesn’t have the <code>&lt; 0 &gt;</code> data flag:</p>
+<p>The F_Temp qa flag is <code>&lt; -3 &gt;</code> indicating QA rejected the data point. Let’s update the data to remove data that doesn’t have the <code>&lt; 0 &gt;</code> data flag:</p>
 <div class="cell">
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">F_Temp</span> <span class="op">==</span> <span class="st">"&lt;0&gt;"</span><span class="op">)</span></span>
 <span><span class="va">df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 111,090 × 10
+<pre><code># A tibble: 58,386 × 10
    StationCode DateTimeStamp        Temp F_Temp SpCond F_SpCond   Sal F_Sal
    &lt;fct&gt;       &lt;dttm&gt;              &lt;dbl&gt; &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;
- 1 marabwq     2020-01-01 00:00:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 2 marabwq     2020-01-01 00:15:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 3 marabwq     2020-01-01 00:30:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 4 marabwq     2020-01-01 00:45:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 5 marabwq     2020-01-01 01:00:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.3 &lt;0&gt;  
- 6 marabwq     2020-01-01 01:15:00  15.5 &lt;0&gt;      38.2 &lt;0&gt;       24.4 &lt;0&gt;  
- 7 marabwq     2020-01-01 01:30:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
- 8 marabwq     2020-01-01 01:45:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
- 9 marabwq     2020-01-01 02:00:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
-10 marabwq     2020-01-01 02:15:00  15.5 &lt;0&gt;      38.3 &lt;0&gt;       24.4 &lt;0&gt;  
-# ℹ 111,080 more rows
+ 1 marabwq     2021-01-01 00:00:00  16.1 &lt;0&gt;      47.9 &lt;0&gt;       31.2 &lt;0&gt;  
+ 2 marabwq     2021-01-01 00:15:00  16   &lt;0&gt;      47.9 &lt;0&gt;       31.3 &lt;0&gt;  
+ 3 marabwq     2021-01-01 00:30:00  16   &lt;0&gt;      47.9 &lt;0&gt;       31.3 &lt;0&gt;  
+ 4 marabwq     2021-01-01 00:45:00  16   &lt;0&gt;      47.9 &lt;0&gt;       31.3 &lt;0&gt;  
+ 5 marabwq     2021-01-01 01:00:00  15.9 &lt;0&gt;      47.9 &lt;0&gt;       31.2 &lt;0&gt;  
+ 6 marabwq     2021-01-01 01:15:00  15.9 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+ 7 marabwq     2021-01-01 01:30:00  15.9 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+ 8 marabwq     2021-01-01 01:45:00  15.8 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+ 9 marabwq     2021-01-01 02:00:00  15.8 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+10 marabwq     2021-01-01 02:15:00  15.7 &lt;0&gt;      47.8 &lt;0&gt;       31.2 &lt;0&gt;  
+# ℹ 58,376 more rows
 # ℹ 2 more variables: DO_mgl &lt;dbl&gt;, F_DO_mgl &lt;chr&gt;</code></pre>
 </div>
 </div>
 <p>This removes about 29,263 observations. Try plotting again:</p>
 <div class="cell">
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">DateTimeStamp</span>, y <span class="op">=</span> <span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">DateTimeStamp</span>, y <span class="op">=</span> <span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="va">p1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-2" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-9-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-2" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>We can use different geoms to explore the data:</p>
 <div class="cell">
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span>binwidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span><span class="va">p2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-3" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-10-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-3" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">Temp</span>, x <span class="op">=</span> <span class="va">StationCode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">Temp</span>, x <span class="op">=</span> <span class="va">StationCode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html">geom_boxplot</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-4" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-11-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-4" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
 </div>
 </div>
-<p>To explore relationships between two variables, use geom_point and geom_smooth with each variable mapped to x and y. In this example, ggplot2 prints a message indicating 834 rows of data had missing or NA values that could not be plotted. geom_mooth will plot the smooth line (using a loess or gam smooth) between two variables. If you want the linear regression drawn use the argument <code>method = "lm"</code>.</p>
+</div>
+<p>To explore relationships between two variables, use geom_point and geom_smooth with each variable mapped to x and y. In this example, ggplot2 prints a message indicating 834 rows of data had missing or NA values that could not be plotted. <code><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth()</a></code> will plot the smooth line (using a loess or gam smooth) between two variables. If you want the linear regression drawn use the argument <code>method = "lm"</code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span>, y <span class="op">=</span> <span class="va">DO_mgl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span>, y <span class="op">=</span> <span class="va">DO_mgl</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">p3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -561,12 +595,17 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-5" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-12-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-5" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>This is a good example to introduce the other important aesthetics in <em>ggplot2</em>. There is a clear negative relationship between Temperature and Dissolved Oxygen. Our data includes two sites, is there a difference between the two sites? We can map color to the site variable which will color each observation and each smooth a different color. Although shape and color can be used inside the <code><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes()</a></code> mapping function, you can assign them a value in the geom directly. Here we asign values for the shape and alpha properties in the point geom.</p>
 <div class="cell">
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span>, y <span class="op">=</span> <span class="va">DO_mgl</span>, color <span class="op">=</span> <span class="va">StationCode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">Temp</span>, y <span class="op">=</span> <span class="va">DO_mgl</span>, color <span class="op">=</span> <span class="va">StationCode</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="fl">21</span>, alpha <span class="op">=</span> <span class="fl">0.05</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="va">p3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -580,12 +619,17 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-6" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-13-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-6" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>There was no reason to expect a difference and there isn’t. However the plot is muddy because there are so many overlying data points. We can also facet the graph by a variable. The following code also shows how you can just add another layer to your existing ggplot object:</p>
 <div class="cell">
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p3</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p3</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">StationCode</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p3</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -599,12 +643,17 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-7" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-14-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-7" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>As you can see, ggplot2 allows you to rapidly iterate plots to explore data. When exploring the data, the formatting might not matter much, but if you want to export plots, we also need to take care of labels and general plot visual preferences.</p>
 <div class="cell">
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p3</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">&lt;-</span> <span class="va">p3</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"Temperature [°F]"</span>, y <span class="op">=</span> <span class="st">"Dissolved Oxygen [mg/L]"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html">scale_colour_brewer</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Stations"</span>,</span>
 <span>                      palette <span class="op">=</span> <span class="st">"Dark2"</span>,</span>
@@ -620,14 +669,19 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-8" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-15-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-8" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <section id="themes" class="level3" data-number="2.2.1"><h3 data-number="2.2.1" class="anchored" data-anchor-id="themes">
 <span class="header-section-number">2.2.1</span> Themes</h3>
 <p>ggplot2 has a number of built-in themes. For most of our use cases (reports and papers), the grey background and white lines are not great choices. We recommend using the <code><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw()</a></code> function at the bare minimum:</p>
 <div class="cell">
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">+</span></span>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">p3</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggtheme.html">theme_bw</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using method = 'gam' and formula = 'y ~ s(x, bs = "cs")'</code></pre>
@@ -639,17 +693,22 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-9" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-16-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-9" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>The twriTemplates package is available with a custom theme and some color palettes that are consistent with the Institute’s branding:</p>
 <div class="cell">
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"twriTemplates"</span>, </span>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"twriTemplates"</span>, </span>
 <span>                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>txwri <span class="op">=</span> <span class="st">'https://txwri.r-universe.dev'</span>,</span>
 <span>                           CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TxWRI/twriTemplates">twriTemplates</a></span><span class="op">)</span></span>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TxWRI/twriTemplates">twriTemplates</a></span><span class="op">)</span></span>
 <span><span class="va">p3</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/scale_custom.html">scale_color_discrete_twri</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Stations"</span>,</span>
@@ -661,12 +720,17 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-10" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-18-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-10" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>The facet labels are still not very useful. There isn’t an easy way to change this using <em>ggplot2</em>. Instead we can create a new variable using the <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> function in <em>dplyr</em>. There is more discussion about <em>dplyr</em> in the next section.</p>
 <div class="cell">
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>StationName <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>    <span class="va">StationCode</span> <span class="op">==</span> <span class="st">"marabwq"</span> <span class="op">~</span> <span class="st">"Aransas Bay"</span>,</span>
 <span>    <span class="va">StationCode</span> <span class="op">==</span> <span class="st">"marcewq"</span> <span class="op">~</span> <span class="st">"Copano Bay East"</span></span>
@@ -687,7 +751,12 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing missing values (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-11" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-19-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-11" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 </section></section><section id="manipulate-and-summarize-data" class="level2" data-number="2.3"><h2 data-number="2.3" class="anchored" data-anchor-id="manipulate-and-summarize-data">
@@ -709,7 +778,7 @@ date (1): date
 <p>There are many other functions, but these cover many use cases for people just getting started. <em>dplyr</em> also provides functions for joining datasets based on common variables, changing the order of a dataframe, calculating cumulative statistics, calculating lag and leading values, and rolling or window rank functions among others. All of these can be very useful to become familiar with.</p>
 <p>In this example I want to explore seasonal differences in the water quality parameters. <code><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate()</a></code> is used to create new variables.</p>
 <div class="cell">
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_plot</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_plot</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="co"># returns DateTimeStamp Value as the month only</span></span>
 <span>  <span class="co"># see ?strptime() for more info</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Month <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="va">DateTimeStamp</span>, <span class="st">"%B"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -728,12 +797,17 @@ date (1): date
 <pre><code>Warning: Removed 834 rows containing non-finite values (`stat_boxplot()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="data_exploration_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="1600"></p>
+<div id="fig-539a35d47e664c97a50115a146a7f1bd-12" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="data_exploration_files/figure-html/unnamed-chunk-20-1.png" id="fig-539a35d47e664c97a50115a146a7f1bd-12" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
 </div>
 </div>
 <p>Now we have a summary figure, but what about the data? We can use the <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarize()</a></code> or <code><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise()</a></code> function (depending on your English preference) to calculate some summary statistics for each group.</p>
 <div class="cell">
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_table</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_table</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>Month <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/format.html">format</a></span><span class="op">(</span><span class="va">DateTimeStamp</span>, <span class="st">"%B"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>         StationName <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
 <span>           <span class="va">StationCode</span> <span class="op">==</span> <span class="st">"marabwq"</span> <span class="op">~</span> <span class="st">"Aransas Bay"</span>,</span>
@@ -753,22 +827,22 @@ date (1): date
 <pre><code>`summarise()` has grouped output by 'StationName'. You can override using the
 `.groups` argument.</code></pre>
 </div>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">summary_table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 24 × 6
 # Groups:   StationName [2]
    StationName Month      Mean   Max   Min      SE
    &lt;chr&gt;       &lt;fct&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
- 1 Aransas Bay January    8.47  12.1   6.7 0.00870
- 2 Aransas Bay February   8.96  13.7   6.4 0.0171 
- 3 Aransas Bay March      7.57  10.4   5.6 0.00722
- 4 Aransas Bay April      7.12   8.5   5.9 0.00738
- 5 Aransas Bay May        6.75   9     4.8 0.00839
- 6 Aransas Bay June       5.98   8.1   2.2 0.0109 
- 7 Aransas Bay July       5.32   8.2   0.2 0.0180 
- 8 Aransas Bay August     5.45   7.4   0.2 0.0114 
- 9 Aransas Bay September  5.88   9.2   2.3 0.0111 
-10 Aransas Bay October    6.67   9.6   3.2 0.00959
+ 1 Aransas Bay January    8.56  12.1   6.7 0.0149 
+ 2 Aransas Bay February   9.36  13.7   6.4 0.0314 
+ 3 Aransas Bay March      7.57   8.7   5.6 0.00920
+ 4 Aransas Bay April      7.19   8.2   5.9 0.00952
+ 5 Aransas Bay May        7.10   9     5.7 0.0143 
+ 6 Aransas Bay June       5.86   7.8   2.2 0.0190 
+ 7 Aransas Bay July       4.74   8.2   0.2 0.0308 
+ 8 Aransas Bay August     5.08   7.1   0.2 0.0185 
+ 9 Aransas Bay September  5.69   7.8   2.3 0.0162 
+10 Aransas Bay October    6.67   9.6   3.2 0.0167 
 # ℹ 14 more rows</code></pre>
 </div>
 </div>
@@ -776,9 +850,9 @@ date (1): date
 <span class="header-section-number">2.4</span> Export Data</h2>
 <section id="figures" class="level3" data-number="2.4.1"><h3 data-number="2.4.1" class="anchored" data-anchor-id="figures">
 <span class="header-section-number">2.4.1</span> Figures</h3>
-<p>You have created a figure and a table in R. Now you probably need to put it in a report, website, or other self contained file for your boss to look at. For figures created with <em>ggplot2</em>, the <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave()</a></code> option is the easiest option. First I reccomend installing, the <em>ragg</em> package because if it available, <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave()</a></code> will use it. <em>ragg</em> provides higher performance and higher quality images than the graphics devices available in base R.</p>
+<p>You have created a figure and a table in R. Now you probably need to put it in a report, website, or other self contained file for your boss to look at. For figures created with <em>ggplot2</em>, the <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave()</a></code> option is the easiest option. First I recommend installing, the <em>ragg</em> package because if it available, <code><a href="https://ggplot2.tidyverse.org/reference/ggsave.html">ggsave()</a></code> will use it. <em>ragg</em> provides higher performance and higher quality images than the graphics devices available in base R.</p>
 <div class="cell">
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># install ragg</span></span>
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># install ragg</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ragg"</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ragg.r-lib.org">ragg</a></span><span class="op">)</span></span>
 <span></span>
@@ -793,7 +867,7 @@ date (1): date
 </div>
 <p>If you have a figure created from something other than a ggplot object, then we need to use the ragg graphics device to save it as a file (this also works with ggplot as demonstrated here). If you don’t have <em>ragg</em> installed, substitute <code><a href="https://rdrr.io/r/grDevices/png.html">png()</a></code> for <code><a href="https://ragg.r-lib.org/reference/agg_png.html">agg_png()</a></code>.</p>
 <div class="cell">
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># first function creates the device</span></span>
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># first function creates the device</span></span>
 <span><span class="fu"><a href="https://ragg.r-lib.org/reference/agg_png.html">agg_png</a></span><span class="op">(</span>filename <span class="op">=</span> <span class="st">"figures/boxplot_mare.png"</span>,</span>
 <span>    width <span class="op">=</span> <span class="fl">8</span>,</span>
 <span>    height <span class="op">=</span> <span class="fl">6</span>,</span>
@@ -808,7 +882,7 @@ date (1): date
 <span class="header-section-number">2.4.2</span> Tables</h3>
 <p><em>readr</em> and <a href="https://docs.ropensci.org/writexl/"><em>writexl</em></a> packages provide the functions required to export data frames to text delimited or Microsoft Excel files.</p>
 <div class="cell">
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## write a csv</span></span>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## write a csv</span></span>
 <span><span class="fu"><a href="https://readr.tidyverse.org/reference/write_delim.html">write_csv</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">summary_table</span>,</span>
 <span>          file <span class="op">=</span> <span class="st">"export_data/monthly_summary_mare.csv"</span><span class="op">)</span></span>
 <span></span>
@@ -845,7 +919,7 @@ Incomplete
 </div>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list" style="display: none">
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
 <div id="ref-noaanationalestuarineresearchreservesystemnerrsSystemwideMonitoringProgram2022" class="csl-entry" role="listitem">
 NOAA National Estuarine Research Reserve System (NERRS). 2022. System-Wide Monitoring Program. NOAA NERRS Centralized Data Management Office. <a href="http://cdmo.baruch.sc.edu/">http://cdmo.baruch.sc.edu/</a>.
 </div>
@@ -929,10 +1003,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     // clear code selection
     e.clearSelection();
   });
-  function tippyHover(el, contentFn) {
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
     const config = {
       allowHTML: true,
-      content: contentFn,
       maxWidth: 500,
       delay: 100,
       arrow: false,
@@ -942,8 +1015,17 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       interactive: true,
       interactiveBorder: 10,
       theme: 'quarto',
-      placement: 'bottom-start'
+      placement: 'bottom-start',
     };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
     window.tippy(el, config); 
   }
   const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
@@ -956,6 +1038,81 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       const id = href.replace(/^#\/?/, "");
       const note = window.document.getElementById(id);
       return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        return container.innerHTML
+      } else {
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }
+    }, function(instance) {
     });
   }
       let selectedAnnoteEl;
@@ -999,6 +1156,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
             }
             div.style.top = top - 2 + "px";
             div.style.height = height + 4 + "px";
+            div.style.left = 0;
             let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
             if (gutterDiv === null) {
               gutterDiv = window.document.createElement("div");
@@ -1024,6 +1182,33 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        console.log("RESIZE");
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -1095,11 +1280,15 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </nav>
 </div> <!-- /content -->
 <footer class="footer"><div class="nav-footer">
-    <div class="nav-footer-left"><a href="https://twri.tamu.edu">Texas Water Resources Institute</a></div>   
+    <div class="nav-footer-left">
+<p><a href="https://twri.tamu.edu">Texas Water Resources Institute</a></p>
+</div>   
     <div class="nav-footer-center">
       &nbsp;
     </div>
-    <div class="nav-footer-right">This work is licensed under <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1">CC BY-NC 4.0 <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"></a></div>
+    <div class="nav-footer-right">
+<p>This work is licensed under <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1">CC BY-NC 4.0 <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"></a></p>
+</div>
   </div>
 </footer>
 

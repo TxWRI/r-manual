@@ -1,0 +1,1560 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.376">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>twri r-manual - 8&nbsp; Hypothesis Testing</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./regression.html" rel="next">
+<link href="./load-duration.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><link rel="stylesheet" href="css/twri.scss">
+</head>
+<body class="nav-sidebar floating nav-fixed slimcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="navbar navbar-expand-lg navbar-dark "><div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./images/logo-drop.png" alt="" class="navbar-logo"></a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">twri r-manual</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools">
+    <a href="https://github.com/txwri/r-manual/tree/main/docs/" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./water-quality-statistics.html">Statistical Analysis</a></li><li class="breadcrumb-item"><a href="./water-quality-statistics.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto"><div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+ <span class="menu-text">R Basics</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Fundamentals</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_exploration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Exploration</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true">
+ <span class="menu-text">Hydrology</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./streamflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Streamflow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./stage-discharge.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stage-Discharge Rating Curves</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./drainage-area-ratio.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Drainage Area Ratio</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true">
+ <span class="menu-text">Water Quality</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./water-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Water Quality Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./load-duration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Load Duration Curves</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
+ <span class="menu-text">Statistical Analysis</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./water-quality-statistics.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Geospatial</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./maps.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./watershed-delineation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./raster-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#hypothesis-tests" id="toc-hypothesis-tests" class="nav-link active" data-scroll-target="#hypothesis-tests"><span class="header-section-number">8.1</span> Hypothesis Tests</a></li>
+  <li>
+<a href="#choice-of-test" id="toc-choice-of-test" class="nav-link" data-scroll-target="#choice-of-test"><span class="header-section-number">8.2</span> Choice of test</a>
+  <ul class="collapse">
+<li><a href="#plot-your-data" id="toc-plot-your-data" class="nav-link" data-scroll-target="#plot-your-data"><span class="header-section-number">8.2.1</span> Plot your data</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#two-independent-groups" id="toc-two-independent-groups" class="nav-link" data-scroll-target="#two-independent-groups"><span class="header-section-number">8.3</span> Two independent groups</a>
+  <ul class="collapse">
+<li><a href="#sec-ttest" id="toc-sec-ttest" class="nav-link" data-scroll-target="#sec-ttest"><span class="header-section-number">8.3.1</span> Two sample t-test</a></li>
+  <li><a href="#sec-ranksum" id="toc-sec-ranksum" class="nav-link" data-scroll-target="#sec-ranksum"><span class="header-section-number">8.3.2</span> Rank-Sum test</a></li>
+  <li><a href="#sec-twosampleperm" id="toc-sec-twosampleperm" class="nav-link" data-scroll-target="#sec-twosampleperm"><span class="header-section-number">8.3.3</span> Two-sample permutation test</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#matched-pairs" id="toc-matched-pairs" class="nav-link" data-scroll-target="#matched-pairs"><span class="header-section-number">8.4</span> Matched pairs</a>
+  <ul class="collapse">
+<li><a href="#sec-pairedt" id="toc-sec-pairedt" class="nav-link" data-scroll-target="#sec-pairedt"><span class="header-section-number">8.4.1</span> Paired <em>t</em>-test</a></li>
+  <li><a href="#sec-signedrank" id="toc-sec-signedrank" class="nav-link" data-scroll-target="#sec-signedrank"><span class="header-section-number">8.4.2</span> Signed rank test</a></li>
+  <li><a href="#sec-pairedperm" id="toc-sec-pairedperm" class="nav-link" data-scroll-target="#sec-pairedperm"><span class="header-section-number">8.4.3</span> Paired permutation test</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#three-of-more-independent-groups" id="toc-three-of-more-independent-groups" class="nav-link" data-scroll-target="#three-of-more-independent-groups"><span class="header-section-number">8.5</span> Three of more independent groups</a>
+  <ul class="collapse">
+<li><a href="#sec-anova" id="toc-sec-anova" class="nav-link" data-scroll-target="#sec-anova"><span class="header-section-number">8.5.1</span> ANOVA</a></li>
+  <li><a href="#sec-kw" id="toc-sec-kw" class="nav-link" data-scroll-target="#sec-kw"><span class="header-section-number">8.5.2</span> Kruskal-Walis</a></li>
+  <li><a href="#sec-onewayperm" id="toc-sec-onewayperm" class="nav-link" data-scroll-target="#sec-onewayperm"><span class="header-section-number">8.5.3</span> One-way permutation</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#two-factor-group-comparisons" id="toc-two-factor-group-comparisons" class="nav-link" data-scroll-target="#two-factor-group-comparisons"><span class="header-section-number">8.6</span> Two-factor group comparisons</a>
+  <ul class="collapse">
+<li><a href="#sec-twowayanova" id="toc-sec-twowayanova" class="nav-link" data-scroll-target="#sec-twowayanova"><span class="header-section-number">8.6.1</span> Two-factor ANOVA</a></li>
+  <li><a href="#sec-bdm" id="toc-sec-bdm" class="nav-link" data-scroll-target="#sec-bdm"><span class="header-section-number">8.6.2</span> Two-factor Brunner-Dette-Munk</a></li>
+  <li><a href="#sec-twowayperm" id="toc-sec-twowayperm" class="nav-link" data-scroll-target="#sec-twowayperm"><span class="header-section-number">8.6.3</span> Two-factor permutation test</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#correlation-between-two-independent-variables" id="toc-correlation-between-two-independent-variables" class="nav-link" data-scroll-target="#correlation-between-two-independent-variables"><span class="header-section-number">8.7</span> Correlation between two independent variables</a>
+  <ul class="collapse">
+<li><a href="#sec-person" id="toc-sec-person" class="nav-link" data-scroll-target="#sec-person"><span class="header-section-number">8.7.1</span> Pearson’s r</a></li>
+  <li><a href="#sec-spearman" id="toc-sec-spearman" class="nav-link" data-scroll-target="#sec-spearman"><span class="header-section-number">8.7.2</span> Spearman’s p</a></li>
+  <li><a href="#sec-permutation-pearson" id="toc-sec-permutation-pearson" class="nav-link" data-scroll-target="#sec-permutation-pearson"><span class="header-section-number">8.7.3</span> Permutation test for Pearson’s <em>r</em></a></li>
+  </ul>
+</li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/txwri/r-manual/edit/main/docs/water-quality-statistics.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/txwri/r-manual/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/txwri/r-manual/blob/main/docs/water-quality-statistics.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./water-quality-statistics.html">Statistical Analysis</a></li><li class="breadcrumb-item"><a href="./water-quality-statistics.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-wqs" class="quarto-section-identifier"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>This section introduces some statistical approaches commonly used in out projects. For an in depth discussion and examples of statistical approaches commonly employed across surface water quality studies, the reader is highly encouraged to review <span class="citation" data-cites="helselStatisticalMethodsWater2020">Helsel et al. (<a href="references.html#ref-helselStatisticalMethodsWater2020" role="doc-biblioref">2020</a>)</span>.</p>
+<section id="hypothesis-tests" class="level2 page-columns page-full" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="hypothesis-tests">
+<span class="header-section-number">8.1</span> Hypothesis Tests</h2>
+<p>Hypothesis tests are an approach for testing for differences between groups of data. Typically, we are interested in differences in the mean, geometric mean, or median of two or more different groups of data. It is useful to become familiar with several terms prior to conducting a hypothesis test:</p>
+<ul>
+<li><p><em>Null hypothesis</em>: or <span class="math inline">\(H_0\)</span> is what is assumed true about a system prior to testing and collecting data. It usually states there is no difference between groups or no relationship between variables. Differences or correlations in groups should be unlikely unless presented with evidence to reject the null.</p></li>
+<li><p><em>Alternative hypothesis</em>: or <span class="math inline">\(H_1\)</span> is assumed true if the data show strong evidence to reject the null. <span class="math inline">\(H_1\)</span> is stated as a negation of <span class="math inline">\(H_0\)</span>.</p></li>
+<li><p><em><span class="math inline">\(\alpha\)</span>-value</em>: or significance level, is the probability of incorrectly rejecting the null hypothesis. While this is traditionally set at 0.05 (5%) or 0.01 (1%), other values can be chosen based on the acceptable risk of rejecting the null hypothesis when in fact the null is true (also called a <em>Type I error</em>).</p></li>
+<li><p><em><span class="math inline">\(\beta\)</span>-value</em>: the probability of failing to reject the null hypothesis when is is in fact false (also called a <em>Type II error</em>).</p></li>
+<li><p><em>Power</em>: Is the probability of rejecting the null when is is in fact false. This is equivalent to <span class="math inline">\(1-\beta\)</span>.</p></li>
+</ul>
+<p>The first step for an analysis is to establish the acceptable <span class="math inline">\(\alpha\)</span> value. Next, we want to minimize the possibility of a Type II error or <span class="math inline">\(\beta\)</span> by (1) choosing the test with the greatest power for the type of data being analyzed; and/or, (2) increasing the sample size.</p>
+<p>With an infinite sample size we can detect nearly any difference or correlation in two groups of data. The increase in sample size comes at a financial and human resource cost. So it is important to identify what magnitude difference needs to be detected for relevance to the system being detected <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. After establishing <span class="math inline">\(H_0\)</span>, <span class="math inline">\(H_1\)</span>, and the acceptable <span class="math inline">\(\alpha\)</span>-value, choose the test and sample size needed to reach the desired power.</p>
+<div class="no-row-height column-margin column-container"><li id="fn1"><p><sup>1</sup>&nbsp;See <span class="citation" data-cites="helselStatisticalMethodsWater2020">Helsel et al. (<a href="references.html#ref-helselStatisticalMethodsWater2020" role="doc-biblioref">2020</a>)</span> (Chapter 13) and <span class="citation" data-cites="schrammEstimatingStatisticalPower2021">Schramm (<a href="references.html#ref-schrammEstimatingStatisticalPower2021" role="doc-biblioref">2021</a>)</span> for more about power calculations.</p></li></div><p>The probability of obtaining the calculated test statistic when the null is true the <em>p</em>-value. The smaller the <em>p</em>-value the less likely the test statistic value would be obtained if the null hypothesis were true. We reject the null hypothesis when the <em>p</em>-value is less than or equal to our predetermined <span class="math inline">\(\alpha\)</span>-value. When the <em>p</em>-value is greater than the <span class="math inline">\(\alpha\)</span>-value, we do no reject the null (we also do no accept the null).</p>
+</section><section id="choice-of-test" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="choice-of-test">
+<span class="header-section-number">8.2</span> Choice of test</h2>
+<p>Maximize statistical power by choosing the hypothesis test appropriate for the characteristics of the data you are analyzing. <a href="#tbl-hypothesis-tests" class="quarto-xref">Table&nbsp;<span>8.1</span></a> provides an overview of potential tests covered in <span class="citation" data-cites="helselStatisticalMethodsWater2020">Helsel et al. (<a href="references.html#ref-helselStatisticalMethodsWater2020" role="doc-biblioref">2020</a>)</span>. There are many more tests and methods available than are covered here, but these cover the most likely scenarios.</p>
+<p><em>Comparison types:</em></p>
+<ul>
+<li><p>Two independent groups: Testing for differences between two different datasets. For example, water quality at two different sites or water quality at one site before and after treatment.</p></li>
+<li><p>Matched pairs: Testing differences in matched pairs of data. For example, water quality between watersheds or sites when the data are collected on the same days, or comparing before and after measurements of many sites.</p></li>
+<li><p>Three of more groups: Testing differences in data collected at three or more groups. For example, comparing runoff at 3 treatment plots and one control plot.</p></li>
+<li><p>Two-factor group comparison: Testing for difference in observations between groups when more than one factor might influence results. For example, testing for difference in water quality at an upstream and downstream site and before and after an intervention.</p></li>
+<li><p>Correlation: Looking for linear or monotonic correlations between two independent and continuous variables. For example, testing the relationship between two simulatanesouly measured water quality parameters.</p></li>
+</ul>
+<p>We also select test by the characteristics of the data. Non-skewed and normally distributed data can be assessed using parametric tests. Data following other distributions or that are skewed can be assessed with non-parametric tests. Often, we transform skewed data and apply parametric tests. This is appropriate but the test no longer tell us if there are differences in means, instead it tells us if there is a difference in geometric means. Similarly, nonparametric test tell us if there is shift in the distribution of the data, not if there is a difference in the means. Finally, we can utilize permutation tests to apply parametric test procedures to skewed datasets without loss of statistical power.</p>
+<div class="cell">
+<div id="tbl-hypothesis-tests" class="cell anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="table quarto-float-caption quarto-float-tbl" id="tbl-hypothesis-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;8.1: Guide to classification of hypothesis tests. Adapted from <span class="citation" data-cites="helselStatisticalMethodsWater2020">Helsel et al. (<a href="references.html#ref-helselStatisticalMethodsWater2020" role="doc-biblioref">2020</a>)</span>.
+</figcaption><div aria-describedby="tbl-hypothesis-tests-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div>
+<div class="cell-output-display">
+<div id="gezlbhoutm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+  
+  
+<table class="gt_table table table-sm table-striped small" data-quarto-postprocess="true" data-quarto-disable-processing="false" data-quarto-bootstrap="false" data-bgcolor="#FFFFFF">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead style="border-style: none;"><tr class="header gt_col_headings" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3;">
+<th id="<strong>Data</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom"><strong>Data</strong></th>
+<th id="<strong>Parametric</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom"><strong>Parametric</strong></th>
+<th id="<strong>Nonparametric</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom"><strong>Nonparametric</strong></th>
+<th id="<strong>Permutation</strong>" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col" style="text-align: left; border-style: none; color: #333333; background-color: #FFFFFF; font-size: 100%; font-weight: normal; text-transform: inherit; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: bottom; padding-top: 5px; padding-bottom: 6px; padding-left: 5px; padding-right: 5px; overflow-x: hidden;" data-bgcolor="#FFFFFF" data-valign="bottom"><strong>Permutation</strong></th>
+</tr></thead>
+<tbody class="gt_table_body" style="border-style: none; border-top-style: solid; border-top-width: 2px; border-top-color: #D3D3D3; border-bottom-style: solid; border-bottom-width: 2px; border-bottom-color: #D3D3D3;">
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Data" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Two independent groups</p>
+</div></td>
+<td class="gt_row gt_left" headers="Parametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-ttest"><em>t</em>-test</a></p>
+</div></td>
+<td class="gt_row gt_left" headers="Nonparametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-ranksum">Rank-sum test</a></p>
+</div></td>
+<td class="gt_row gt_left" headers="Permutation" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-twosampleperm">Two-sample permutation test</a></p>
+</div></td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Data" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Matched pairs</p>
+</div></td>
+<td class="gt_row gt_left" headers="Parametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Paired <em>t</em>-test</p>
+</div></td>
+<td class="gt_row gt_left" headers="Nonparametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Signed-rank test</p>
+</div></td>
+<td class="gt_row gt_left" headers="Permutation" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Paired permuatation test</p>
+</div></td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Data" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Three of more independent groups</p>
+</div></td>
+<td class="gt_row gt_left" headers="Parametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Analysis of variance (ANOVA)</p>
+</div></td>
+<td class="gt_row gt_left" headers="Nonparametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Kruskal-Walis test</p>
+</div></td>
+<td class="gt_row gt_left" headers="Permutation" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>One-way permutation test</p>
+</div></td>
+</tr>
+<tr class="even" style="border-style: none;">
+<td class="gt_row gt_left" headers="Data" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Two-factor group comparisons</p>
+</div></td>
+<td class="gt_row gt_left" headers="Parametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-twowayanova">Two-factor ANOVA</a></p>
+</div></td>
+<td class="gt_row gt_left" headers="Nonparametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-bdm">Brunner-Dette-Munk test</a></p>
+</div></td>
+<td class="gt_row gt_left" headers="Permutation" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-twowayperm">Two-factor permutation test</a></p>
+</div></td>
+</tr>
+<tr class="odd" style="border-style: none;">
+<td class="gt_row gt_left" headers="Data" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p>Correlation between two independent variables</p>
+</div></td>
+<td class="gt_row gt_left" headers="Parametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-person">Pearson’s <em>r</em></a></p>
+</div></td>
+<td class="gt_row gt_left" headers="Nonparametric" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-spearman">Spearman’s <em>p</em></a> or Kendall’s <em>r</em></p>
+</div></td>
+<td class="gt_row gt_left" headers="Permutation" style="text-align: left; border-style: none; padding-top: 8px; padding-bottom: 8px; padding-left: 5px; padding-right: 5px; margin: 10px; border-top-style: solid; border-top-width: 1px; border-top-color: #D3D3D3; border-left-style: none; border-left-width: 1px; border-left-color: #D3D3D3; border-right-style: none; border-right-width: 1px; border-right-color: #D3D3D3; vertical-align: middle; overflow-x: hidden;" data-valign="middle"><div class="gt_from_md">
+<p><a href="#sec-permutation-pearson">Permutation test for Pearson’s <em>r</em></a></p>
+</div></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<section id="plot-your-data" class="level3" data-number="8.2.1"><h3 data-number="8.2.1" class="anchored" data-anchor-id="plot-your-data">
+<span class="header-section-number">8.2.1</span> Plot your data</h3>
+<p>Data should, at minimum, be plotted using histograms and probability (Q-Q) plots to assess distributions and characteristics. If your data includes treatment blocks or levels, the data should be subset to explore each block and the overall distribution. The information from these plots will assist in chosing the correct type of tests described above.</p>
+<div class="cell" data-fig-caption="Histograms and Q-Q plots from randomly generated data following different theoretical distributions common in water resources.">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/TxWRI/twriTemplates">twriTemplates</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com">patchwork</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>normal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span><span class="fl">100</span>, mean <span class="op">=</span> <span class="fl">126</span><span class="op">)</span>,</span>
+<span>       lognormal <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Lognormal.html">rlnorm</a></span><span class="op">(</span><span class="fl">100</span>, meanlog <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="fl">126</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>       gamma <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/GammaDist.html">rgamma</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">100</span>, shape <span class="op">=</span> <span class="fl">2</span>, scale <span class="op">=</span> <span class="fl">126</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>               names_to <span class="op">=</span> <span class="st">"distribution"</span>, values_to <span class="op">=</span> <span class="st">"value"</span><span class="op">)</span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">distribution</span>,</span>
+<span>             scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_qq.html">geom_qq_line</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>sample <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/facet_wrap.html">facet_wrap</a></span><span class="op">(</span><span class="op">~</span><span class="va">distribution</span>,</span>
+<span>             scales <span class="op">=</span> <span class="st">"free"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p1</span><span class="op">/</span><span class="va">p2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-exploreplot" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div>
+<img src="water-quality-statistics_files/figure-html/fig-exploreplot-1.png" id="fig-exploreplot" class="img-fluid figure-img" width="1600">
+</div>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section id="two-independent-groups" class="level2 page-columns page-full" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="two-independent-groups">
+<span class="header-section-number">8.3</span> Two independent groups</h2>
+<p>This set of tests compares two independent groups of samples. The data should be formatted as either two vectors of numeric data of any length, or as one vector of numeric data and a second vector of the same length indicating which group each data observation is in (also called long or tidy format). The example below shows random data drawn from the normal distribution using the <code><a href="https://rdrr.io/r/stats/Normal.html">rnorm()</a></code> function. The first sample was drawn from a normal distribution with mean (<span class="math inline">\(\mu\)</span>)=0.5 and standard deviation (<span class="math inline">\(\sigma\)</span>)= 0.25. The second sample is drawn from a normal distribution with <span class="math inline">\(\mu\)</span>=1.0 and <span class="math inline">\(\sigma\)</span> = 0.5.</p>
+<div class="cell">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## sets seed for reproducible example with random data</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## sample size</span></span>
+<span><span class="va">n</span> <span class="op">=</span> <span class="fl">10</span></span>
+<span></span>
+<span><span class="co">## example data</span></span>
+<span><span class="va">sample_1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.5</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span>
+<span><span class="va">sample_2</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.7</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the example above <code>sample_1</code> and <code>sample_2</code> are numeric vectors with the observations of interest. These can be stored in long or tidy format. The advantage to storing in long format, is that plotting and data exploration is much easier:</p>
+<div class="cell">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## get those vectors into a data frame or tibble format</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>sample_1 <span class="op">=</span> <span class="va">sample_1</span>,</span>
+<span>             sample_2 <span class="op">=</span> <span class="va">sample_2</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## convert to long format</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>               names_to <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
+<span><span class="va">df</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 20 × 2
+   group      value
+   &lt;chr&gt;      &lt;dbl&gt;
+ 1 sample_1  0.277 
+ 2 sample_2  0.209 
+ 3 sample_1 -0.103 
+ 4 sample_2  0.423 
+ 5 sample_1  0.521 
+ 6 sample_2  0.761 
+ 7 sample_1  0.820 
+ 8 sample_2  0.640 
+ 9 sample_1  0.107 
+10 sample_2  0.0320
+11 sample_1  0.307 
+12 sample_2  0.785 
+13 sample_1  0.262 
+14 sample_2  0.778 
+15 sample_1  0.860 
+16 sample_2  0.712 
+17 sample_1  0.491 
+18 sample_2 -0.323 
+19 sample_1 -0.187 
+20 sample_2  0.807 </code></pre>
+</div>
+</div>
+<section id="sec-ttest" class="level3 page-columns page-full" data-number="8.3.1"><h3 data-number="8.3.1" class="anchored" data-anchor-id="sec-ttest">
+<span class="header-section-number">8.3.1</span> Two sample t-test</h3>
+<p>A test for the difference in the means is conducted using the <code><a href="https://rdrr.io/r/stats/t.test.html">t.test()</a></code> function:</p>
+<div class="cell">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">value</span> <span class="op">~</span> <span class="va">group</span>,</span>
+<span>                  data <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
+<span><span class="va">results</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  value by group
+t = -0.88698, df = 17.779, p-value = 0.3869
+alternative hypothesis: true difference in means between group sample_1 and group sample_2 is not equal to 0
+95 percent confidence interval:
+ -0.4946719  0.2011626
+sample estimates:
+mean in group sample_1 mean in group sample_2 
+             0.3354548              0.4822094 </code></pre>
+</div>
+</div>
+<p>For the <em>t</em>-test, the null hypothesis (<span class="math inline">\(H_0\)</span>) is that the difference in means is equal to zero, the alternative hypothesis (<span class="math inline">\(H_1\)</span>) is that the difference in means is <em>not</em> equal to zero. By default <code><a href="https://rdrr.io/r/stats/t.test.html">t.test()</a></code> prints some information about your test results, including the t-statistic, degrees of freedom for the t-statistic calculation, p-value, and confidence intervals <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<div class="no-row-height column-margin column-container"><li id="fn2"><p><sup>2</sup>&nbsp;By assigning the output of <code><a href="https://rdrr.io/r/stats/t.test.html">t.test()</a></code> to the <code>results</code> object it is easier to obtain or store the values printed in the console. For example, <code>results$p.value</code> returns the <span class="math inline">\(p\)</span>-value. This is useful for for plotting or exporting results to other files. See the output of <code>str(results)</code> for a list of values.</p></li></div><p>The example above uses “formula” notation. In formula notation, <code>y ~ x</code>, the left hand side of <code>~</code> represents the response variable or column and the right hand side represents the grouping variable. The same thing can be achieved with:</p>
+<div class="cell">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">sample_1</span>,</span>
+<span>       <span class="va">sample_2</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  sample_1 and sample_2
+t = -0.88698, df = 17.779, p-value = 0.3869
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -0.4946719  0.2011626
+sample estimates:
+mean of x mean of y 
+0.3354548 0.4822094 </code></pre>
+</div>
+</div>
+<p>In this example, we do not have the evidence to reject <span class="math inline">\(H_0\)</span> at an <span class="math inline">\(\alpha\)</span> = 0.05 (t-stat = -0.887, <span class="math inline">\(p\)</span> = 0.387).</p>
+<p>Since this example uses randomly drawn data, we can examine what happens when sample size is increased to <span class="math inline">\(n\)</span> = 100:</p>
+<div class="cell">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## sample size</span></span>
+<span><span class="va">n</span> <span class="op">=</span> <span class="fl">100</span></span>
+<span></span>
+<span><span class="co">## generate example data</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span></span>
+<span>  sample_1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.5</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span>,</span>
+<span>  sample_2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">rnorm</a></span><span class="op">(</span>n <span class="op">=</span> <span class="va">n</span>, mean <span class="op">=</span> <span class="fl">0.7</span>, sd <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="co">#convert to long format</span></span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">pivot_longer</a></span><span class="op">(</span><span class="fu"><a href="https://tidyselect.r-lib.org/reference/everything.html">everything</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>               names_to <span class="op">=</span> <span class="st">"group"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="va">value</span> <span class="op">~</span> <span class="va">group</span>,</span>
+<span>       data <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Welch Two Sample t-test
+
+data:  value by group
+t = -2.2183, df = 193.22, p-value = 0.0277
+alternative hypothesis: true difference in means between group sample_1 and group sample_2 is not equal to 0
+95 percent confidence interval:
+ -0.2846771 -0.0167098
+sample estimates:
+mean in group sample_1 mean in group sample_2 
+             0.5580668              0.7087602 </code></pre>
+</div>
+</div>
+<p>Now we have evidence to reject <span class="math inline">\(H_0\)</span> due to the larger sample size which increased the statistical power for detecting a smaller effect size at a cost of increasing the risk of detecting an effect that is not actually there or is not environmentally relevant and of course increased monitoring costs if this were an actual water quality monitoring project.</p>
+<p>The <em>t</em>-test assumes underlying data is normally distributed. However, hydrology and water quality data is often skewed and log-normally distributed. While, a simple log-transformation in the data can correct this, it is suggested to use a non-parametric or permutation test instead.</p>
+</section><section id="sec-ranksum" class="level3" data-number="8.3.2"><h3 data-number="8.3.2" class="anchored" data-anchor-id="sec-ranksum">
+<span class="header-section-number">8.3.2</span> Rank-Sum test</h3>
+<p>The <strong>Wilcoxon Rank Sum</strong> (also called Mann-Whitney) tests can be considered a non-parametric versions of the two-sample <em>t</em>-test. This example uses the bacteria data first shown in <a href="water-quality.html" class="quarto-xref"><span>Chapter&nbsp;6</span></a>. The heavily skewed data observed in fecal indicator bacteria are well suited for non-parametric statistical analysis. The Wilcoxon test is conducted using the <code><a href="https://rdrr.io/r/stats/wilcox.test.html">wilcox.test()</a></code> function.</p>
+<div class="cell">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## arroyo_wetland is an example dataset in twriTemplates</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">arroyo_wetland</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">parameter_code</span> <span class="op">==</span> <span class="st">"31699"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">station_id</span>, <span class="va">value</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>station_id <span class="op">=</span> <span class="fu"><a href="https://forcats.tidyverse.org/reference/as_factor.html">as_factor</a></span><span class="op">(</span><span class="va">station_id</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## formula notation</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/wilcox.test.html">wilcox.test</a></span><span class="op">(</span><span class="va">value</span><span class="op">~</span><span class="va">station_id</span>, data <span class="op">=</span> <span class="va">df</span>,</span>
+<span>            conf.int <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon rank sum test with continuity correction
+
+data:  value by station_id
+W = 1546.5, p-value = 0.6166
+alternative hypothesis: true location shift is not equal to 0
+95 percent confidence interval:
+ -60.00007  80.00004
+sample estimates:
+difference in location 
+              18.09865 </code></pre>
+</div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## default notation</span></span>
+<span><span class="co"># x &lt;- df |&gt; </span></span>
+<span><span class="co">#   filter(station_id == "13079")</span></span>
+<span><span class="co"># y &lt;- df |&gt; </span></span>
+<span><span class="co">#   filter(station_id == "13074")</span></span>
+<span><span class="co"># </span></span>
+<span><span class="co"># wilcox.test(x$value, y$value,</span></span>
+<span><span class="co">#             conf.int = TRUE)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="sec-twosampleperm" class="level3" data-number="8.3.3"><h3 data-number="8.3.3" class="anchored" data-anchor-id="sec-twosampleperm">
+<span class="header-section-number">8.3.3</span> Two-sample permutation test</h3>
+<p>Chapter 5.2 in <span class="citation" data-cites="helselStatisticalMethodsWater2020">Helsel et al. (<a href="references.html#ref-helselStatisticalMethodsWater2020" role="doc-biblioref">2020</a>)</span> provide an excellent explanation of permutation tests. The permutation test works by resampling the data for all (or thousands of) possible permutations. Assuming the null hypothesis is true, we can draw a population distribution of the null statistic all the resampled combinations. The proportion of permutation results that equal or exceed the difference calculated in the original data is the permutation <em>p</em>-value.</p>
+<p>The <a href="http://coin.r-forge.r-project.org/"><em>coin</em></a> package provides functions for using the permutation test approach with different statistical tests.</p>
+<div class="cell">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://coin.r-forge.r-project.org">coin</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/coin/man/LocationTests.html">oneway_test</a></span><span class="op">(</span><span class="va">value</span><span class="op">~</span><span class="va">station_id</span>, </span>
+<span>            data <span class="op">=</span> <span class="va">df</span>,</span>
+<span>            distribution <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/coin/man/NullDistribution.html">approximate</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Approximative Two-Sample Fisher-Pitman Permutation Test
+
+data:  value by station_id (13079, 13074)
+Z = -0.4277, p-value = 0.6742
+alternative hypothesis: true mu is not equal to 0</code></pre>
+</div>
+</div>
+<p>We get roughly similar results with the permutation test and the Wilcoxon. However, the Wilcoxon tells us about the medians, while the permutation test tells us about the means.</p>
+</section></section><section id="matched-pairs" class="level2" data-number="8.4"><h2 data-number="8.4" class="anchored" data-anchor-id="matched-pairs">
+<span class="header-section-number">8.4</span> Matched pairs</h2>
+<p>Matched pairs test evalute the differences in matched pairs of data. Typically, this might include watersheds in which you measured water quality before and after an intervention or event; paired upstream and downstream data; or looking at pre- and post-evaluation scores at an extension event. Since data has to be matched, the data format is typically two vectors with observed numeric data. The examples below use mean annual streamflow measurements from 2021 and 2022 at a random subset of stream gages in Travis County obtained from the dataRetrieval package.</p>
+<div class="cell">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## retrieve some USGS steamgage in Travis County</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">910</span><span class="op">)</span></span>
+<span><span class="va">sites</span> <span class="op">&lt;-</span> <span class="fu">dataRetrieval</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dataRetrieval/man/whatNWISsites.html">whatNWISsites</a></span><span class="op">(</span>stateCd <span class="op">=</span> <span class="st">"TX"</span>, </span>
+<span>                                      parameterCd <span class="op">=</span> <span class="st">"00060"</span>,</span>
+<span>                                      countyCd <span class="op">=</span> <span class="st">"453"</span>,</span>
+<span>                                      startDT <span class="op">=</span> <span class="st">"2021-01-01"</span>,</span>
+<span>                                      endDT <span class="op">=</span> <span class="st">"2022-12-31"</span>,</span>
+<span>                                      siteStatus <span class="op">=</span> <span class="st">"active"</span>,</span>
+<span>                                      hasDataTypeCd <span class="op">=</span> <span class="st">"dv"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html">slice_sample</a></span><span class="op">(</span>n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/pull.html">pull</a></span><span class="op">(</span><span class="va">site_no</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## retrieve annual mean discharges for 10 sites</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">dataRetrieval</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dataRetrieval/man/readNWISstat.html">readNWISstat</a></span><span class="op">(</span><span class="va">sites</span>, parameterCd <span class="op">=</span> <span class="st">"00060"</span>,</span>
+<span>                            startDate <span class="op">=</span> <span class="st">"2021"</span>,</span>
+<span>                            endDate <span class="op">=</span> <span class="st">"2022"</span>,</span>
+<span>                            statReportType <span class="op">=</span> <span class="st">"annual"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">## needs a column for each observation year</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">site_no</span>, <span class="va">year_nu</span>, <span class="va">mean_va</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">year_nu</span>,</span>
+<span>              names_prefix <span class="op">=</span> <span class="st">"year_"</span>,</span>
+<span>              values_from <span class="op">=</span> <span class="va">mean_va</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">year_2021</span><span class="op">)</span>, <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">year_2022</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="sec-pairedt" class="level3" data-number="8.4.1"><h3 data-number="8.4.1" class="anchored" data-anchor-id="sec-pairedt">
+<span class="header-section-number">8.4.1</span> Paired <em>t</em>-test</h3>
+<p>The paired t-test assumes a normal distribution, so the observations are log transformed in this example. The resulting difference are differences in log-means.</p>
+<div class="cell">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/t.test.html">t.test</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">year_2021</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">year_2022</span><span class="op">)</span>, paired <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Paired t-test
+
+data:  log(df$year_2021) and log(df$year_2022)
+t = 7.1157, df = 9, p-value = 5.57e-05
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ 0.8421781 1.6272234
+sample estimates:
+mean difference 
+       1.234701 </code></pre>
+</div>
+</div>
+</section><section id="sec-signedrank" class="level3" data-number="8.4.2"><h3 data-number="8.4.2" class="anchored" data-anchor-id="sec-signedrank">
+<span class="header-section-number">8.4.2</span> Signed rank test</h3>
+<p>Instead of the t-test, the sign rank test is more appropriate for skewed datasets. Keep in mind this does not report a difference in means because it is a test on the ranked values.</p>
+<div class="cell">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/wilcox.test.html">wilcox.test</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">year_2021</span>, <span class="va">df</span><span class="op">$</span><span class="va">year_2022</span>, paired <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Wilcoxon signed rank exact test
+
+data:  df$year_2021 and df$year_2022
+V = 55, p-value = 0.001953
+alternative hypothesis: true location shift is not equal to 0</code></pre>
+</div>
+</div>
+</section><section id="sec-pairedperm" class="level3" data-number="8.4.3"><h3 data-number="8.4.3" class="anchored" data-anchor-id="sec-pairedperm">
+<span class="header-section-number">8.4.3</span> Paired permutation test</h3>
+<p>The permutation test is appropriate for skewed datasets where there is not a desire to transform data. The function below evaluates the mean difference in the paired data, then randomly reshuffles observations between 2021 and 2022 to create a distribution of mean differences under null conditions. The observed mean and the null distribution are compared to derive a <span class="math inline">\(p\)</span>-value or the probability of obtaining the observed value if the null were true.</p>
+<div class="cell">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">paired_perm</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">n</span> <span class="op">=</span> <span class="fl">1000</span>, <span class="va">seed</span> <span class="op">=</span> <span class="fl">90</span>,</span>
+<span>                        <span class="va">conf</span> <span class="op">=</span> <span class="fl">95</span>, </span>
+<span>                        <span class="va">alternative</span> <span class="op">=</span> <span class="st">"two.sided"</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="va">seed</span><span class="op">)</span></span>
+<span>  <span class="va">data.name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/deparse.html">deparse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substitute.html">substitute</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,<span class="st">" and "</span>,<span class="fu"><a href="https://rdrr.io/r/base/deparse.html">deparse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substitute.html">substitute</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>,<span class="st">"\n"</span>,<span class="va">n</span>,<span class="st">" permutations"</span>,sep<span class="op">=</span><span class="st">""</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co">## calculate mean diff</span></span>
+<span>  <span class="va">difference</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="va">x</span> <span class="op">-</span> <span class="va">y</span><span class="op">)</span></span>
+<span>  <span class="va">diff_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">difference</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">diff_obs</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"mean difference"</span></span>
+<span></span>
+<span>  <span class="co">## resample</span></span>
+<span>  <span class="va">resamp_mean_diff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span></span>
+<span>  <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">n</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">signs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="op">-</span><span class="fl">1</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">difference</span><span class="op">)</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">resamp</span> <span class="op">&lt;-</span> <span class="va">difference</span> <span class="op">*</span> <span class="va">signs</span></span>
+<span>    <span class="va">resamp_mean_diff</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">resamp</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class="va">upper</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">resamp_mean_diff</span><span class="op">[</span><span class="va">resamp_mean_diff</span> <span class="op">&gt;=</span> <span class="va">diff_obs</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">n</span></span>
+<span>  <span class="va">lower</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">resamp_mean_diff</span><span class="op">[</span><span class="va">resamp_mean_diff</span> <span class="op">&lt;=</span> <span class="op">(</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span> <span class="op">*</span> <span class="va">diff_obs</span><span class="op">]</span><span class="op">)</span> <span class="op">/</span> <span class="va">n</span></span>
+<span>  <span class="va">prob2tailed</span> <span class="op">&lt;-</span> <span class="va">upper</span> <span class="op">+</span> <span class="va">lower</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">diff_obs</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">prob2tailed</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">lower</span><span class="op">)</span> <span class="op">+</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">upper</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
+<span>  <span class="va">resampMD</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sort.html">sort</a></span><span class="op">(</span><span class="va">resamp_mean_diff</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">prob</span> <span class="op">&lt;-</span> <span class="va">prob2tailed</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">alternative</span> <span class="op">==</span> <span class="st">"greater"</span> <span class="op">|</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"g"</span><span class="op">)</span> <span class="va">prob</span> <span class="op">&lt;-</span> <span class="va">upper</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="va">alternative</span> <span class="op">==</span> <span class="st">"less"</span> <span class="op">|</span> <span class="va">alternative</span> <span class="op">==</span> <span class="st">"l"</span><span class="op">)</span> <span class="va">prob</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">lower</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">null_value</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">null_value</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"mean difference"</span></span>
+<span>  </span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>estimate <span class="op">=</span> <span class="va">diff_obs</span>,</span>
+<span>                 data.name <span class="op">=</span> <span class="va">data.name</span>,</span>
+<span>                 p.value <span class="op">=</span> <span class="va">prob</span>,</span>
+<span>                 method <span class="op">=</span> <span class="st">"Permutation Matched-Pair Test"</span>,</span>
+<span>                 null.value <span class="op">=</span> <span class="va">null_value</span>,</span>
+<span>                 alternative <span class="op">=</span> <span class="va">alternative</span>,</span>
+<span>                 permutations <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>resamples <span class="op">=</span> <span class="va">resamp_mean_diff</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"htest"</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu">paired_perm</span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">year_2021</span>, <span class="va">df</span><span class="op">$</span><span class="va">year_2022</span>, n <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span>
+<span><span class="va">m1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Permutation Matched-Pair Test
+
+data:  df$year_2021 and df$year_2022
+10000 permutations
+p-value = 0.002
+alternative hypothesis: true mean difference is not equal to 0
+sample estimates:
+mean difference 
+         9.9701 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">m1</span><span class="op">$</span><span class="va">permutations</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_histogram.html">geom_histogram</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">resamples</span><span class="op">)</span>, </span>
+<span>               fill <span class="op">=</span> <span class="st">"steelblue"</span>, </span>
+<span>               alpha <span class="op">=</span> <span class="fl">0.2</span>, </span>
+<span>               color <span class="op">=</span> <span class="st">"steelblue"</span>,</span>
+<span>               binwidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">m1</span><span class="op">$</span><span class="va">estimate</span>, color <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span><span class="st">"Mean Differences"</span>, expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"Count"</span>, expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-pairedperm" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-pairedperm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="water-quality-statistics_files/figure-html/fig-pairedperm-1.png" class="img-fluid figure-img" width="1600">
+</div>
+<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-pairedperm-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.2: The blue histogram shows the distribution of mean differences calculated by 10,000 permutations of randomly reshuffled paired data. The red line shows the observed mean difference.
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section></section><section id="three-of-more-independent-groups" class="level2" data-number="8.5"><h2 data-number="8.5" class="anchored" data-anchor-id="three-of-more-independent-groups">
+<span class="header-section-number">8.5</span> Three of more independent groups</h2>
+<section id="sec-anova" class="level3" data-number="8.5.1"><h3 data-number="8.5.1" class="anchored" data-anchor-id="sec-anova">
+<span class="header-section-number">8.5.1</span> ANOVA</h3>
+</section><section id="sec-kw" class="level3" data-number="8.5.2"><h3 data-number="8.5.2" class="anchored" data-anchor-id="sec-kw">
+<span class="header-section-number">8.5.2</span> Kruskal-Walis</h3>
+</section><section id="sec-onewayperm" class="level3" data-number="8.5.3"><h3 data-number="8.5.3" class="anchored" data-anchor-id="sec-onewayperm">
+<span class="header-section-number">8.5.3</span> One-way permutation</h3>
+</section></section><section id="two-factor-group-comparisons" class="level2" data-number="8.6"><h2 data-number="8.6" class="anchored" data-anchor-id="two-factor-group-comparisons">
+<span class="header-section-number">8.6</span> Two-factor group comparisons</h2>
+<section id="sec-twowayanova" class="level3" data-number="8.6.1"><h3 data-number="8.6.1" class="anchored" data-anchor-id="sec-twowayanova">
+<span class="header-section-number">8.6.1</span> Two-factor ANOVA</h3>
+<p>When you have two-(non-nested)factors that may simultaneously influence observations, the factorial ANOVA and non-parametric alternatives can be used.</p>
+<p>In 2011, an artificial wetland was completed to treat wastewater effluent discharged between stations <code>13079</code> (upstream side) and <code>13074</code> (downstream side). The first factor is station location, either upstream or downstream of the effluent discharge. We expect the upstream station to have “better” water quality than the downstream station. The second factor is before and after the wetland was completed. We expect the downstream station to have better water quality after the wetland than before, but no impact on the upstream water quality.</p>
+<div class="cell">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## prepare the data for analysis</span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">arroyo_wetland</span> <span class="op">|&gt;</span></span>
+<span>  <span class="co">## filter to the ammonia parameter only</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">parameter_code</span> <span class="op">==</span> <span class="st">"00610"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## assign upstream and downstream variables</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>location <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">station_id</span>  <span class="op">==</span> <span class="st">"13074"</span> <span class="op">~</span> <span class="st">"Below"</span>,</span>
+<span>    <span class="va">station_id</span>  <span class="op">==</span> <span class="st">"13079"</span> <span class="op">~</span> <span class="st">"Above"</span>,</span>
+<span>    .default <span class="op">=</span> <span class="va">station_id</span> </span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## assign pre- and post-wetland variable</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>wetland <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/case_when.html">case_when</a></span><span class="op">(</span></span>
+<span>    <span class="va">end_date</span>  <span class="op">&lt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2011-12-31"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Pre"</span>,</span>
+<span>    <span class="va">end_date</span>  <span class="op">&gt;</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2011-12-31"</span><span class="op">)</span> <span class="op">~</span> <span class="st">"Post"</span></span>
+<span>  <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="co">## make wetland a factor so it orders correctly in the plots</span></span>
+<span>  <span class="co">## default order is alphabetical, but it makes more sense to</span></span>
+<span>  <span class="co">## specify "Pre" before "Post"</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>wetland <span class="op">=</span> <span class="fu">forcats</span><span class="fu">::</span><span class="fu"><a href="https://forcats.tidyverse.org/reference/fct_relevel.html">fct_relevel</a></span><span class="op">(</span><span class="va">wetland</span>, <span class="st">"Pre"</span>, <span class="st">"Post"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">station_id</span>, <span class="va">value</span>, <span class="va">location</span>, <span class="va">end_date</span>, <span class="va">wetland</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/stats/aov.html">aov()</a></code> function fits the ANOVA model using the formula notation. The formula notation is of form <code>response ~ factor</code> where factor is a series of factors specified in the model. The specification <code>factor1 + factor2</code> indicates all the factors are taken together, while <code>factor1:factor2</code>indicates the interactions. The notation <code>factor1*factor2</code> is equivalent to <code>factor1 + factor2 + factor1:factor2</code>.</p>
+<div class="cell">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aov.html">aov</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span> <span class="op">~</span> <span class="va">wetland</span> <span class="op">*</span> <span class="va">location</span>,</span>
+<span>          data <span class="op">=</span> <span class="va">df</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">m1</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Df Sum Sq Mean Sq F value  Pr(&gt;F)    
+wetland            1  75.05   75.05  101.44 &lt; 2e-16 ***
+location           1  68.84   68.84   93.05 &lt; 2e-16 ***
+wetland:location   1  11.07   11.07   14.96 0.00013 ***
+Residuals        359 265.59    0.74                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Here we fit the ANOVA to log-transformed ammonia values. The results indicate a difference in geometric means (because we used the log values in the ANOVA) between upstream and downstream location <em>and</em> a difference in the interaction terms.</p>
+<p>We follow up the ANOVA with a multiple comparisons test (Tukey’s Honest Significant Difference, or Tukey’s HSD) on the factor(s) of interest.</p>
+<div class="cell">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/TukeyHSD.html">TukeyHSD</a></span><span class="op">(</span><span class="va">m1</span>, <span class="st">"wetland:location"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = log(value) ~ wetland * location, data = df)
+
+$`wetland:location`
+                            diff        lwr         upr     p adj
+Post:Above-Pre:Above  -0.3976851 -0.8174807  0.02211047 0.0706430
+Pre:Below-Pre:Above    1.1651979  0.8740836  1.45631222 0.0000000
+Post:Below-Pre:Above  -0.1584935 -0.6526102  0.33562322 0.8412073
+Pre:Below-Post:Above   1.5628830  1.1917236  1.93404242 0.0000000
+Post:Below-Post:Above  0.2391916 -0.3059350  0.78431828 0.6696459
+Post:Below-Pre:Below  -1.3236914 -1.7772135 -0.87016930 0.0000000</code></pre>
+</div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/stats/TukeyHSD.html">TukeyHSD()</a></code> function takes the output from <code><a href="https://rdrr.io/r/stats/aov.html">aov()</a></code> and optionally the factor you are interested in evaluating the difference in means. The output provide the estimate difference in means between each level of the factor, the 95% confidence interval and the multiple comparisons adjusted p-value. <a href="#fig-contrasts" class="quarto-xref">Figure&nbsp;<span>8.3</span></a> is an example of how the data can be plotted for easier interpretation.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-contrasts" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-contrasts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="water-quality-statistics_files/figure-html/fig-contrasts-1.png" class="img-fluid figure-img" width="1600">
+</div>
+<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-contrasts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.3: The 95% confidence intervals on differences in means (log scale) for different factor interactions.
+</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section id="sec-bdm" class="level3" data-number="8.6.2"><h3 data-number="8.6.2" class="anchored" data-anchor-id="sec-bdm">
+<span class="header-section-number">8.6.2</span> Two-factor Brunner-Dette-Munk</h3>
+<p>The non-parametric version of the ANOVA model is the <em>two-factor Brunner-Dette-Munk</em> (BDM) test. The BDM test is implemented in the <code>asbio</code> package using the <code><a href="https://rdrr.io/pkg/asbio/man/BDM.test.html">BDM.2way()</a></code> function:</p>
+<div class="cell">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">asbio</span><span class="op">)</span></span>
+<span><span class="va">bdm_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/asbio/man/BDM.test.html">BDM.2way</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">value</span>, </span>
+<span>                       X1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">location</span><span class="op">)</span>, </span>
+<span>                       X2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">wetland</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">bdm_output</span><span class="op">$</span><span class="va">BDM.Table</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      df1     df2       F*    P(F &gt; F*)
+X1      1 110.783 34.78313 4.067546e-08
+X2      1 110.783 70.37562 1.767388e-13
+X1:X2   1 110.783 19.29776 2.571712e-05</code></pre>
+</div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">bdm_output</span><span class="op">$</span><span class="va">Q</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Levels Rel.effects
+1  Above.Pre   0.3404442
+2 Above.Post   0.2219232
+3  Below.Pre   0.6456563
+4 Below.Post   0.2665544</code></pre>
+</div>
+</div>
+<p>The BMD output indicates there is evidence to reject the null hypothesis (no difference in concentration) for each factor and the interaction. We can conduct a multiple comparisons test following the BDM test using the Wilcoxon rank-sum test on all possible pairs and use the Benjamini and Hochberg correction to account for multiple comparisons.</p>
+<p>Since we are interested in the impact of the wetland specifically, group the data by location (upstream, downstream) and subtract the median of each group from the observed values. Subtraction of the median values defined by the location factor adjusts for difference attributed to location. The <code><a href="https://rdrr.io/r/stats/pairwise.wilcox.test.html">pairwise.wilcox.test()</a></code> function provides the pairwise compairson with corrections for multiple comparisons:</p>
+<div class="cell">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df_adj</span> <span class="op">&lt;-</span> <span class="va">df</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">location</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>loc_med <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/median.html">median</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>,</span>
+<span>         adj_value <span class="op">=</span> <span class="va">value</span> <span class="op">-</span> <span class="va">loc_med</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/asbio/man/BDM.test.html">BDM.test</a></span><span class="op">(</span><span class="va">df_adj</span><span class="op">$</span><span class="va">adj_value</span>, <span class="va">df_adj</span><span class="op">$</span><span class="va">wetland</span><span class="op">)</span><span class="op">$</span><span class="va">Q</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Levels Rel.effects
+1    Pre   0.5393808
+2   Post   0.3351633</code></pre>
+</div>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## multiple comparison is not needed here since there are only two groups</span></span>
+<span><span class="co">## in the wetland factor, but is included here for demonstration.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/pairwise.wilcox.test.html">pairwise.wilcox.test</a></span><span class="op">(</span><span class="va">df_adj</span><span class="op">$</span><span class="va">adj_value</span>, <span class="va">df_adj</span><span class="op">$</span><span class="va">wetland</span>, p.adjust.method <span class="op">=</span> <span class="st">"BH"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  df_adj$adj_value and df_adj$wetland 
+
+     Pre    
+Post 1.1e-07
+
+P value adjustment method: BH </code></pre>
+</div>
+</div>
+</section><section id="sec-twowayperm" class="level3" data-number="8.6.3"><h3 data-number="8.6.3" class="anchored" data-anchor-id="sec-twowayperm">
+<span class="header-section-number">8.6.3</span> Two-factor permutation test</h3>
+<p>In <a href="#sec-twowayanova" class="quarto-xref"><span>Section&nbsp;8.6.1</span></a> we identified a significant differencs in ammonia geometric means for each factor and interaction. If the interest is to identify difference in means, a permutation test can be used. The <code><a href="https://rdrr.io/pkg/asbio/man/perm.fact.test.html">perm.fact.test()</a></code> function from the <em>asbio</em> package can be used:</p>
+<div class="cell">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/asbio/man/perm.fact.test.html">perm.fact.test</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">df</span><span class="op">$</span><span class="va">value</span>, </span>
+<span>               X1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">location</span><span class="op">)</span>, </span>
+<span>               X2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">as.factor</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">wetland</span><span class="op">)</span>,</span>
+<span>               perm <span class="op">=</span> <span class="fl">5000</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Table
+         Initial.F  Df   pval
+X1        9.443296   1 0.0002
+X2        2.881668   1 0.1212
+X1:X2     1.418071   1 0.2014
+Residual        NA 359     NA</code></pre>
+</div>
+</div>
+</section></section><section id="correlation-between-two-independent-variables" class="level2" data-number="8.7"><h2 data-number="8.7" class="anchored" data-anchor-id="correlation-between-two-independent-variables">
+<span class="header-section-number">8.7</span> Correlation between two independent variables</h2>
+<section id="sec-person" class="level3" data-number="8.7.1"><h3 data-number="8.7.1" class="anchored" data-anchor-id="sec-person">
+<span class="header-section-number">8.7.1</span> Pearson’s r</h3>
+<p>Using the estuary water quality example data from #sec-plotclean we will explore correlations between two independent variables:</p>
+<div class="cell">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="va">mission_aransas_nerr</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">F_Temp</span> <span class="op">==</span> <span class="st">"&lt;0&gt;"</span>,</span>
+<span>         <span class="va">F_DO_mgl</span> <span class="op">==</span> <span class="st">"&lt;0&gt;"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Pearson’s <em>r</em> </strong>is the linear correlation coefficient that measures the linear association between two variables. Values of r range from -1 to 1 (indicate perfectly positive or negative linear relationships). Use the <code><a href="https://rdrr.io/r/stats/cor.test.html">cor.test()</a></code> function to return Pearson’s <em>r</em> and associated p-value:</p>
+<div class="cell">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">DO_mgl</span>, <span class="va">df</span><span class="op">$</span><span class="va">Temp</span><span class="op">)</span></span>
+<span><span class="va">m1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation
+
+data:  df$DO_mgl and df$Temp
+t = -341.01, df = 53357, p-value &lt; 2.2e-16
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ -0.8305839 -0.8252462
+sample estimates:
+       cor 
+-0.8279338 </code></pre>
+</div>
+</div>
+<p>The results indicate we have strong evidence to reject the null hypothesis of no correlation between Temperature and dissolved oxygen (Pearson’s <em>r</em> = -0.83, <em>p</em> &lt; 0.001).</p>
+</section><section id="sec-spearman" class="level3" data-number="8.7.2"><h3 data-number="8.7.2" class="anchored" data-anchor-id="sec-spearman">
+<span class="header-section-number">8.7.2</span> Spearman’s p</h3>
+<p>Spearman’s p is a non-parametric correlation test using the ranked values. The following example looks at the correlation between TSS and TN concentrations.</p>
+<div class="cell">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/read_delim.html">read_delim</a></span><span class="op">(</span><span class="st">"data/swqmispublicdata.txt"</span>,</span>
+<span>                 delim <span class="op">=</span> <span class="st">"|"</span>,</span>
+<span>                 <span class="co"># see awkward column names that have to be wrapped</span></span>
+<span>                 <span class="co"># in between "`" (escape) marks.</span></span>
+<span>                 col_types <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/cols.html">cols_only</a></span><span class="op">(</span></span>
+<span>                   `Segment ID` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Station ID` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_factor.html">col_factor</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Station Description` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `End Date` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_datetime.html">col_date</a></span><span class="op">(</span>format <span class="op">=</span> <span class="st">"%m/%d/%Y"</span><span class="op">)</span>,</span>
+<span>                   `Collecting Entity` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Monitoring Type` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Composite Category` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Parameter Name` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Parameter Code` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `Value` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_number.html">col_number</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>                   `RFA/Tag ID` <span class="op">=</span> <span class="fu"><a href="https://readr.tidyverse.org/reference/parse_atomic.html">col_character</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>                 <span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">janitor</span><span class="fu">::</span><span class="fu"><a href="https://sfirke.github.io/janitor/reference/clean_names.html">clean_names</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">station_id</span> <span class="op">==</span> <span class="st">"12517"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">parameter_code</span> <span class="op">==</span> <span class="st">"00630"</span> <span class="op">|</span> <span class="va">parameter_code</span> <span class="op">==</span> <span class="st">"00530"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">end_date</span>, <span class="va">parameter_name</span>, <span class="va">value</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span><span class="op">(</span><span class="va">end_date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">parameter_name</span>, values_from <span class="op">=</span> <span class="va">value</span>,</span>
+<span>              values_fn <span class="op">=</span> <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">.x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/rename.html">rename</a></span><span class="op">(</span>tss <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"RESIDUE"</span><span class="op">)</span>,</span>
+<span>         tn <span class="op">=</span> <span class="fu"><a href="https://tidyselect.r-lib.org/reference/starts_with.html">contains</a></span><span class="op">(</span><span class="st">"NITRATE"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">tss</span><span class="op">)</span> <span class="op">&amp;</span> <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">tn</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">df</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">tss</span>, <span class="va">tn</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html">geom_point</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_log10</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"TSS"</span>, y <span class="op">=</span> <span class="st">"TN"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_smooth.html">geom_smooth</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-tss_tn" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-tss_tn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="water-quality-statistics_files/figure-html/fig-tss_tn-1.png" class="img-fluid figure-img" width="1600">
+</div>
+<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-tss_tn-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.4: Scatter plot of TSS and TN concentrations. The distributions of both concentrations are potentially right skewed and a non-parametric test would be appropriate.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>The <code><a href="https://rdrr.io/r/stats/cor.test.html">cor.test()</a></code> function is also used to calculate Spearman’s <em>p</em>, but the <code>method</code> argument must be specified:</p>
+<div class="cell">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">tn</span>, <span class="va">df</span><span class="op">$</span><span class="va">tss</span>, method <span class="op">=</span> <span class="st">"spearman"</span>, exact <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Spearman's rank correlation rho
+
+data:  df$tn and df$tss
+S = 155347, p-value = 0.5026
+alternative hypothesis: true rho is not equal to 0
+sample estimates:
+       rho 
+0.06782282 </code></pre>
+</div>
+</div>
+<p>Using Spearman’s <em>p</em> there isn’t evidence to reject the null hypothesis at <span class="math inline">\(\alpha = 0.05\)</span>.</p>
+</section><section id="sec-permutation-pearson" class="level3" data-number="8.7.3"><h3 data-number="8.7.3" class="anchored" data-anchor-id="sec-permutation-pearson">
+<span class="header-section-number">8.7.3</span> Permutation test for Pearson’s <em>r</em>
+</h3>
+<p>If you want to use a permutation approach for Pearson’s <em>r</em> we need to write a function to calculate <em>r</em> for the observed data, then calculate <em>r</em> for the permutation resamples. The following function does that and provides the outputs along with the permutation results so we can plot them:</p>
+<div class="cell">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">## create a permutation function for 2 sided pearson's r</span></span>
+<span></span>
+<span><span class="va">permutate_cor</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, <span class="va">n</span> <span class="op">=</span> <span class="fl">1000</span>, <span class="va">seed</span> <span class="op">=</span> <span class="fl">90</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="va">seed</span><span class="op">)</span></span>
+<span>  <span class="va">data.name</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/deparse.html">deparse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substitute.html">substitute</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>,<span class="st">" and "</span>,<span class="fu"><a href="https://rdrr.io/r/base/deparse.html">deparse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/substitute.html">substitute</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span>,<span class="st">"\n"</span>,<span class="va">n</span>,<span class="st">" permutations"</span>,sep<span class="op">=</span><span class="st">""</span><span class="op">)</span></span>
+<span>  <span class="va">cor_test_output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.test.html">cor.test</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, method <span class="op">=</span> <span class="st">"pearson"</span><span class="op">)</span></span>
+<span>  <span class="va">obs_r</span> <span class="op">&lt;-</span> <span class="va">cor_test_output</span><span class="op">$</span><span class="va">estimate</span></span>
+<span>  <span class="va">obs_stat</span> <span class="op">&lt;-</span> <span class="va">cor_test_output</span><span class="op">$</span><span class="va">statistic</span></span>
+<span>  </span>
+<span>  <span class="va">cor_permutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">n</span>,</span>
+<span>                             FUN <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/stats/cor.html">cor</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">cor_permutations</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">cor_permutations</span>, <span class="va">obs_r</span><span class="op">)</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class="va">p_val</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">cor_permutations</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">obs_r</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="va">n</span><span class="op">+</span><span class="fl">1</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>statistic <span class="op">=</span> <span class="va">obs_stat</span>, </span>
+<span>                 data.name <span class="op">=</span> <span class="va">data.name</span>, </span>
+<span>                 estimate <span class="op">=</span> <span class="va">obs_r</span>,</span>
+<span>                 p.value <span class="op">=</span> <span class="va">p_val</span>,</span>
+<span>                 method <span class="op">=</span> <span class="st">"Pearson's product-moment correlation - Permutation test"</span>,</span>
+<span>                 permutations <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>r <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html">unname</a></span><span class="op">(</span><span class="va">cor_permutations</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/class.html">class</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"htest"</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">result</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, use the function <code>permutate_cor()</code> to conduct Pearson’s r on the observed data and resamples:</p>
+<div class="cell">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">m1</span> <span class="op">&lt;-</span> <span class="fu">permutate_cor</span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">tss</span>, <span class="va">df</span><span class="op">$</span><span class="va">tn</span>, n <span class="op">=</span> <span class="fl">10000</span><span class="op">)</span></span>
+<span><span class="va">m1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Pearson's product-moment correlation - Permutation test
+
+data:  df$tss and df$tn
+10000 permutations
+t = 1.1083, p-value = 0.09629
+sample estimates:
+      cor 
+0.1112609 </code></pre>
+</div>
+</div>
+<p>Using the permutation approach, we don’t have evidence to reject the null hypothesis at <span class="math inline">\(\alpha = 0.05\)</span>.</p>
+<p>The following code produces a plot of the mull distribution of test statistic values and the test statistic value for the observed data:</p>
+<div class="cell">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">m1</span><span class="op">$</span><span class="va">permutations</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_density.html">geom_density</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">r</span><span class="op">)</span>, fill <span class="op">=</span> <span class="st">"steelblue"</span>, alpha <span class="op">=</span> <span class="fl">0.2</span>, color <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_abline.html">geom_vline</a></span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">m1</span><span class="op">$</span><span class="va">estimate</span>, color <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_text_repel</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">m1</span><span class="op">$</span><span class="va">estimate</span>, y <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>,</span>
+<span>                           <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span><span class="va">x</span>, <span class="va">y</span>, label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Pearson's r for observed data = "</span>, <span class="fu"><a href="https://rdrr.io/r/base/Round.html">round</a></span><span class="op">(</span><span class="va">x</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>                           family <span class="op">=</span> <span class="st">"OpenSansCondensed_TWRI"</span>, fontface <span class="op">=</span> <span class="st">"bold"</span>, direction <span class="op">=</span> <span class="st">"y"</span>, hjust <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>                           size <span class="op">=</span> <span class="fl">2.5</span>, nudge_x <span class="op">=</span> <span class="fl">0.1</span>, color <span class="op">=</span> <span class="st">"darkred"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">ggrepel</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggrepel/man/geom_text_repel.html">geom_text_repel</a></span><span class="op">(</span>data <span class="op">=</span> <span class="fu"><a href="https://tibble.tidyverse.org/reference/tibble.html">tibble</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">0</span>, y <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>                           <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">x</span>, y <span class="op">=</span> <span class="va">y</span>, label <span class="op">=</span> <span class="st">"Null distribution of Pearson's r"</span><span class="op">)</span>,</span>
+<span>                           family <span class="op">=</span> <span class="st">"OpenSansCondensed_TWRI"</span>, fontface <span class="op">=</span> <span class="st">"bold"</span>,</span>
+<span>                           size <span class="op">=</span> <span class="fl">2.5</span>, color <span class="op">=</span> <span class="st">"steelblue"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_x_continuous</a></span><span class="op">(</span><span class="st">"Permutation estimates"</span>, expand <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html">scale_y_continuous</a></span><span class="op">(</span><span class="st">"Smoothed density"</span>, expand <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/expansion.html">expansion</a></span><span class="op">(</span>mult <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0.05</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://txwri.github.io/twriTemplates/reference/theme_TWRI_print.html">theme_TWRI_print</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-nullpearson" class="quarto-figure quarto-figure-center anchored" width="1600">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-nullpearson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="water-quality-statistics_files/figure-html/fig-nullpearson-1.png" class="img-fluid figure-img" width="1600">
+</div>
+<figcaption class="figure quarto-float-caption quarto-float-fig" id="fig-nullpearson-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;8.5: The estimated distribution of Pearson’s r calculated with 10,000 resamples in blue. The red line shows Pearson’s r for the observed data. The observed Pearson’s r exceeded approximately 90.3% of the null distribution test statistic values.
+</figcaption></figure>
+</div>
+</div>
+</div>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-helselStatisticalMethodsWater2020" class="csl-entry" role="listitem">
+Helsel, D.R., Hirsch, R.M., Ryberg, K.R., Archfield, S.A., and Gilroy, E.J. 2020. Statistical Methods in Water Resources: U.S. Geological Survey Techniques and Methods, Book 4, Chapter A3. Reston, VA: USGS. <a href="https://doi.org/10.3133/tm4a3">https://doi.org/10.3133/tm4a3</a>.
+</div>
+<div id="ref-schrammEstimatingStatisticalPower2021" class="csl-entry" role="listitem">
+Schramm, M.P. 2021. Estimating statistical power for detecting long term trends in surface water <em>Escherichia coli</em> concentrations. Texas Water Journal 12 (1): 140–50. <a href="https://doi.org/10.21423/txj.v12i1.7126">https://doi.org/10.21423/txj.v12i1.7126</a>.
+</div>
+</div>
+</section></section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        for (let i = 0; i < 2; i++) {
+          container.appendChild(note.children[i].cloneNode(true));
+        }
+        return container.innerHTML
+      } else {
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      return note.innerHTML;
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        console.log("RESIZE");
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./load-duration.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Load Duration Curves</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./regression.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="https://twri.tamu.edu">Texas Water Resources Institute</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This work is licensed under <a href="http://creativecommons.org/licenses/by-nc/4.0/?ref=chooser-v1">CC BY-NC 4.0 <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"><img src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"><img src="https://mirrors.creativecommons.org/presskit/icons/nc.svg?ref=chooser-v1" class="img-fluid" style="height:22px!important;margin-left:3px;vertical-align:text-bottom;"></a></p>
+</div>
+  </div>
+</footer>
+
+
+</body></html>

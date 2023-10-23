@@ -1,0 +1,819 @@
+# Hypothesis Testing {#sec-wqs}
+
+```{r}
+#| label: setup
+#| echo: false
+#| message: false
+
+options(tidyverse.quiet = TRUE)
+library(dplyr)
+library(ggplot2)
+library(gt)
+```
+
+
+This section introduces some statistical approaches commonly used in out projects.
+For an in depth discussion and examples of statistical approaches commonly
+employed across surface water quality studies, the reader is highly
+encouraged to review @helselStatisticalMethodsWater2020.
+
+## Hypothesis Tests
+
+Hypothesis tests are an approach for testing for differences between groups of data.
+Typically, we are interested in differences in the mean, geometric mean, or median
+of two or more different groups of data. It is useful to become familiar with
+several terms prior to conducting a hypothesis test:
+
+- *Null hypothesis*: or $H_0$ is what is assumed true about a system prior to testing and collecting data. It usually states there is no difference between groups or no relationship between variables. Differences or correlations in groups should be unlikely unless presented with evidence to reject the null.
+
+- *Alternative hypothesis*: or $H_1$ is assumed true if the data show strong evidence to reject the null. $H_1$ is stated as a negation of $H_0$.
+
+- *$\alpha$-value*: or significance level, is the probability of incorrectly rejecting the null hypothesis. While this is traditionally set at 0.05 (5%) or 0.01 (1%), other values can be chosen based on the acceptable risk of rejecting the null hypothesis when in fact the null is true (also called a *Type I error*).
+
+- *$\beta$-value*: the probability of failing to reject the null hypothesis when is is in fact false (also called a *Type II error*).
+
+- *Power*: Is the probability of rejecting the null when is is in fact false. This is equivalent to $1-\beta$.
+
+The first step for an analysis is to establish the acceptable $\alpha$ value.
+Next, we want to minimize the possibility of a Type II error or $\beta$ by 
+(1) choosing the test with the greatest power for the type of data being analyzed; and/or,
+(2) increasing the sample size. 
+
+With an infinite sample size we can detect nearly any difference or correlation
+in two groups of data. The increase in sample size comes at a financial and human
+resource cost. So it is important to identify what magnitude difference needs to 
+be detected for relevance to the system being detected ^[See @helselStatisticalMethodsWater2020 (Chapter 13) and 
+@schrammEstimatingStatisticalPower2021 for more about power calculations.]. 
+After establishing $H_0$, $H_1$, and the acceptable $\alpha$-value, choose the test and sample size needed to reach the desired power.
+
+The probability of obtaining the calculated test statistic when the null is true
+the *p*-value. The smaller the *p*-value the less likely the test statistic value
+would be obtained if the null hypothesis were true. We reject the null hypothesis
+when the *p*-value is less than or equal to our predetermined $\alpha$-value.
+When the *p*-value is greater than the $\alpha$-value, we do no reject the null 
+(we also do no accept the null).
+
+## Choice of test
+
+Maximize statistical power by choosing the hypothesis test appropriate for 
+the characteristics of the data you are analyzing. @tbl-hypothesis-tests
+provides an overview of potential tests covered in @helselStatisticalMethodsWater2020.
+There are many more tests and methods available than are covered here, but 
+these cover the most likely scenarios.
+
+*Comparison types:*
+
+- Two independent groups: Testing for differences between two different datasets. For example, water quality at two different sites or water quality at one site before and after treatment.
+
+- Matched pairs: Testing differences in matched pairs of data. For example, water quality between watersheds or sites when the data are collected on the same days, or comparing before and after measurements of many sites.
+
+
+- Three of more groups: Testing differences in data collected at three or more groups. For example, comparing runoff at 3 treatment plots and one control plot.
+
+- Two-factor group comparison: Testing for difference in observations between groups when more than one factor might influence results. For example, testing for difference in water quality at an upstream and downstream site and before and after an intervention.
+
+- Correlation: Looking for linear or monotonic correlations between two independent and continuous variables. For example, testing the relationship between two simulatanesouly measured water quality parameters.
+
+We also select test by the characteristics of the data. 
+Non-skewed and normally distributed data can be assessed using parametric tests. 
+Data following other distributions or that are skewed can be assessed with 
+non-parametric tests. 
+Often, we transform skewed data and apply parametric tests. 
+This is appropriate but the test no longer tell us if there are differences in 
+means, instead it tells us if there is a difference in geometric means. 
+Similarly, nonparametric test tell us if there is shift in the distribution 
+of the data, not if there is a difference in the means. Finally, we can utilize 
+permutation tests to apply parametric test procedures to skewed datasets 
+without loss of statistical power. 
+
+
+
+```{r}
+#| label: tbl-hypothesis-tests
+#| echo: false
+#| tbl-cap: Guide to classification of hypothesis tests. Adapted from @helselStatisticalMethodsWater2020.
+
+
+tibble(
+  Data = c(
+    "Two independent groups",
+    "Matched pairs",
+    "Three of more independent groups",
+    "Two-factor group comparisons",
+    "Correlation between two independent variables"
+  ),
+  Parametric = c(
+    "[*t*-test](#sec-ttest)",
+    "Paired *t*-test",
+    "Analysis of variance (ANOVA)",
+    "[Two-factor ANOVA](#sec-twowayanova)",
+    "[Pearson's *r*](#sec-person)"
+  ),
+  Nonparametric = c(
+    "[Rank-sum test](#sec-ranksum)",
+    "Signed-rank test",
+    "Kruskal-Walis test",
+    "[Brunner-Dette-Munk test](#sec-bdm)",
+    "[Spearman's *p*](#sec-spearman) or Kendall's *r*"
+  ),
+  Permutation = c(
+    "[Two-sample permutation test](#sec-twosampleperm)",
+    "Paired permuatation test",
+    "One-way permutation test",
+    "[Two-factor permutation test](#sec-twowayperm)",
+    "[Permutation test for Pearson's *r*](#sec-permutation-pearson)"
+  )
+) |> 
+  gt() |> 
+  fmt_markdown(columns = everything()) |> 
+  cols_label(Data = '**Data**',
+             Parametric = '**Parametric**',
+             Nonparametric = "**Nonparametric**",
+             Permutation = "**Permutation**",
+             .fn = md) |> 
+  as_raw_html()
+```
+
+
+### Plot your data
+
+Data should, at minimum, be plotted using histograms and probability (Q-Q) 
+plots to assess distributions and characteristics. If your data includes
+treatment blocks or levels, the data should be subset to explore each block
+and the overall distribution. The information from these plots will assist
+in chosing the correct type of tests described above.
+
+```{r}
+#| message: false
+#| label: fig-exploreplot
+#| fig-caption: "Histograms and Q-Q plots from randomly generated data following different theoretical distributions common in water resources."
+library(tidyverse)
+library(twriTemplates)
+library(patchwork)
+
+df <- tibble(normal = rnorm(100, mean = 126),
+       lognormal = rlnorm(100, meanlog = log(126)),
+       gamma = rgamma(n = 100, shape = 2, scale = 126)) |> 
+  pivot_longer(cols = everything(),
+               names_to = "distribution", values_to = "value")
+p1 <- ggplot(df) +
+  geom_histogram(aes(value)) +
+  facet_wrap(~distribution,
+             scales = "free") +
+  theme_TWRI_print()
+
+p2 <- ggplot(df) +
+  geom_qq(aes(sample = value)) +
+  geom_qq_line(aes(sample = value)) +
+  facet_wrap(~distribution,
+             scales = "free") +
+  theme_TWRI_print()
+
+p1/p2
+```
+
+
+## Two independent groups
+
+This set of tests compares two independent groups of samples.
+The data should be formatted as either two vectors of numeric data of any 
+length, or as one vector of numeric data and a second vector of the same length 
+indicating which group each data observation is in (also called long or tidy 
+format). The example below shows random data drawn
+from the normal distribution using the `rnorm()` function. 
+The first sample was drawn from a normal distribution with mean ($\mu$)=0.5 
+and standard deviation ($\sigma$)= 0.25. 
+The second sample is drawn from a normal distribution with $\mu$=1.0 and 
+$\sigma$ = 0.5. 
+
+```{r}
+## sets seed for reproducible example with random data
+set.seed(1000)
+
+## sample size
+n = 10
+
+## example data
+sample_1 = rnorm(n = n, mean = 0.5, sd = 0.5)
+sample_2 = rnorm(n = n, mean = 0.7, sd = 0.5)
+
+```
+
+In the example above `sample_1` and `sample_2` are numeric vectors with the 
+observations of interest. 
+These can be stored in long or tidy format.
+The advantage to storing in long format, is that plotting and data exploration
+is much easier:
+
+```{r}
+## get those vectors into a data frame or tibble format
+df <- tibble(sample_1 = sample_1,
+             sample_2 = sample_2) |> 
+  ## convert to long format
+  pivot_longer(everything(),
+               names_to = "group")
+df
+```
+
+
+
+### Two sample t-test {#sec-ttest}
+
+A test for the difference in the means is conducted using the 
+`t.test()` function:
+
+```{r}
+results <- t.test(value ~ group,
+                  data = df)
+results
+```
+
+For the *t*-test, the null hypothesis ($H_0$) is that the difference in means
+is equal to zero, the alternative hypothesis ($H_1$) is that the difference in
+means is *not* equal to zero. By default `t.test()` prints some information about
+your test results, including the t-statistic, degrees of freedom for the
+t-statistic calculation, p-value, and confidence intervals ^[By assigning the 
+output of `t.test()` to the `results` object it is easier to obtain or store
+the values printed in the console. For example, `results$p.value` returns
+the $p$-value. This is useful for for plotting or exporting
+results to other files. See the output of `str(results)` for a list of values.]. 
+
+The example above uses "formula" notation. In formula notation, `y ~ x`, the
+left hand side of `~` represents the response variable or column and the right
+hand side represents the grouping variable. The same thing can be achieved with:
+
+```{r}
+t.test(sample_1,
+       sample_2)
+```
+
+
+In this example, we do not have the evidence to reject $H_0$ at an 
+$\alpha$ = 0.05 (t-stat = `r results$statistic |> prettyNum(digits = 3)`, $p$ = 
+`r results$p.value |> prettyNum(digits = 3)`). 
+
+
+Since this example uses randomly drawn data, we can examine what happens when
+sample size is increased to $n$ = 100:
+
+```{r}
+## sample size
+n = 100
+
+## generate example data
+df <- tibble(
+  sample_1 = rnorm(n = n, mean = 0.5, sd = 0.5),
+  sample_2 = rnorm(n = n, mean = 0.7, sd = 0.5)) |>
+  #convert to long format
+  pivot_longer(everything(),
+               names_to = "group")
+
+t.test(value ~ group,
+       data = df)
+```
+Now we have evidence to reject $H_0$ due to the larger sample size which increased
+the statistical power for detecting a smaller effect size at a cost
+of increasing the risk of detecting an effect that is not actually there or
+is not environmentally relevant and of course increased monitoring costs if
+this were an actual water quality monitoring project.
+
+The *t*-test assumes underlying data is normally distributed. However, hydrology
+and water quality data is often skewed and log-normally distributed. While,
+a simple log-transformation in the data can correct this, it is suggested to use
+a non-parametric or permutation test instead.
+
+### Rank-Sum test {#sec-ranksum}
+
+The **Wilcoxon Rank Sum** (also called Mann-Whitney) tests can be considered
+a non-parametric versions of the two-sample *t*-test. This example uses the bacteria
+data first shown in @sec-waterquality. The heavily skewed data observed in
+fecal indicator bacteria are well suited for non-parametric statistical analysis.
+The Wilcoxon test is conducted using the `wilcox.test()` function. 
+
+```{r}
+## arroyo_wetland is an example dataset in twriTemplates
+df <- arroyo_wetland |> 
+  filter(parameter_code == "31699") |> 
+  select(station_id, value) |> 
+  mutate(station_id = as_factor(station_id))
+
+## formula notation
+wilcox.test(value~station_id, data = df,
+            conf.int = TRUE)
+
+## default notation
+# x <- df |> 
+#   filter(station_id == "13079")
+# y <- df |> 
+#   filter(station_id == "13074")
+# 
+# wilcox.test(x$value, y$value,
+#             conf.int = TRUE)
+```
+
+### Two-sample permutation test {#sec-twosampleperm}
+
+Chapter 5.2 in @helselStatisticalMethodsWater2020 provide an excellent 
+explanation of permutation tests. The permutation test works by resampling the 
+data for all (or thousands of) possible permutations. Assuming the null 
+hypothesis is true, we can draw a population distribution of the null statistic 
+all the resampled combinations. The proportion of permutation results that 
+equal or exceed the difference calculated in the original data is the 
+permutation *p*-value.
+
+The [*coin*](http://coin.r-forge.r-project.org/) package provides functions
+for using the permutation test approach with different statistical tests.
+
+```{r}
+#| message: false
+library(coin)
+
+oneway_test(value~station_id, 
+            data = df,
+            distribution = approximate())
+
+```
+
+We get roughly similar results with the permutation test and the Wilcoxon. 
+However, the Wilcoxon tells us about the medians, while the permutation
+test tells us about the means.
+
+
+## Matched pairs
+
+Matched pairs test evalute the differences in matched pairs of data.
+Typically, this might include watersheds in which you measured water quality 
+before and after an intervention or event; paired upstream and downstream data;
+or looking at pre- and post-evaluation scores at an extension event.
+Since data has to be matched, the data format is typically two vectors
+with observed numeric data. 
+The examples below use mean annual streamflow measurements from 2021 and
+2022 at a random subset of stream gages in Travis County obtained from the 
+dataRetrieval package.
+
+```{r}
+#| message: false
+## retrieve some USGS steamgage in Travis County
+set.seed(910)
+sites <- dataRetrieval::whatNWISsites(stateCd = "TX", 
+                                      parameterCd = "00060",
+                                      countyCd = "453",
+                                      startDT = "2021-01-01",
+                                      endDT = "2022-12-31",
+                                      siteStatus = "active",
+                                      hasDataTypeCd = "dv") |> 
+  slice_sample(n = 10) |> 
+  pull(site_no)
+
+## retrieve annual mean discharges for 10 sites
+df <- dataRetrieval::readNWISstat(sites, parameterCd = "00060",
+                            startDate = "2021",
+                            endDate = "2022",
+                            statReportType = "annual")
+
+## needs a column for each observation year
+df <- df |> 
+  select(site_no, year_nu, mean_va) |> 
+  pivot_wider(names_from = year_nu,
+              names_prefix = "year_",
+              values_from = mean_va) |> 
+  filter(!is.na(year_2021), !is.na(year_2022))
+```
+
+
+### Paired *t*-test {#sec-pairedt}
+
+The paired t-test assumes a normal distribution, so the observations are log
+transformed in this example. The resulting difference are differences in
+log-means.
+
+```{r}
+t.test(log(df$year_2021), log(df$year_2022), paired = TRUE)
+```
+
+
+
+### Signed rank test {#sec-signedrank}
+
+Instead of the t-test, the sign rank test is more appropriate
+for skewed datasets. 
+Keep in mind this does not report a difference in means because it is a test
+on the ranked values.
+
+
+```{r}
+wilcox.test(df$year_2021, df$year_2022, paired = TRUE)
+```
+
+
+### Paired permutation test {#sec-pairedperm}
+
+The permutation test is appropriate for skewed datasets where there is not
+a desire to transform data.
+The function below evaluates the mean difference in the paired data, then
+randomly reshuffles observations between 2021 and 2022 to create a distribution
+of mean differences under null conditions. The observed mean and the 
+null distribution are compared to derive a $p$-value or the probability of
+obtaining the observed value if the null were true.
+
+```{r}
+paired_perm <- function(x, y, n = 1000, seed = 90,
+                        conf = 95, 
+                        alternative = "two.sided") {
+  set.seed(seed)
+  data.name <- paste(deparse(substitute(x))," and ",deparse(substitute(y)),"\n",n," permutations",sep="")
+  
+  ## calculate mean diff
+  difference <- na.omit(x - y)
+  diff_obs <- mean(difference)
+  names(diff_obs) <- "mean difference"
+
+  ## resample
+  resamp_mean_diff <- numeric(n)
+  for (i in 1:n) {
+    signs <- sample(c(1, -1), length(difference), replace = TRUE)
+    resamp <- difference * signs
+    resamp_mean_diff[i] <- mean(resamp)
+  }
+  
+  
+  upper <- length(resamp_mean_diff[resamp_mean_diff >= diff_obs]) / n
+  lower <- length(resamp_mean_diff[resamp_mean_diff <= (-1) * diff_obs]) / n
+  prob2tailed <- upper + lower
+  if (diff_obs < 0) {
+    prob2tailed <- (1 - lower) + (1 - upper)
+  }
+  resampMD <- sort(resamp_mean_diff)
+  
+  prob <- prob2tailed
+  if (alternative == "greater" | alternative == "g") prob <- upper
+  if (alternative == "less" | alternative == "l") prob <- (1 - lower)
+  
+  null_value <- 0
+  names(null_value) <- "mean difference"
+  
+  result <- list(estimate = diff_obs,
+                 data.name = data.name,
+                 p.value = prob,
+                 method = "Permutation Matched-Pair Test",
+                 null.value = null_value,
+                 alternative = alternative,
+                 permutations = tibble(resamples = resamp_mean_diff))
+  class(result) <- "htest"
+  return(result)
+}
+
+
+```
+
+
+```{r}
+m1 <- paired_perm(df$year_2021, df$year_2022, n = 10000)
+m1
+```
+
+```{r}
+#| label: fig-pairedperm
+#| fig-asp: 0.4
+#| fig-cap: "The blue histogram shows the distribution of mean differences calculated by 10,000 permutations of randomly reshuffled paired data. The red line shows the observed mean difference."
+ggplot(m1$permutations) +
+  geom_histogram(aes(resamples), 
+               fill = "steelblue", 
+               alpha = 0.2, 
+               color = "steelblue",
+               binwidth = 1) +
+  geom_vline(xintercept = m1$estimate, color = "darkred") +
+  scale_x_continuous("Mean Differences", expand = c(0,0)) +
+  scale_y_continuous("Count", expand = expansion(mult = c(0, 0.05))) +
+  theme_TWRI_print()
+```
+
+## Three of more independent groups
+
+### ANOVA {#sec-anova}
+
+### Kruskal-Walis {#sec-kw}
+
+### One-way permutation {#sec-onewayperm}
+
+
+## Two-factor group comparisons
+
+### Two-factor ANOVA {#sec-twowayanova}
+
+When you have two-(non-nested)factors that may simultaneously influence 
+observations, the factorial ANOVA and non-parametric alternatives can be used.
+
+In 2011, an artificial wetland was completed to treat wastewater effluent 
+discharged between stations `13079` (upstream side) and `13074`
+(downstream side). 
+The first factor is station location, either upstream or downstream of the 
+effluent discharge. 
+We expect the upstream station to have "better" water quality than the 
+downstream station. 
+The second factor is before and after the wetland was completed. 
+We expect the downstream station to have better water quality after the wetland 
+than before, but no impact on the upstream water quality.
+
+
+```{r}
+## prepare the data for analysis
+df <- arroyo_wetland |>
+  ## filter to the ammonia parameter only
+  filter(parameter_code == "00610") |> 
+  ## assign upstream and downstream variables
+  mutate(location = case_when(
+    station_id  == "13074" ~ "Below",
+    station_id  == "13079" ~ "Above",
+    .default = station_id 
+  )) |> 
+  ## assign pre- and post-wetland variable
+  mutate(wetland = case_when(
+    end_date  <= as.Date("2011-12-31") ~ "Pre",
+    end_date  > as.Date("2011-12-31") ~ "Post"
+  )) |> 
+  ## make wetland a factor so it orders correctly in the plots
+  ## default order is alphabetical, but it makes more sense to
+  ## specify "Pre" before "Post"
+  mutate(wetland = forcats::fct_relevel(wetland, "Pre", "Post")) |> 
+  select(station_id, value, location, end_date, wetland)
+```
+
+
+The `aov()` function fits the ANOVA model using the formula notation.
+The formula notation is of form `response ~ factor` where factor is 
+a series of factors specified in the model. 
+The specification `factor1 + factor2` indicates all the factors are taken 
+together, while `factor1:factor2`indicates the interactions. 
+The notation `factor1*factor2` is equivalent to 
+`factor1 + factor2 + factor1:factor2`. 
+
+```{r}
+m1 <- aov(log(value) ~ wetland * location,
+          data = df)
+
+summary(m1)
+```
+
+Here we fit the ANOVA to log-transformed ammonia values. 
+The results indicate a difference in geometric means (because we used the 
+log values in the ANOVA) between upstream and downstream location *and* a 
+difference in the interaction terms. 
+
+We follow up the ANOVA with a multiple comparisons test (Tukey's Honest 
+Significant Difference, or Tukey's HSD) on the factor(s) of interest.
+
+```{r}
+TukeyHSD(m1, "wetland:location")
+```
+
+The `TukeyHSD()` function takes the output from `aov()` and optionally
+the factor you are interested in evaluating the difference in means.
+The output provide the estimate difference in means between each level of the 
+factor, the 95% confidence interval and the multiple comparisons adjusted 
+p-value. 
+@fig-contrasts is an example of how the data can be plotted for easier 
+interpretation.
+
+```{r}
+#| label: fig-contrasts
+#| fig-cap: The 95% confidence intervals on differences in means (log scale) for different factor interactions. 
+#| echo: false
+#| fig-asp: 0.33
+TukeyHSD(m1, "wetland:location") |> 
+  broom::tidy() |> 
+  mutate(adj.p.value = format.pval(adj.p.value,
+                                   digits = 2,
+                                   eps = 0.001,
+                                   nsmall = 3)) |> 
+  select(`Contrast` = contrast,
+         `Estimate` = estimate,
+         `Lower 95% CI` = conf.low,
+         `Upper 95% CI` = conf.high,
+         `Adj. p-value` = adj.p.value) |> 
+  mutate(Contrast = forcats::fct_reorder(Contrast, Estimate)) |> 
+  ggplot() +
+  geom_pointrange(aes(y = Contrast, x = Estimate,
+                      xmin = `Lower 95% CI`, xmax = `Upper 95% CI`)) +
+  labs(x = "Difference in ammonia log(means)", y = "Contrasts") +
+  theme_TWRI_print()
+  
+```
+
+### Two-factor Brunner-Dette-Munk {#sec-bdm}
+
+The non-parametric version of the ANOVA model is the 
+*two-factor Brunner-Dette-Munk* (BDM) test. 
+The BDM test is implemented in the `asbio` package using the `BDM.2way()` 
+function:
+
+```{r}
+#| message: false
+library(asbio)
+bdm_output <- BDM.2way(Y = df$value, 
+                       X1 = as.factor(df$location), 
+                       X2 = as.factor(df$wetland))
+
+bdm_output$BDM.Table
+bdm_output$Q
+```
+
+The BMD output indicates there is evidence to reject the null hypothesis (no 
+difference in concentration) for each factor and the interaction. We can conduct
+a multiple comparisons test following the BDM test using the Wilcoxon rank-sum
+test on all possible pairs and use the Benjamini and Hochberg correction to 
+account for multiple comparisons.
+
+Since we are interested in the impact of the wetland specifically, group
+the data by location (upstream, downstream) and subtract the median of each
+group from the observed values. Subtraction of the median values defined by the 
+location factor adjusts for difference attributed to location. The `pairwise.wilcox.test()`
+function provides the pairwise compairson with corrections for multiple comparisons:
+
+
+```{r}
+df_adj <- df |> 
+  group_by(location) |> 
+  mutate(loc_med = median(value),
+         adj_value = value - loc_med)
+
+BDM.test(df_adj$adj_value, df_adj$wetland)$Q
+
+## multiple comparison is not needed here since there are only two groups
+## in the wetland factor, but is included here for demonstration.
+pairwise.wilcox.test(df_adj$adj_value, df_adj$wetland, p.adjust.method = "BH")
+```
+
+
+
+
+
+### Two-factor permutation test {#sec-twowayperm}
+
+In @sec-twowayanova we identified a significant differencs in ammonia geometric means
+for each factor and interaction. If the interest is to identify difference in means,
+a permutation test can be used. The `perm.fact.test()` function from the *asbio* package
+can be used:
+
+```{r}
+perm.fact.test(Y = df$value, 
+               X1 = as.factor(df$location), 
+               X2 = as.factor(df$wetland),
+               perm = 5000)
+```
+
+
+
+
+## Correlation between two independent variables
+
+### Pearson's r {#sec-person}
+
+Using the estuary water quality example data from #sec-plotclean we will explore
+correlations between two independent variables:
+
+```{r}
+
+df <- mission_aransas_nerr |> 
+  filter(F_Temp == "<0>",
+         F_DO_mgl == "<0>")
+
+```
+
+**Pearson's *r* **is the linear correlation
+coefficient that measures the linear association between two variables. Values of r
+range from -1 to 1 (indicate perfectly positive or negative linear relationships).
+Use the `cor.test()` function to return Pearson's *r* and associated p-value:
+
+```{r}
+m1 <- cor.test(df$DO_mgl, df$Temp)
+m1
+```
+
+The results indicate we have strong evidence to reject the null hypothesis of no
+correlation between Temperature and dissolved oxygen (Pearson's *r* = `r round(m1$estimate, 2)`,
+*p* < 0.001). 
+
+
+### Spearman's p {#sec-spearman}
+
+Spearman's p is a non-parametric correlation test using the ranked values. The
+following example looks at the correlation between TSS and TN concentrations.
+
+
+```{r}
+#| label: fig-tss_tn
+#| fig-asp: 0.5
+#| fig-cap: "Scatter plot of TSS and TN concentrations. The distributions of both concentrations are potentially right skewed and a non-parametric test would be appropriate."
+#| 
+df <- read_delim("data/swqmispublicdata.txt",
+                 delim = "|",
+                 # see awkward column names that have to be wrapped
+                 # in between "`" (escape) marks.
+                 col_types = cols_only(
+                   `Segment ID` = col_character(),
+                   `Station ID` = col_factor(),
+                   `Station Description` = col_character(),
+                   `End Date` = col_date(format = "%m/%d/%Y"),
+                   `Collecting Entity` = col_character(),
+                   `Monitoring Type` = col_character(),
+                   `Composite Category` = col_character(),
+                   `Parameter Name` = col_character(),
+                   `Parameter Code` = col_character(),
+                   `Value` = col_number(),
+                   `RFA/Tag ID` = col_character()
+                 )) |> 
+  janitor::clean_names() |> 
+  filter(station_id == "12517") |> 
+  filter(parameter_code == "00630" | parameter_code == "00530") |> 
+  select(end_date, parameter_name, value) |>
+  group_by(end_date) |> 
+  pivot_wider(names_from = parameter_name, values_from = value,
+              values_fn = ~mean(.x, na.rm = TRUE)) |> 
+  rename(tss = contains("RESIDUE"),
+         tn = contains("NITRATE")) |> 
+  filter(!is.na(tss) & !is.na(tn))
+
+ggplot(df, aes(tss, tn)) +
+  geom_point() + 
+  scale_x_log10() +
+  labs(x = "TSS", y = "TN") +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_TWRI_print()
+```
+The `cor.test()` function is also used to calculate Spearman's *p*, but the `method` argument must be specified:
+
+```{r}
+cor.test(df$tn, df$tss, method = "spearman", exact = FALSE)
+```
+
+Using Spearman's *p* there isn't evidence to reject the null hypothesis at $\alpha = 0.05$.
+
+
+### Permutation test for Pearson's *r* {#sec-permutation-pearson}
+
+If you want to use a permutation approach for Pearson's *r* we need to write a function
+to calculate *r* for the observed data, then calculate *r* for the permutation resamples.
+The following function does that and provides the outputs along with the permutation results
+so we can plot them:
+
+```{r}
+## create a permutation function for 2 sided pearson's r
+
+permutate_cor <- function(x, y, n = 1000, seed = 90) {
+  set.seed(seed)
+  data.name <- paste(deparse(substitute(x))," and ",deparse(substitute(y)),"\n",n," permutations",sep="")
+  cor_test_output <- cor.test(x = x, y = y, method = "pearson")
+  obs_r <- cor_test_output$estimate
+  obs_stat <- cor_test_output$statistic
+  
+  cor_permutations <- sapply(1:n,
+                             FUN = function(i) cor(x = x, y = sample(y)))
+  
+  cor_permutations <- c(cor_permutations, obs_r)
+  
+  
+  p_val <- sum(abs(cor_permutations) >= abs(obs_r))/(n+1)
+  
+  result <- list(statistic = obs_stat, 
+                 data.name = data.name, 
+                 estimate = obs_r,
+                 p.value = p_val,
+                 method = "Pearson's product-moment correlation - Permutation test",
+                 permutations = data.frame(r = unname(cor_permutations)))
+  class(result) <- "htest"
+  return(result)
+}
+```
+
+Now, use the function `permutate_cor()` to conduct Pearson's r on the observed data and resamples:
+
+```{r}
+m1 <- permutate_cor(df$tss, df$tn, n = 10000)
+m1
+```
+Using the permutation approach, we don't have evidence to reject the null hypothesis at $\alpha = 0.05$.
+
+The following code produces a plot of the mull distribution of test statistic values and the test statistic value for the observed data:
+
+```{r}
+#| label: fig-nullpearson
+#| fig-asp: 0.4
+#| fig-cap: The estimated distribution of Pearson's r calculated with 10,000 resamples in blue. The red line shows Pearson's r for the observed data. The observed Pearson's r exceeded approximately 90.3% of the null distribution test statistic values. 
+ggplot(m1$permutations) +
+  geom_density(aes(r), fill = "steelblue", alpha = 0.2, color = "steelblue") +
+  geom_vline(xintercept = m1$estimate, color = "darkred") +
+  ggrepel::geom_text_repel(data = tibble(x = m1$estimate, y = 2),
+                           aes(x, y, label = paste0("Pearson's r for observed data = ", round(x,2))),
+                           family = "OpenSansCondensed_TWRI", fontface = "bold", direction = "y", hjust = 0,
+                           size = 2.5, nudge_x = 0.1, color = "darkred") +
+  ggrepel::geom_text_repel(data = tibble(x = 0, y = 1),
+                           aes(x = x, y = y, label = "Null distribution of Pearson's r"),
+                           family = "OpenSansCondensed_TWRI", fontface = "bold",
+                           size = 2.5, color = "steelblue") +
+  scale_x_continuous("Permutation estimates", expand = c(0,0)) +
+  scale_y_continuous("Smoothed density", expand = expansion(mult = c(0, 0.05))) +
+  theme_TWRI_print()
+```
+
+
