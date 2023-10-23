@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>twri r-manual - 3&nbsp; Streamflow</title>
+<title>twri r-manual - 9&nbsp; Regression Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -30,8 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./stage-discharge.html" rel="next">
-<link href="./data_exploration.html" rel="prev">
+<link href="./maps.html" rel="next">
+<link href="./water-quality-statistics.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -97,7 +97,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./streamflow.html">Hydrology</a></li><li class="breadcrumb-item"><a href="./streamflow.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Streamflow</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./water-quality-statistics.html">Statistical Analysis</a></li><li class="breadcrumb-item"><a href="./regression.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -149,7 +149,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./streamflow.html" class="sidebar-item-text sidebar-link active">
+  <a href="./streamflow.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Streamflow</span></span></a>
   </div>
 </li>
@@ -207,7 +207,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./regression.html" class="sidebar-item-text sidebar-link">
+  <a href="./regression.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
   </div>
 </li>
@@ -258,18 +258,24 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-sources" id="toc-data-sources" class="nav-link active" data-scroll-target="#data-sources"><span class="header-section-number">3.1</span> Data Sources</a></li>
-  <li><a href="#summarise" id="toc-summarise" class="nav-link" data-scroll-target="#summarise"><span class="header-section-number">3.2</span> Summarise</a></li>
-  <li><a href="#flow-duration-curve" id="toc-flow-duration-curve" class="nav-link" data-scroll-target="#flow-duration-curve"><span class="header-section-number">3.3</span> Flow Duration Curve</a></li>
+  <li><a href="#linear-regression" id="toc-linear-regression" class="nav-link active" data-scroll-target="#linear-regression"><span class="header-section-number">9.1</span> Linear regression</a></li>
+  <li><a href="#generalized-linear-models" id="toc-generalized-linear-models" class="nav-link" data-scroll-target="#generalized-linear-models"><span class="header-section-number">9.2</span> Generalized linear models</a></li>
+  <li><a href="#generalized-additive-models" id="toc-generalized-additive-models" class="nav-link" data-scroll-target="#generalized-additive-models"><span class="header-section-number">9.3</span> Generalized additive models</a></li>
+  <li><a href="#trend-analysis" id="toc-trend-analysis" class="nav-link" data-scroll-target="#trend-analysis"><span class="header-section-number">9.4</span> Trend Analysis</a>
+  <ul class="collapse">
+  <li><a href="#mann-kendall-test" id="toc-mann-kendall-test" class="nav-link" data-scroll-target="#mann-kendall-test"><span class="header-section-number">9.4.1</span> Mann-Kendall test</a></li>
+  <li><a href="#linear-regression-on-numeric-dates" id="toc-linear-regression-on-numeric-dates" class="nav-link" data-scroll-target="#linear-regression-on-numeric-dates"><span class="header-section-number">9.4.2</span> Linear regression on numeric dates</a></li>
+  <li><a href="#flow-adjustments" id="toc-flow-adjustments" class="nav-link" data-scroll-target="#flow-adjustments"><span class="header-section-number">9.4.3</span> Flow adjustments</a></li>
+  </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/txwri/r-manual/edit/main/docs/streamflow.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/txwri/r-manual/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/txwri/r-manual/blob/main/docs/streamflow.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/txwri/r-manual/edit/main/docs/regression.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/txwri/r-manual/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/txwri/r-manual/blob/main/docs/regression.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./streamflow.html">Hydrology</a></li><li class="breadcrumb-item"><a href="./streamflow.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Streamflow</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./water-quality-statistics.html">Statistical Analysis</a></li><li class="breadcrumb-item"><a href="./regression.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span id="sec-streamflow" class="quarto-section-identifier"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Streamflow</span></span></h1>
+<h1 class="title"><span id="sec-regression" class="quarto-section-identifier"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></h1>
 </div>
 
 
@@ -285,29 +291,28 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Incomplete
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This has not been written yet.</p>
-</div>
-</div>
-<section id="data-sources" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="data-sources"><span class="header-section-number">3.1</span> Data Sources</h2>
+<section id="linear-regression" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="linear-regression"><span class="header-section-number">9.1</span> Linear regression</h2>
 </section>
-<section id="summarise" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="summarise"><span class="header-section-number">3.2</span> Summarise</h2>
+<section id="generalized-linear-models" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="generalized-linear-models"><span class="header-section-number">9.2</span> Generalized linear models</h2>
 </section>
-<section id="flow-duration-curve" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="flow-duration-curve"><span class="header-section-number">3.3</span> Flow Duration Curve</h2>
+<section id="generalized-additive-models" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="generalized-additive-models"><span class="header-section-number">9.3</span> Generalized additive models</h2>
+</section>
+<section id="trend-analysis" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="trend-analysis"><span class="header-section-number">9.4</span> Trend Analysis</h2>
+<section id="mann-kendall-test" class="level3" data-number="9.4.1">
+<h3 data-number="9.4.1" class="anchored" data-anchor-id="mann-kendall-test"><span class="header-section-number">9.4.1</span> Mann-Kendall test</h3>
+</section>
+<section id="linear-regression-on-numeric-dates" class="level3" data-number="9.4.2">
+<h3 data-number="9.4.2" class="anchored" data-anchor-id="linear-regression-on-numeric-dates"><span class="header-section-number">9.4.2</span> Linear regression on numeric dates</h3>
+</section>
+<section id="flow-adjustments" class="level3" data-number="9.4.3">
+<h3 data-number="9.4.3" class="anchored" data-anchor-id="flow-adjustments"><span class="header-section-number">9.4.3</span> Flow adjustments</h3>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -657,13 +662,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./data_exploration.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data Exploration</span></span>
+      <a href="./water-quality-statistics.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./stage-discharge.html" class="pagination-link">
-        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Stage-Discharge Rating Curves</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./maps.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial Data</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -4,7 +4,7 @@ description: This is the R resource manual and cookbook for TWRI staff and gradu
 ---
 # Preface {.unnumbered}
 
-This online resource provides guidance for reproducible data analysis using R and RStudio. The intent is not to provide copy and pastable code but to provide genaral guidance and examples that are adaptable to your own project.
+This online resource provides guidance for reproducible data analysis using R and RStudio. The intent is not to provide copy and pastable code but to provide general guidance and examples that are adaptable to your own project.
 
 
 ## Requirements

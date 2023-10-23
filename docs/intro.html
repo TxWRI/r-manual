@@ -204,18 +204,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Load Duration Curves</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./water-quality-statistics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Water Quality Statistics</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Geospatial</span></a>
+ <span class="menu-text">Statistical Analysis</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -223,20 +217,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./water-quality-statistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Geospatial</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./maps.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./watershed-delineation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./raster-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
   </div>
 </li>
       </ul>
@@ -508,12 +525,12 @@ Levels: Easy Medium Hard</code></pre>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2021-01-01"</span><span class="op">)</span></span>
 <span><span class="va">n</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 1018 days</code></pre>
+<pre><code>Time difference of 1025 days</code></pre>
 </div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co">##  or specify units</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/difftime.html">difftime</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.Date</a></span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="st">"2021-01-01"</span><span class="op">)</span>, units <span class="op">=</span> <span class="st">"weeks"</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Time difference of 145.4286 weeks</code></pre>
+<pre><code>Time difference of 146.4286 weeks</code></pre>
 </div>
 </div>
 <p>If you have Date-Time strings, the <em>POSIXct</em> class is your friend. The default format is shown below and <code><a href="https://rdrr.io/r/base/strptime.html">strptime()</a></code> provides the details on how to specify different formats. The time recorded in your data probably depends on a timezone and might shift based on daylight savings time (or might not depending on the device collecting the data). Use the time zone argument to specify the time. If you are setting up a device to collect data that will be read into R, I highly recommend setting up the device to collect in UTC offset.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
@@ -566,7 +583,7 @@ Levels: Easy Medium Hard</code></pre>
 <span><span class="va">alpha</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">-</span> <span class="va">ci</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">+</span> <span class="va">se</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html">qnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">alpha</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">-</span><span class="va">alpha</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.907045 5.260658</code></pre>
+<pre><code>[1] 4.925691 5.285134</code></pre>
 </div>
 </div>
 <p>If we need to recalculate the confidence interval for different values or combinations of values of <code>x</code>, <code>n</code>, and <code>ci</code> we would have to cut and paste the chunk each time with the potential for data entry errors if the wrong values are entered. Instead, create a function and change the arguments as needed.</p>
@@ -580,15 +597,15 @@ Levels: Easy Medium Hard</code></pre>
 <span></span>
 <span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">0</span>, max <span class="op">=</span> <span class="fl">10</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.741090 5.092174</code></pre>
+<pre><code>[1] 4.714993 5.068229</code></pre>
 </div>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="fl">100</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.90</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 53.37521 56.08682</code></pre>
+<pre><code>[1] 52.94005 55.65136</code></pre>
 </div>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu">ci</span><span class="op">(</span>min <span class="op">=</span> <span class="fl">10</span>, max <span class="op">=</span> <span class="fl">1000</span>, n <span class="op">=</span> <span class="fl">1000</span>, ci <span class="op">=</span> <span class="fl">0.80</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 508.1175 531.4035</code></pre>
+<pre><code>[1] 489.9881 513.0073</code></pre>
 </div>
 </div>
 </section><section id="packages" class="level2" data-number="1.4"><h2 data-number="1.4" class="anchored" data-anchor-id="packages">
@@ -646,7 +663,7 @@ Note
 <span><span class="co">## calculate the mean of the log</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 99.99192</code></pre>
+<pre><code>[1] 100.0328</code></pre>
 </div>
 </div>
 <p>This is a little messy. If we had multiple steps this could make the code difficult to interprt. The pipe function separates this into steps. The code below pipes <code>x</code> into the first argument of <code><a href="https://rdrr.io/r/base/Log.html">log()</a></code>, the output of <code><a href="https://rdrr.io/r/base/Log.html">log()</a></code> is piped into the first argument of <code><a href="https://rdrr.io/r/base/mean.html">mean()</a></code>. This delineates each step in the data workflow.</p>
@@ -656,7 +673,7 @@ Note
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/Log.html">log</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="op">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 99.99192</code></pre>
+<pre><code>[1] 100.0328</code></pre>
 </div>
 </div>
 <p>If it isn’t the first argument that needs the output from the previous function, we use the placeholder <code>_</code>. A good example is the function to fit a linear regresion, <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> which requires the regression formula as the first argument and data for the second argument. We generate vector of sample random predictor data (x) from a uniform distribution using <code><a href="https://rdrr.io/r/stats/Uniform.html">runif()</a></code>. A vector <code>b</code> of coefficents normally distributed around mean 10 is generated using <code><a href="https://rdrr.io/r/stats/Normal.html">rnorm()</a></code>. The response is generated using x * b. The linear regression should return a coefficient for x that is near 10.</p>
@@ -677,18 +694,18 @@ lm(formula = y ~ x, data = data.frame(x = x, y = x * b))
 
 Residuals:
     Min      1Q  Median      3Q     Max 
--453.24  -36.78    7.69   67.76  368.61 
+-393.14  -74.48   15.60   61.39  290.33 
 
 Coefficients:
             Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  -24.045     26.825  -0.896    0.372    
-x             10.346      0.446  23.199   &lt;2e-16 ***
+(Intercept) -30.8483    26.7371  -1.154    0.251    
+x            10.3504     0.4626  22.376   &lt;2e-16 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
-Residual standard error: 121.5 on 98 degrees of freedom
-Multiple R-squared:  0.846, Adjusted R-squared:  0.8444 
-F-statistic: 538.2 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
+Residual standard error: 115.5 on 98 degrees of freedom
+Multiple R-squared:  0.8363,    Adjusted R-squared:  0.8346 
+F-statistic: 500.7 on 1 and 98 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </section></section><section id="suggested-rstudio-settings" class="level2" data-number="1.6"><h2 data-number="1.6" class="anchored" data-anchor-id="suggested-rstudio-settings">

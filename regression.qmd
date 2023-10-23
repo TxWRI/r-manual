@@ -1,0 +1,18 @@
+# Regression Modeling {#sec-regression}
+
+## Linear regression
+
+## Generalized linear models
+
+
+## Generalized additive models
+
+
+## Trend Analysis
+
+### Mann-Kendall test
+
+### Linear regression on numeric dates
+
+
+### Flow adjustments

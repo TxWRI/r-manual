@@ -31,7 +31,10 @@ book:
       chapters:
         - water-quality.qmd
         - load-duration.qmd
+    - part: "Statistical Analysis"
+      chapters: 
         - water-quality-statistics.qmd
+        - regression.qmd
     - part: "Geospatial"
       chapters:
         - maps.qmd

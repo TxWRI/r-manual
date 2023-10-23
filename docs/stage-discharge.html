@@ -224,18 +224,12 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Load Duration Curves</span></span></a>
   </div>
 </li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./water-quality-statistics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Water Quality Statistics</span></span></a>
-  </div>
-</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true">
- <span class="menu-text">Geospatial</span></a>
+ <span class="menu-text">Statistical Analysis</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -243,20 +237,43 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./water-quality-statistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Hypothesis Testing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Regression Modeling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true">
+ <span class="menu-text">Geospatial</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./maps.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Spatial Data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./watershed-delineation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Delineate Watersheds</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./raster-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Extract Raster Summaries</span></span></a>
   </div>
 </li>
       </ul>
@@ -460,19 +477,19 @@ Formula: finalDischarge ~ K * (streamStage - H_0)^Z
 
 Parameters:
     Estimate Std. Error t value Pr(&gt;|t|)    
-K     5.0399     1.3421   3.755 0.000335 ***
-H_0   0.7874     0.1315   5.990 6.30e-08 ***
-Z     1.9097     0.2568   7.436 1.23e-10 ***
+K     5.0398     1.3422   3.755 0.000335 ***
+H_0   0.7874     0.1315   5.990 6.31e-08 ***
+Z     1.9098     0.2568   7.435 1.23e-10 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Residual standard error: 0.889 on 77 degrees of freedom
 
-Number of iterations to convergence: 41 
+Number of iterations to convergence: 42 
 Achieved convergence tolerance: 1.49e-08</code></pre>
 </div>
 </div>
-<p>NLS estimated parameters are: <span class="math inline">\(K =\)</span> 5.0398732, <span class="math inline">\(H_0 =\)</span> 0.7874016, and <span class="math inline">\(Z =\)</span> 0.7874016. Before using these parameter, evaluated the goodness of fit using the model residuals (add citation or note with more resources here).</p>
+<p>NLS estimated parameters are: <span class="math inline">\(K =\)</span> 5.0397806, <span class="math inline">\(H_0 =\)</span> 0.7874016, and <span class="math inline">\(Z =\)</span> 0.7874016. Before using these parameter, evaluated the goodness of fit using the model residuals (add citation or note with more resources here).</p>
 <div class="cell">
 <details><summary>Show the code</summary><div class="sourceCode" id="cb10"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># for easy multipanel plots, use the patchwork package</span></span>
 <span><span class="co">#install.packages("patchwork")</span></span>
